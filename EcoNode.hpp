@@ -16,6 +16,8 @@ class EcoNode {
     void initializePickup(bool rightSidePickup);
     void initializeDropoff();
 
+    EcoRadio radio();
+
 public:
 
     EcoNode() {
@@ -23,6 +25,9 @@ public:
 
     }
 
+    void execute() {
+        //
+    }
 };
 
 #endif

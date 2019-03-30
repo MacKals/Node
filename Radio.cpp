@@ -4,13 +4,16 @@
 //  Erik MacLennan, Morten Kals
 //  2019-03-23
 
-class Radio {
+#include "Radio.hpp"
 
+bool EcoRadio::recievedData() {
+    return false;
+}
 
-public:
+String EcoRadio::readData() {
+    return "apple";
+}
 
-    Radio() {
-        //do RF95 things
-    }
-
-};
+bool EcoRadio::sendData(String data) {
+    return false;
+}
