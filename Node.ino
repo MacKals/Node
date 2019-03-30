@@ -6,15 +6,15 @@
 
 #include "EcoNode.hpp"
 
-#include <SDI12.h>
+//#include <SDI12.h>
 
 EcoNode node;
 
 void setup() {
-  node = EcoNode(); // init the EcoNode object
+  //node = EcoNode(); // init the EcoNode object
   Serial.begin(9600);
 }
 
 void loop() {
-   node.execute();
+//   node.execute();
 }

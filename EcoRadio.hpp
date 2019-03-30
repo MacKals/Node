@@ -26,7 +26,7 @@ class EcoRadio {
 
 public:
     EcoRadio() {
-        //SPI.setSCK(RFM95_CLK);
+        SPI.setSCK(RFM95_CLK);
 
         if (!lora.init()) error = "unable to init lora";
         lora.setFrequency(RF95_FREQ);
