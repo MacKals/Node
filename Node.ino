@@ -5,7 +5,6 @@
 //  2019-03-23
 
 #include "EcoNode.hpp"
-#include "Configuration.hpp"
 
 #include <SPI.h>
 #include <SDI12.h>
