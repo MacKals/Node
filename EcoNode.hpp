@@ -8,21 +8,29 @@
 #define _ECONODE_H
 
 #include "Configuration.hpp"
-#include "Radio.hpp"
+#include "EcoRadio.hpp"
+#include "EcoSensor.hpp"
+#include <list>
 
 class EcoNode {
 
-    void initializeNavigator();
-    void initializePickup(bool rightSidePickup);
-    void initializeDropoff();
+    EcoRadio radio;
+    std::list<EcoSensor> sensors;
 
     EcoRadio radio();
 
 public:
 
-    EcoNode() {
-        // init things, RF, Name, get sensors that are connected from internet?
+    EcoNode();
+    std::list<EcoNode> getChildren();
+    void pollSensor(EcoSensor s);
 
+    void init() {
+        radio.init();
+    }
+
+    void printRegisters() {
+        radio.printRegisters();
     }
 
     void execute() {

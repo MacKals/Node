@@ -4,7 +4,7 @@
 //  Erik MacLennan, Morten Kals
 //  2019-03-23
 
-#include "Radio.hpp"
+#include "EcoRadio.hpp"
 
 bool EcoRadio::recievedData() {
     return false;

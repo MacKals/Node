@@ -10,15 +10,16 @@
 #define _CONFIG_H
 
 // RF95 Pins
-#define RFM95_CS 1
-#define RFM95_RST 2
-#define RFM95_INT 0
-#define RFM95_SCK 14
+// #define RFM95_CS 1
+// #define RFM95_RST 2
+// #define RFM95_INT 0
+// #define RFM95_SCK 14
 
 // SDI-12 Pins
 
 // Analog Pins
 
 // Digital Pins
+#define LED 13
 
 #endif

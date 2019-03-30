@@ -5,17 +5,27 @@
 //  2019-03-23
 
 #include "EcoNode.hpp"
-#include "Configuration.hpp"
 
-#include <SDI12.h>
+//#include <SDI12.h>
 
 EcoNode node;
 
 void setup() {
-  node = EcoNode(); // init the EcoNode object
-  Serial.begin(9600);
+    Serial.begin(9600);
+    delay(1000);
+
+    node.init(); // init the EcoNode object
+
+    pinMode(LED, OUTPUT);
+    digitalWrite(LED, HIGH);
+
+    node.printRegisters();
 }
 
 void loop() {
-   node.execute();
+    Serial.println("loop");
+
+    node.execute();
+
+    delay(1000);
 }
