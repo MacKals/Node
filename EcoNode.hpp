@@ -17,8 +17,6 @@ class EcoNode {
     EcoRadio radio;
     std::list<EcoSensor> sensors;
 
-    EcoRadio radio();
-
 public:
 
     EcoNode();

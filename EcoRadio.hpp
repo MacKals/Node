@@ -23,12 +23,8 @@ class EcoRadio {
 
 public:
     EcoRadio() {
-<<<<<<< HEAD:Radio.hpp
         Serial.println("started radio");
     }
-=======
-        SPI.setSCK(RFM95_CLK);
->>>>>>> master:EcoRadio.hpp
 
     bool init() {
         SPI.setSCK(RFM95_CLK);
