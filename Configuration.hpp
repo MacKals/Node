@@ -16,12 +16,12 @@
 // #define RFM95_SCK 14
 
 // SDI-12 Pins
+#define SDI 33 //data pin for the bus
 
 // Analog Pins
 
 // Digital Pins
 #define LED 13
-
 
 //Address Pins
 #define DIP0 4
