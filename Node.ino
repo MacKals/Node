@@ -19,13 +19,12 @@ void setup() {
     pinMode(LED, OUTPUT);
     digitalWrite(LED, HIGH);
 
-    node.printRegisters();
 }
 
 void loop() {
     Serial.println("loop");
 
-    node.execute();
+    //node.execute();
 
     delay(1000);
 }

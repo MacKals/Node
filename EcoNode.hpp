@@ -15,25 +15,23 @@
 class EcoNode {
 
     EcoRadio radio;
+    uint8_t nodeAddress;
+    uint8_t parentAddress; // 0 for no current parent
+
     std::list<EcoSensor> sensors;
+    std::list<EcoNode> children;
 
 public:
 
     EcoNode();
+    void init();
     std::list<EcoNode> getChildren();
-    void pollSensor(EcoSensor s);
+    void collectSensorData();
+    std::list<EcoSensor> getSensors();
 
-    void init() {
-        radio.init();
-    }
-
-    void printRegisters() {
-        radio.printRegisters();
-    }
-
-    void execute() {
-        //
-    }
+private:
+  void pollSensor(EcoSensor s);
+  int getAddress();
 };
 
 #endif

@@ -22,4 +22,13 @@
 // Digital Pins
 #define LED 13
 
+
+//Address Pins
+#define DIP0 4
+#define DIP1 5
+#define DIP2 6
+#define DIP3 7
+#define DIP4 8
+#define DIP5 9
+
 #endif
