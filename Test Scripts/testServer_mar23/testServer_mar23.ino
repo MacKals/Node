@@ -3,10 +3,13 @@
 #include <RH_RF95.h>
 
 // Singleton instance of the radio driver
-#define RFM95_CS 1 
-#define RFM95_RST 2
-#define RFM95_INT 0
-#define RFM95_SCK 14
+#define RFM95_CS  10 // slave select
+#define RFM95_RST 24 // reset
+#define RFM95_INT 28 // interupt
+#define RFM95_SCK 14 // clock, not primary
+
+#define LED 13
+
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 915.0
 
@@ -25,15 +28,19 @@ void setup()
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
   
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED, HIGH);
   
   Serial.begin(9600);
   delay(1000);
-  
+  Serial.println("initializing");
+
   if (!rf95.init()) Serial.println("init failed");  
   Serial.println("init success");  
   rf95.setFrequency(RF95_FREQ);
   //rf95.printRegisters();
   //rf95.setTxPower(23, false);
+  rf95.printRegisters();
 }
 
 void loop()
@@ -41,6 +48,8 @@ void loop()
   //Serial.println(rf95.isChannelActive()); 
   if (rf95.available())
   {
+    Serial.println("here");
+    digitalWrite(LED, LOW);
     // Should be a message for us now   
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
     uint8_t len = sizeof(buf);
@@ -62,5 +71,7 @@ void loop()
     {
       Serial.println("recv failed");
     }
+    digitalWrite(LED, HIGH);
+
   }
 }
