@@ -5,7 +5,6 @@
 //  2019-03-29
 
 #include "EcoNode.hpp"
-#include <list>
 
 
 //Constructor
@@ -15,11 +14,11 @@ EcoNode::EcoNode() {
 }
 
 void EcoNode::init(){ //start radio
-   bool parentFound = radio.init(); //power up and get a parent
+   // bool parentFound = radio.init(); //power up and get a parent
 
-   if (parentFound) {
-     parentAddress = radio.getParentAddress();
-   }
+   // if (parentFound) {
+   //   parentAddress = radio.getParentAddress();
+   // }
 
    // get connected sensors
 

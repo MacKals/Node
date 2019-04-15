@@ -6,7 +6,6 @@
 
 #include "EcoNode.hpp"
 
-//#include <SDI12.h>
 
 EcoNode node;
 

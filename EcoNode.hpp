@@ -8,20 +8,14 @@
 #define _ECONODE_H
 
 #include "Configuration.hpp"
-#include "EcoRadio.hpp"
+//#include "EcoRadio.hpp"
 #include "EcoSensor.hpp"
 #include <list>
 
 class EcoNode {
 
-    EcoRadio radio;
-    uint8_t nodeAddress;
-    uint8_t parentAddress;         // 0 for no current parent
-
+    // EcoRadio radio;
 	EcoSensor sensors = EcoSensor();
-
-    // std::list<EcoSensor> sensors;
-    // std::list<EcoNode> children;
 
 public:
 
@@ -32,7 +26,7 @@ EcoNode();
     std::list<EcoSensor> getSensors();
 
 	void testFunc() {
-		sensors.attachAllSensors();
+		sensors.attachAllSDI12();
 	}
 
     private:
