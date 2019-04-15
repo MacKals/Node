@@ -9,8 +9,6 @@
 
 //Constructor
 EcoNode::EcoNode() {
-    parentAddress = 0; // will need to find this
-    nodeAddress = getAddress();
 }
 
 void EcoNode::init(){ //start radio

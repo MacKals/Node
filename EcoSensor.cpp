@@ -1,30 +1,30 @@
-//  EcoSensor.cpp
-//  UBC Ecohydrology Node
+// //  EcoSensor.cpp
+// //  UBC Ecohydrology Node
+// //
+// //  Erik MacLennan, Morten Kals
+// //  2019-03-29
 //
-//  Erik MacLennan, Morten Kals
-//  2019-03-29
-
-#include "EcoSensor.hpp"
-
-
-// converts allowable address characters '0'-'9', 'a'-'z', 'A'-'Z',
-// to a decimal number between 0 and 61 (inclusive) to cover the 62 possible addresses
-byte EcoSensor::charToDec(char i){
-	if((i >= '0') && (i <= '9')) return i - '0';
-	if((i >= 'a') && (i <= 'z')) return i - 'a' + 10;
-	if((i >= 'A') && (i <= 'Z')) return i - 'A' + 37;
-	else return i;
-}
-
-// maps a decimal number between 0 and 61 (inclusive) to
-// allowable address characters '0'-'9', 'a'-'z', 'A'-'Z',
-char EcoSensor::decToChar(byte i){
-	if((i >= 0) && (i <= 9)) return i + '0';
-	if((i >= 10) && (i <= 36)) return i + 'a' - 10;
-	if((i >= 37) && (i <= 62)) return i + 'A' - 37;
-	else return i;
-}
-
+// #include "EcoSensor.hpp"
+//
+//
+// // converts allowable address characters '0'-'9', 'a'-'z', 'A'-'Z',
+// // to a decimal number between 0 and 61 (inclusive) to cover the 62 possible addresses
+// byte EcoSensor::charToDec(char i){
+// 	if((i >= '0') && (i <= '9')) return i - '0';
+// 	if((i >= 'a') && (i <= 'z')) return i - 'a' + 10;
+// 	if((i >= 'A') && (i <= 'Z')) return i - 'A' + 37;
+// 	else return i;
+// }
+//
+// // maps a decimal number between 0 and 61 (inclusive) to
+// // allowable address characters '0'-'9', 'a'-'z', 'A'-'Z',
+// char EcoSensor::decToChar(byte i){
+// 	if((i >= 0) && (i <= 9)) return i + '0';
+// 	if((i >= 10) && (i <= 36)) return i + 'a' - 10;
+// 	if((i >= 37) && (i <= 62)) return i + 'A' - 37;
+// 	else return i;
+// }
+//
 // void EcoSensor::printBufferToScreen(){
 // 	String buffer = "";
 // 	EcoSensor->sdi12.read(); // consume address
