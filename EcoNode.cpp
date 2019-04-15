@@ -23,16 +23,15 @@ void EcoNode::init(){ //start radio
 
    // get connected sensors
 
-
 }
 
-std::list<EcoSensor> EcoNode::getSensors(){
-   return this->sensors;
-}
-
-std::list<EcoNode> EcoNode::getChildren(){
-   return this->children;
-}
+// std::list<EcoSensor> EcoNode::getSensors(){
+//    return this->sensors;
+// }
+//
+// std::list<EcoNode> EcoNode::getChildren(){
+//    return this->children;
+// }
 
 void EcoNode::collectSensorData(){ // collect from all
 

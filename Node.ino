@@ -23,7 +23,7 @@ void setup() {
 
 void loop() {
     Serial.println("loop");
-
+	node.testFunc();
     //node.execute();
 
     delay(1000);

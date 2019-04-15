@@ -16,22 +16,28 @@ class EcoNode {
 
     EcoRadio radio;
     uint8_t nodeAddress;
-    uint8_t parentAddress; // 0 for no current parent
+    uint8_t parentAddress;         // 0 for no current parent
 
-    std::list<EcoSensor> sensors;
-    std::list<EcoNode> children;
+	EcoSensor sensors = EcoSensor();
+
+    // std::list<EcoSensor> sensors;
+    // std::list<EcoNode> children;
 
 public:
 
-    EcoNode();
+EcoNode();
     void init();
     std::list<EcoNode> getChildren();
     void collectSensorData();
     std::list<EcoSensor> getSensors();
 
-private:
-  void pollSensor(EcoSensor s);
-  int getAddress();
+	void testFunc() {
+		sensors.attachAllSensors();
+	}
+
+    private:
+    void pollSensor(EcoSensor s);
+    int getAddress();
 };
 
 #endif
