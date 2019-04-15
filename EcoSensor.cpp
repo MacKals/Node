@@ -1,12 +1,12 @@
-// //  EcoSensor.cpp
-// //  UBC Ecohydrology Node
-// //
-// //  Erik MacLennan, Morten Kals
-// //  2019-03-29
+//  EcoSensor.cpp
+//  UBC Ecohydrology Node
 //
-// #include "EcoSensor.hpp"
-//
-//
+//  Erik MacLennan, Morten Kals
+//  2019-03-29
+
+#include "EcoSensor.hpp"
+
+
 // // converts allowable address characters '0'-'9', 'a'-'z', 'A'-'Z',
 // // to a decimal number between 0 and 61 (inclusive) to cover the 62 possible addresses
 // byte EcoSensor::charToDec(char i){
@@ -24,27 +24,27 @@
 // 	if((i >= 37) && (i <= 62)) return i + 'A' - 37;
 // 	else return i;
 // }
-//
-// void EcoSensor::printBufferToScreen(){
-// 	String buffer = "";
-// 	EcoSensor->sdi12.read(); // consume address
-// 	while(EcoSensor->sdi12.available()) {
-// 		char c = EcoSensor->sdi12.read();
-// 		if(c == '+') {
-// 			if (buffer.length() != 0) {
-// 				buffer += ',';
-// 			}
-// 		} else if (c == '-') {
-// 			buffer += ",-";
-// 		} else if ((c != '\n') && (c != '\r') && (c != '\t')) {
-// 			buffer += c;
-// 		}
-// 		delay(50);
-// 	}
-//
-// 	Serial.print(buffer);
-// }
-//
+
+void EcoSensor::printBufferToScreen() {
+	String buffer = "";
+	this->sdi12.read(); // consume address
+	while(this->sdi12.available()) {
+		char c = this->sdi12.read();
+		if(c == '+') {
+			if (buffer.length() != 0) {
+				buffer += ',';
+			}
+		} else if (c == '-') {
+			buffer += ",-";
+		} else if ((c != '\n') && (c != '\r') && (c != '\t')) {
+			buffer += c;
+		}
+		delay(50);
+	}
+
+	Serial.print(buffer);
+}
+
 // // gets identification information from a sensor, and prints it to the serial port
 // // expects a character between '0'-'9', 'a'-'z', or 'A'-'Z'.
 // void EcoSensor::printInfo(char i){
@@ -113,30 +113,30 @@
 // 	printBufferToScreen();
 // 	EcoSensor->sdi12.clearBuffer();
 // }
-//
-// // this checks for activity at a particular address
-// // expects a char, '0'-'9', 'a'-'z', or 'A'-'Z'
-// bool EcoSensor::checkActive(char i){
-//
-// 	String myCommand = "";
-// 	myCommand = "";
-// 	myCommand += (char) i;           // sends basic 'acknowledge' command [address][!]
-// 	myCommand += "!";
-//
-// 	for(int j = 0; j < 3; j++) {     // goes through three rapid contact attempts
-// 		EcoSensor->sdi12.sendCommand(myCommand);
-// 		delay(30);
-// 		if(EcoSensor->sdi12.available()) { // If we here anything, assume we have an active sensor
-// 			printBufferToScreen();
-// 			EcoSensor->sdi12.clearBuffer();
-// 			return true;
-// 		}
-// 	}
-// 	EcoSensor->sdi12.clearBuffer();
-// 	return false;
-// }
-//
-//
+
+// this checks for activity at a particular address
+// expects a char, '0'-'9', 'a'-'z', or 'A'-'Z'
+bool EcoSensor::checkActive(char i){
+
+	String myCommand = "";
+	myCommand = "";
+	myCommand += (char) i;           // sends basic 'acknowledge' command [address][!]
+	myCommand += "!";
+
+	for(int j = 0; j < 3; j++) {     // goes through three rapid contact attempts
+		this->sdi12.sendCommand(myCommand);
+		delay(30);
+		if(this->sdi12.available()) { // If we here anything, assume we have an active sensor
+			this->printBufferToScreen();
+			this->sdi12.clearBuffer();
+			return true;
+		}
+	}
+	this->sdi12.clearBuffer();
+	return false;
+}
+
+
 // // this quickly checks if the address has already been taken by an active sensor
 // bool EcoSensor::isTaken(byte i){
 // 	i = charToDec(i); // e.g. convert '0' to 0, 'a' to 10, 'Z' to 61.
