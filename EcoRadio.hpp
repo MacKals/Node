@@ -7,8 +7,8 @@
 #ifndef _ECORADIO_H
 #define _ECORADIO_H
 
-#include "Libraries/RadioHead/RH_RF95.h"
-#include "Libraries/SPI/SPI.h"
+#include <RH_RF95.h>
+#include <SPI.h>
 #include "Configuration.hpp"
 
 /*
@@ -82,7 +82,8 @@ String readData() {
 bool sendDataWithReciept(String data, time_t time, uint8_t from, uint8_t to = 0);
 
 uint8_t lastSNR() {
-	return lora.lastSNR();
+	//return lora.lastSNR();
+	return 0;
 }
 
 uint8_t getParentAddress() {

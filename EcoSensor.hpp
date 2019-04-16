@@ -18,39 +18,38 @@ class EcoSensor {
 
 	String sdi12_addr = "";
 
-    // Methods from example library
-    // byte charToDec(char i);
-    // char decToChar(byte i);
-    void printBufferToScreen();
-    // void printInfo(char i);
-    // void takeMeasurement(char i);
+    String printBufferToString();
+    void printInfo(char i);
+    String takeMeasurement(char i);
     bool checkActive(char i);
-    // bool isTaken(byte i);
-    // bool setTaken(byte i);
-    // bool setVacant(byte i);
 
 public:
 
+	void init() {
+		this->sdi12.begin();
+		delay(500);
+	}
 
 	void attachAllSDI12() {
-		Serial.println("in");
-		for (byte i = '0'; i <= '9'; i++) {
-			if (this->checkActive(i)) {
-				this->sdi12_addr += (char) i;
-			}   // scan address space 0-9
-		}
-		// for(byte i = 'a'; i <= 'z'; i++) if(this->checkActive(i)) {this->sdi12_addr.push_back(i);}   // scan address space a-z
-		// for(byte i = 'A'; i <= 'Z'; i++) if(this->checkActive(i)) {this->sdi12_addr.push_back(i);}   // scan address space A-Z
+		// clear existing
+		sdi12_addr = "";
+
+		// serach through all valid addresses
+		for (byte i = '0'; i <= '9'; i++) if (this->checkActive(i)) {this->sdi12_addr += (char) i;}   // scan address space 0-9
+		for (byte i = 'a'; i <= 'z'; i++) if (this->checkActive(i)) {this->sdi12_addr += (char) i;}   // scan address space a-z
+		for (byte i = 'A'; i <= 'Z'; i++) if (this->checkActive(i)) {this->sdi12_addr += (char) i;}   // scan address space A-Z
+
 		Serial.println("Found " + String(sdi12_addr.length()) + " at " + sdi12_addr);
 	}
 
+    String readAllSensors() {
+		String data = "";
+		for (uint8_t i = 0; i < sdi12_addr.length(); i++) {
+			data += takeMeasurement(sdi12_addr.charAt(i));
+		}
+		return data;
+    }
 
-
-
-    // String getData() {
-	//
-    // }
-
-    };
+};
 
 #endif

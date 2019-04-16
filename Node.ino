@@ -18,6 +18,8 @@ void setup() {
     pinMode(LED, OUTPUT);
     digitalWrite(LED, HIGH);
 
+	delay(1000);
+
 }
 
 void loop() {

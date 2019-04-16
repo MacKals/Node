@@ -10,6 +10,7 @@
 #include "Configuration.hpp"
 //#include "EcoRadio.hpp"
 #include "EcoSensor.hpp"
+#include <Arduino.h>
 #include <list>
 
 class EcoNode {
@@ -26,7 +27,7 @@ EcoNode();
     std::list<EcoSensor> getSensors();
 
 	void testFunc() {
-		sensors.attachAllSDI12();
+		Serial.println(sensors.readAllSensors());
 	}
 
     private:

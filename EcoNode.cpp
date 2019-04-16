@@ -11,7 +11,12 @@
 EcoNode::EcoNode() {
 }
 
-void EcoNode::init(){ //start radio
+void EcoNode::init() {
+
+	this->sensors.init();
+	sensors.attachAllSDI12();
+
+
    // bool parentFound = radio.init(); //power up and get a parent
 
    // if (parentFound) {
