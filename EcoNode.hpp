@@ -13,6 +13,7 @@
 #include <Arduino.h>
 #include <list>
 
+
 class EcoNode {
 
     // EcoRadio radio;
@@ -27,7 +28,7 @@ EcoNode();
     std::list<EcoSensor> getSensors();
 
 	void testFunc() {
-		Serial.println(sensors.readAllSensors());
+		PRINT(sensors.readAllSensors());
 	}
 
     private:

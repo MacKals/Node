@@ -12,10 +12,9 @@ EcoNode::EcoNode() {
 }
 
 void EcoNode::init() {
+	PRINT("Init node class.");
 
 	this->sensors.init();
-	sensors.attachAllSDI12();
-
 
    // bool parentFound = radio.init(); //power up and get a parent
 

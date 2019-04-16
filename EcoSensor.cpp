@@ -119,3 +119,22 @@ bool EcoSensor::checkActive(char i){
 
 	return false;
 }
+
+bool EcoSensor::addressAttached(char i) {
+	return this->sdi12_addr.indexOf(i) == -1 ? false : true;
+}
+
+bool EcoSensor::changeAddress(char from, char to) {
+	PRINT("Address " + String(from) + " changed to " + String(to));
+
+	String command = "";
+	command += (char) from;
+	command += "A";
+	command += (char) to;
+	command += "!";
+	this->sdi12.sendCommand(command);
+	this->sdi12_addr.replace(from, to);
+	delay(300);
+
+	this->sdi12.clearBuffer();
+}

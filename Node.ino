@@ -20,10 +20,12 @@ void setup() {
 
 	delay(1000);
 
+	PRINT("Init complete, entering loop.");
 }
 
 void loop() {
-    Serial.println("loop");
+    PRINT("loop");
+
 	node.testFunc();
     //node.execute();
 

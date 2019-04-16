@@ -22,15 +22,26 @@ class EcoSensor {
     void printInfo(char i);
     String takeMeasurement(char i);
     bool checkActive(char i);
-
+	bool changeAddress(char from, char to);
+	bool addressAttached(char i);
 public:
 
 	void init() {
+		PRINT("Init sensor class.");
+
 		this->sdi12.begin();
 		delay(500);
+
+		this->attachAllSDI12();
+
+		if (this->addressAttached('B')) {
+			this->changeAddress('B', 'A');
+		}
 	}
 
 	void attachAllSDI12() {
+		PRINT("Attaching all SDI-12 nodes.");
+
 		// clear existing
 		sdi12_addr = "";
 
