@@ -29,20 +29,14 @@ EcoNode();
     bool transmitDataFromMemory(uint8_t pa);
     std::list<EcoSensor> getSensors();
 
-<<<<<<< HEAD
 private:
   void pollSensor(EcoSensor s);
   int getAddress();
 
-=======
 	void testFunc() {
 		PRINT(sensors.readAllSensors());
 	}
 
-    private:
-    void pollSensor(EcoSensor s);
-    int getAddress();
->>>>>>> 031c0b2f65c2331d383e80b6004aae2f9c361f59
 };
 
 #endif

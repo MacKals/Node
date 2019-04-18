@@ -30,16 +30,9 @@
 
 #define TIMEOUT_WAIT_TIME 3000 // ms
 
-
 // ---- SDI-12 ----
 #define SDI12_DATA_PIN 33
 #define SDI12_BAUD 115200   // The baud rate for the output serial port
-
-<<<<<<< HEAD
-// SDI-12 Pins
-#define SDI 33 //data pin for the bus
-=======
->>>>>>> 031c0b2f65c2331d383e80b6004aae2f9c361f59
 
 // Analog Pins
 
