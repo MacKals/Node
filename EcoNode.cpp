@@ -5,15 +5,13 @@
 //  2019-03-29
 
 #include "EcoNode.hpp"
-#include <list>
 
 
 //Constructor
 EcoNode::EcoNode() {
-    parentAddress = 0; // will need to find this
-    nodeAddress = getAddress();
 }
 
+<<<<<<< HEAD
 
 //
 void EcoNode::init(){ //start radio
@@ -26,10 +24,34 @@ void EcoNode::init(){ //start radio
    // get connected sensors
    //SDI-12
    
+=======
+void EcoNode::init() {
+	PRINT("Init node class.");
 
+	this->sensors.init();
+
+   // bool parentFound = radio.init(); //power up and get a parent
+
+   // if (parentFound) {
+   //   parentAddress = radio.getParentAddress();
+   // }
+>>>>>>> 031c0b2f65c2331d383e80b6004aae2f9c361f59
+
+   // get connected sensors
+
+<<<<<<< HEAD
+
+=======
 }
 
-
+// std::list<EcoSensor> EcoNode::getSensors(){
+//    return this->sensors;
+// }
+//
+// std::list<EcoNode> EcoNode::getChildren(){
+//    return this->children;
+// }
+>>>>>>> 031c0b2f65c2331d383e80b6004aae2f9c361f59
 
 void EcoNode::collectSensorData(){ // collect from all
 

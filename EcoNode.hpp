@@ -8,22 +8,20 @@
 #define _ECONODE_H
 
 #include "Configuration.hpp"
-#include "EcoRadio.hpp"
+//#include "EcoRadio.hpp"
 #include "EcoSensor.hpp"
+#include <Arduino.h>
 #include <list>
+
 
 class EcoNode {
 
-    EcoRadio radio;
-    uint8_t nodeAddress;
-    uint8_t parentAddress; // 0 for no current parent
-
-    std::list<EcoSensor> sensors;
-    std::list<EcoNode> children;
+    // EcoRadio radio;
+	EcoSensor sensors = EcoSensor();
 
 public:
 
-    EcoNode();
+EcoNode();
     void init();
 
     std::list<EcoNode> getChildren();
@@ -31,10 +29,20 @@ public:
     bool transmitDataFromMemory(uint8_t pa);
     std::list<EcoSensor> getSensors();
 
+<<<<<<< HEAD
 private:
   void pollSensor(EcoSensor s);
   int getAddress();
 
+=======
+	void testFunc() {
+		PRINT(sensors.readAllSensors());
+	}
+
+    private:
+    void pollSensor(EcoSensor s);
+    int getAddress();
+>>>>>>> 031c0b2f65c2331d383e80b6004aae2f9c361f59
 };
 
 #endif

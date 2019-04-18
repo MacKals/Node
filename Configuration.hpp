@@ -9,14 +9,37 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-// RF95 Pins
-// #define RFM95_CS 1
-// #define RFM95_RST 2
-// #define RFM95_INT 0
-// #define RFM95_SCK 14
+//#define DEBUG // comment to stop serial printing
 
+#ifdef DEBUG
+ #define PRINT(x)  Serial.println (x)
+#else
+ #define PRINT(x)
+#endif
+
+
+// ---- RF95 ----
+
+#define RF95_FREQ 915.0 // MHz, transmission frequency
+
+// Pin locations
+#define RFM95_CS  10 // slave select
+#define RFM95_RST 24 // reset
+#define RFM95_INT 28 // interupt
+#define RFM95_CLK 14 // clock, not primary
+
+#define TIMEOUT_WAIT_TIME 3000 // ms
+
+
+// ---- SDI-12 ----
+#define SDI12_DATA_PIN 33
+#define SDI12_BAUD 115200   // The baud rate for the output serial port
+
+<<<<<<< HEAD
 // SDI-12 Pins
 #define SDI 33 //data pin for the bus
+=======
+>>>>>>> 031c0b2f65c2331d383e80b6004aae2f9c361f59
 
 // Analog Pins
 

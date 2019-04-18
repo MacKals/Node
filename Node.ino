@@ -6,7 +6,6 @@
 
 #include "EcoNode.hpp"
 
-//#include <SDI12.h>
 
 EcoNode node;
 
@@ -19,11 +18,15 @@ void setup() {
     pinMode(LED, OUTPUT);
     digitalWrite(LED, HIGH);
 
+	delay(1000);
+
+	PRINT("Init complete, entering loop.");
 }
 
 void loop() {
-    Serial.println("loop");
+    PRINT("loop");
 
+	node.testFunc();
     //node.execute();
 
     delay(1000);
