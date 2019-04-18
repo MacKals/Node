@@ -14,7 +14,7 @@
 /*
     Defining header format:
     first octet: 76543210
-     0 = reciept (1 = yes)
+     0 = receipt (1 = yes)
      1 = 0
      2 = 0
      3 = 0
@@ -75,11 +75,11 @@ bool available() {
 String readData() {
 	lora.recv(buf, &len);
 
-	// send reciept?
+	// send receipt?
 	return String((char*) buf);
 }
 
-bool sendDataWithReciept(String data, time_t time, uint8_t from, uint8_t to = 0);
+bool sendDataWithReceipt(String data, time_t time, uint8_t from, uint8_t to = 0);
 
 uint8_t lastSNR() {
 	//return lora.lastSNR();
