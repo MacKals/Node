@@ -11,8 +11,25 @@
 #include <SDI12_Teensy35.h>
 //#include "Libraries/Arduino-SDI-12-Teensy-35/src/SDI12_Teensy35.h"
 
+enum SensorType {
+    Serial12, //SDI-12
+    Digital,
+    Analog,
+    Differential,
+};
+
 class EcoSensor {
 
+  SensorType sensorType;
+  uint8_t pin1;
+  uint8_t pin2; // differential signals
+
+public:
+
+  SensorType getSensorType();
+  double read();
+
+private:
     // Define the SDI-12 bus
     SDI12 sdi12 = SDI12(SDI12_DATA_PIN);
 
