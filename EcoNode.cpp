@@ -26,6 +26,7 @@ void EcoNode::init(){ //start radio
    // get connected sensors
    //SDI-12
    
+
 }
 
 
