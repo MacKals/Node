@@ -20,7 +20,6 @@ enum SensorType {
 
 class EcoSensor {
 
-<<<<<<< HEAD
   SensorType sensorType;
   uint8_t pin1;
   uint8_t pin2; // differential signals
@@ -31,7 +30,6 @@ public:
   double read();
 
 private:
-=======
     // Define the SDI-12 bus
     SDI12 sdi12 = SDI12(SDI12_DATA_PIN);
 
@@ -79,7 +77,6 @@ public:
 		}
 		return data;
     }
->>>>>>> 031c0b2f65c2331d383e80b6004aae2f9c361f59
 
 };
 

@@ -6,8 +6,6 @@
 
 #include "EcoRadio.hpp"
 
-
-
 bool EcoRadio::sendDataWithReciept(String data, time_t time, uint8_t from, uint8_t to) {
 
     uint8_t firstOctet = B10000000; // expecting reciept
