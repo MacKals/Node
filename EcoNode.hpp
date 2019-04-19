@@ -8,35 +8,51 @@
 #define _ECONODE_H
 
 #include "Configuration.hpp"
-//#include "EcoRadio.hpp"
+#include "EcoRadio.hpp"
 #include "EcoSensor.hpp"
 #include <Arduino.h>
 #include <list>
 
+#include <TimeLib.h> // sync RTC
+
 
 class EcoNode {
 
-    // EcoRadio radio;
+    EcoRadio radio;
 	EcoSensor sensors = EcoSensor();
+
+	int timeLastData;
 
 public:
 
 EcoNode();
+
     void init();
 
-    std::list<EcoNode> getChildren();
-    void collectSensorData();
-    bool transmitDataFromMemory(uint8_t pa);
-    std::list<EcoSensor> getSensors();
+	void loop() {
+		this->radio.loop();
 
-private:
-  void pollSensor(EcoSensor s);
-  int getAddress();
+		// send message every 10 seconds
 
-	void testFunc() {
-		PRINT(sensors.readAllSensors());
+
 	}
 
+	void sendData() {
+		PRINT("sending data");
+		this->radio.send(sensors.readAllSensors());
+	}
+
+
+//     void collectSensorData();
+//     bool transmitDataFromMemory(uint8_t pa);
+//
+// private:
+// 	void pollSensor(EcoSensor s);
+	int getAddress();
+
+	// TIME
+	void setRTC();
+	String timeAsString();
 };
 
 #endif

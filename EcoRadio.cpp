@@ -20,6 +20,11 @@
 # define FILLMEIN (#dont edit this, edit the lines that use FILLMEIN)
 #endif
 
+
+static uint8_t mydata[] = "This is a test message.";
+static osjob_t sendjob;
+
+
 // This EUI must be in little-endian format, so least-significant-byte
 // first. When copying an EUI from ttnctl output, this means to reverse
 // the bytes. For TTN issued EUIs the last bytes should be 0xD5, 0xB3,
@@ -37,8 +42,6 @@ void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
 static const u1_t PROGMEM APPKEY[16] = { 0xF2, 0x81, 0xF2, 0x91, 0x2E, 0x5B, 0x79, 0x5B, 0x08, 0x18, 0x8B, 0xDF, 0x29, 0xBD, 0x98, 0xB4 };
 void os_getDevKey (u1_t* buf) {  memcpy_P(buf, APPKEY, 16);}
 
-static uint8_t mydata[] = "Hello, world!";
-static osjob_t sendjob;
 
 // Schedule TX every this many seconds (might become longer due to duty
 // cycle limitations).
@@ -51,6 +54,20 @@ const lmic_pinmap lmic_pins = {
     .rst = 24,
     .dio = {28, 29, 30},
 };
+
+
+void do_send(osjob_t* j){
+    // Check if there is not a current TX/RX job running
+    if (LMIC.opmode & OP_TXRXPEND) {
+        Serial.println(F("OP_TXRXPEND, not sending"));
+    } else {
+        // Prepare upstream data transmission at the next possible time.
+        LMIC_setTxData2(1, mydata, sizeof(mydata)-1, 0);
+        Serial.println(F("Packet queued"));
+    }
+    // Next TX is scheduled after TX_COMPLETE event.
+}
+
 
 void onEvent (ev_t ev) {
     Serial.print(os_getTime());
@@ -159,19 +176,15 @@ void onEvent (ev_t ev) {
     }
 }
 
-void EcoRadio::do_send(osjob_t* j){
-    // Check if there is not a current TX/RX job running
-    if (LMIC.opmode & OP_TXRXPEND) {
-        Serial.println(F("OP_TXRXPEND, not sending"));
-    } else {
-        // Prepare upstream data transmission at the next possible time.
-        LMIC_setTxData2(1, mydata, sizeof(mydata)-1, 0);
-        Serial.println(F("Packet queued"));
-    }
-    // Next TX is scheduled after TX_COMPLETE event.
-}
 
 
-void loop() {
-    os_runloop_once();
+void EcoRadio:: send(String s) {
+	// uint16_t length = s.length();
+	// uint8_t c[length];
+	// for (uint16_t i = 0; i < length; i++) {
+	// 	c[i] = (uint8_t) s.charAt(i);
+	// }
+	//
+	// mydata = c;
+	do_send(&sendjob); // Start job (sending automatically starts OTAA too)
 }

@@ -9,7 +9,7 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-//#define DEBUG // comment to stop serial printing
+#define DEBUG // comment to stop serial printing
 
 #ifdef DEBUG
  #define PRINT(x)  Serial.println (x)

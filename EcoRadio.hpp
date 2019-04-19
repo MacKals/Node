@@ -17,9 +17,6 @@
 
 class EcoRadio {
 
-	void do_send(osjob_t* j);
-
-
 public:
 	EcoRadio() {
 		Serial.println("radio object created");
@@ -30,9 +27,15 @@ public:
 
 		os_init();    // LMIC init
 		LMIC_reset(); // Reset the MAC state. Session and pending data transfers will be discarded.
-
-		do_send(&sendjob); // Start job (sending automatically starts OTAA too)
 	}
+
+	void loop() {
+		// queries replies from LORA module
+		// must keep runing
+		os_runloop_once();
+	}
+
+	void send(String s);
 
 };
 
