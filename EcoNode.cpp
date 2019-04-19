@@ -29,12 +29,18 @@ int EcoNode::getAddress(){
 
 // TIME
 
+
+// --- TIME SYNC --- //
+
 time_t getTeensy3Time() {
   return Teensy3Clock.get();
 }
 
-void EcoNode::setRTC() {
+time_t EcoNode::currentTimeInSeconds() {
+	return getTeensy3Time();
+}
 
+void EcoNode::setRTC() {
 	setSyncProvider(getTeensy3Time);
 
 	if (timeStatus()!= timeSet) {
@@ -65,4 +71,20 @@ String EcoNode::timeAsString() {
 	s += String(month()) + " ";
 	s += String(year());
 	return s;
+}
+
+
+// --- TIMER --- //
+
+
+bool EcoNode::startTimer(uint8_t t) {
+	if (!this->timerDone()) return false;
+
+	this->timerTime = this->currentTimeInSeconds() + t;
+	return true;
+}
+
+bool EcoNode::timerDone() {
+	if (this->currentTimeInSeconds() > timerTime) return true;
+	return false;
 }

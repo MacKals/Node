@@ -33,8 +33,10 @@ EcoNode();
 		this->radio.loop();
 
 		// send message every 10 seconds
-
-
+		if (timerDone()) {
+			this->sendData();
+			this->startTimer(20);
+		}
 	}
 
 	void sendData() {
@@ -51,8 +53,15 @@ EcoNode();
 	int getAddress();
 
 	// TIME
+	time_t currentTimeInSeconds();
 	void setRTC();
 	String timeAsString();
+
+	// delay time in seconds, false if timer allready set
+	bool startTimer(uint8_t time);
+	bool timerDone();
+private:
+	time_t timerTime;
 };
 
 #endif
