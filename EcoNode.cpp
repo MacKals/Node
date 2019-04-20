@@ -20,11 +20,31 @@ void EcoNode::init() {
 	this->sensors.init();
 }
 
+void EcoNode::loop() {
+	this->radio.loop();
+
+	// send message every 10 seconds
+	if (timerDone()) {
+		this->sendData();
+		this->startTimer(60);
+	}
+}
+
+void EcoNode::sendData() {
+	PRINT("sending data");
+	this->radio.send(sensors.readAllSensors());
+}
+
+
+
 // can't change address live
 // value between 1 and 63
 int EcoNode::getAddress(){
    return 1*digitalRead(DIP0) + 2*digitalRead(DIP1) + 4*digitalRead(DIP2) + 8*digitalRead(DIP3) + 16*digitalRead(DIP4) + 32*digitalRead(DIP5);
 }
+
+
+
 
 
 // TIME

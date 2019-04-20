@@ -28,21 +28,9 @@ public:
 EcoNode();
 
     void init();
+	void loop();
 
-	void loop() {
-		this->radio.loop();
-
-		// send message every 10 seconds
-		if (timerDone()) {
-			this->sendData();
-			this->startTimer(60);
-		}
-	}
-
-	void sendData() {
-		PRINT("sending data");
-		this->radio.send(sensors.readAllSensors());
-	}
+	void sendData();
 
 
 //     void collectSensorData();
