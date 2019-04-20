@@ -21,9 +21,6 @@
 #endif
 
 
-static uint8_t mydata[] = "This is a test message.";
-static osjob_t sendjob;
-
 
 // This EUI must be in little-endian format, so least-significant-byte
 // first. When copying an EUI from ttnctl output, this means to reverse
@@ -56,40 +53,27 @@ const lmic_pinmap lmic_pins = {
 };
 
 
-void do_send(osjob_t* j){
-    // Check if there is not a current TX/RX job running
-    if (LMIC.opmode & OP_TXRXPEND) {
-        Serial.println(F("OP_TXRXPEND, not sending"));
-    } else {
-        // Prepare upstream data transmission at the next possible time.
-        LMIC_setTxData2(1, mydata, sizeof(mydata)-1, 0);
-        Serial.println(F("Packet queued"));
-    }
-    // Next TX is scheduled after TX_COMPLETE event.
-}
-
-
 void onEvent (ev_t ev) {
     Serial.print(os_getTime());
     Serial.print(": ");
     switch(ev) {
         case EV_SCAN_TIMEOUT:
-            Serial.println(F("EV_SCAN_TIMEOUT"));
+            PRINT(F("EV_SCAN_TIMEOUT"));
             break;
         case EV_BEACON_FOUND:
-            Serial.println(F("EV_BEACON_FOUND"));
+            PRINT(F("EV_BEACON_FOUND"));
             break;
         case EV_BEACON_MISSED:
-            Serial.println(F("EV_BEACON_MISSED"));
+            PRINT(F("EV_BEACON_MISSED"));
             break;
         case EV_BEACON_TRACKED:
-            Serial.println(F("EV_BEACON_TRACKED"));
+            PRINT(F("EV_BEACON_TRACKED"));
             break;
         case EV_JOINING:
-            Serial.println(F("EV_JOINING"));
+            PRINT(F("EV_JOINING"));
             break;
         case EV_JOINED:
-            Serial.println(F("EV_JOINED"));
+            PRINT(F("EV_JOINED"));
             {
               u4_t netid = 0;
               devaddr_t devaddr = 0;
@@ -116,75 +100,73 @@ void onEvent (ev_t ev) {
 	    // size, we don't use it in this example.
             LMIC_setLinkCheckMode(0);
             break;
-        /*
-        || This event is defined but not used in the code. No
-        || point in wasting codespace on it.
-        ||
-        || case EV_RFU1:
-        ||     Serial.println(F("EV_RFU1"));
-        ||     break;
-        */
+
+        case EV_RFU1:
+             PRINT(F("EV_RFU1"));
+             break;
         case EV_JOIN_FAILED:
-            Serial.println(F("EV_JOIN_FAILED"));
+            PRINT(F("EV_JOIN_FAILED"));
             break;
         case EV_REJOIN_FAILED:
-            Serial.println(F("EV_REJOIN_FAILED"));
+            PRINT(F("EV_REJOIN_FAILED"));
             break;
         case EV_TXCOMPLETE:
-            Serial.println(F("EV_TXCOMPLETE (includes waiting for RX windows)"));
+            PRINT(F("EV_TXCOMPLETE (includes waiting for RX windows)"));
             if (LMIC.txrxFlags & TXRX_ACK)
-              Serial.println(F("Received ack"));
+              PRINT(F("Received ack"));
             if (LMIC.dataLen) {
               Serial.print(F("Received "));
               Serial.print(LMIC.dataLen);
-              Serial.println(F(" bytes of payload"));
+              PRINT(F(" bytes of payload"));
             }
             // Schedule next transmission
-            os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
+            // os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
             break;
         case EV_LOST_TSYNC:
-            Serial.println(F("EV_LOST_TSYNC"));
+            PRINT(F("EV_LOST_TSYNC"));
             break;
         case EV_RESET:
-            Serial.println(F("EV_RESET"));
+            PRINT(F("EV_RESET"));
             break;
         case EV_RXCOMPLETE:
             // data received in ping slot
-            Serial.println(F("EV_RXCOMPLETE"));
+            PRINT(F("EV_RXCOMPLETE"));
             break;
         case EV_LINK_DEAD:
-            Serial.println(F("EV_LINK_DEAD"));
+            PRINT(F("EV_LINK_DEAD"));
             break;
         case EV_LINK_ALIVE:
-            Serial.println(F("EV_LINK_ALIVE"));
+            PRINT(F("EV_LINK_ALIVE"));
             break;
-        /*
-        || This event is defined but not used in the code. No
-        || point in wasting codespace on it.
-        ||
-        || case EV_SCAN_FOUND:
-        ||    Serial.println(F("EV_SCAN_FOUND"));
-        ||    break;
-        */
+        case EV_SCAN_FOUND:
+        	PRINT(F("EV_SCAN_FOUND"));
+        	break;
         case EV_TXSTART:
-            Serial.println(F("EV_TXSTART"));
+            PRINT(F("EV_TXSTART"));
             break;
         default:
             Serial.print(F("Unknown event: "));
-            Serial.println((unsigned) ev);
+            PRINT((unsigned) ev);
             break;
     }
 }
 
 
-
 void EcoRadio:: send(String s) {
-	// uint16_t length = s.length();
-	// uint8_t c[length];
-	// for (uint16_t i = 0; i < length; i++) {
-	// 	c[i] = (uint8_t) s.charAt(i);
-	// }
-	//
-	// mydata = c;
-	do_send(&sendjob); // Start job (sending automatically starts OTAA too)
+	uint16_t length = s.length();
+	uint8_t sendArray[length];
+	for (uint16_t i = 0; i < length; i++) {
+		sendArray[i] = (uint8_t) s.charAt(i);
+	}
+
+	// Check if there is not a current TX/RX job running
+	if (LMIC.opmode & OP_TXRXPEND) {
+		PRINT(F("OP_TXRXPEND, not sending"));
+	} else {
+		// Prepare upstream data transmission at the next possible time.
+		LMIC_setTxData2(1, sendArray, length, 0);
+		PRINT(F("Packet queued"));
+	}
+	// Next TX is scheduled after TX_COMPLETE event.
+
 }

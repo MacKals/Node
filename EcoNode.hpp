@@ -35,7 +35,7 @@ EcoNode();
 		// send message every 10 seconds
 		if (timerDone()) {
 			this->sendData();
-			this->startTimer(20);
+			this->startTimer(60);
 		}
 	}
 
