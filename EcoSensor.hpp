@@ -80,4 +80,30 @@ public:
 
 };
 
+class Sensor {
+protected:
+    char address; // sensor address
+
+public:
+    // Return address of sensor as a character
+    char getAddress() {
+        return address;
+    }
+
+    void EcoSensor(char address) {
+        this->address = address;
+    }
+
+    // return data read by sensor as a string. Start with address followed b
+    // by comma and information
+    virtual String readDataToString();
+};
+
+
+class AnalogSensor : public Sensor {
+
+
+
+};
+
 #endif
