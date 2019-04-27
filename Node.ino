@@ -27,7 +27,7 @@ void setup() {
 
 	PRINTLN("Init complete, entering loop.");
 	node.sendData();
-
+    //AnalogSensor s('a');
 }
 
 void loop() {
