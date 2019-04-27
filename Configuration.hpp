@@ -23,6 +23,17 @@
 #endif
 
 
+// ---- POWER SAVE ----
+// Methods and calls to remove when wanting to conserve power
+// but that might have to make operator more carefull.
+// Limitations:
+// - all sensors must be connected when system power up
+//
+
+#define POWER_SAVE
+
+
+
 // ---- RF95 ----
 
 #define RF95_FREQ 915.0 // MHz, transmission frequency
