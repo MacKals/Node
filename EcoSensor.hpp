@@ -67,7 +67,7 @@ public:
 		for (byte i = 'a'; i <= 'z'; i++) if (this->checkActive(i)) {this->sdi12_addr += (char) i;}   // scan address space a-z
 		for (byte i = 'A'; i <= 'Z'; i++) if (this->checkActive(i)) {this->sdi12_addr += (char) i;}   // scan address space A-Z
 
-		Serial.println("Found " + String(sdi12_addr.length()) + " at " + sdi12_addr);
+		PRINTLN("Found " + String(sdi12_addr.length()) + " at " + sdi12_addr);
 	}
 
     String readAllSensors() {

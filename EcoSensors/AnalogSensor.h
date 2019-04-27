@@ -7,6 +7,8 @@
 #ifndef _ANALOGSENSOR_H
 #define _ANALOGSENSOR_H
 
+#include "Sensor.h"
+
 class AnalogSensor : public Sensor {
 private:
     const uint8_t pin;

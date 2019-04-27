@@ -7,29 +7,43 @@
 #ifndef _SDISENSOR_H
 #define _SDISENSOR_H
 
+#include "Sensor.h"
+#include <SDI12_Teensy35.h>
+
 class SDISensor : public Sensor {
+private:
+    const SDI12 sdiBus;
+    const pin pin;
+
+    String sensorAddresses = "";
 
 public:
 
-    // // return array of all uninitialized sdi sensors
-    // static sdiSensor * getAllActiveSensors() {
-    //     return ;
-    // }
+    SDISensor(char address, uint8_t pin)
+     : Sensor(address), sdiBus(pin), pin(pin) {
 
-    sdiSensor(char address)
-     : Sensor(address) {}
+        // SDI-12 bus must be initialized with init method
+        this->sdiBus.init();
+        delay(30); // TODO: incrase? decrease?
 
-    uint16_t readData() {
-        return 0;
+        this->sensorAddress = this->getAllActiveAddresses(); // TODO: change?
     }
 
-    String readDataToString() {
-        return "";
-    }
+    // Sensor methods
+    String readDataToString();
+    bool sensorPresent();
 
-    bool sensorPresent() {
-        return false;
-    }
+    // SDISensor spesific methods
+public:
+    String getAllActiveAddresses();
+    void printInfo(char i);
+
+private:
+    String printBufferToString();
+    String takeMeasurement(char i);
+    bool checkActive(char i);
+    bool changeAddress(char from, char to);
+    bool addressAttached(char i);
 };
 
 #endif
