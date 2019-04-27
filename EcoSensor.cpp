@@ -125,7 +125,7 @@ bool EcoSensor::addressAttached(char i) {
 }
 
 bool EcoSensor::changeAddress(char from, char to) {
-	PRINT("Address " + String(from) + " changed to " + String(to));
+	PRINTLN("Address " + String(from) + " changed to " + String(to));
 
 	String command = "";
 	command += (char) from;

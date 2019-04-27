@@ -12,10 +12,10 @@ EcoNode node;
 void setup() {
     Serial.begin(115200);
 	while (!Serial);  // Wait for Arduino Serial Monitor to open
-	
+
     delay(100);
 
-	PRINT("Started.");
+	PRINTLN("Started.");
 	delay(500);
 
     node.init(); // init the EcoNode object
@@ -25,13 +25,13 @@ void setup() {
 
 	delay(1000);
 
-	PRINT("Init complete, entering loop.");
+	PRINTLN("Init complete, entering loop.");
 	node.sendData();
 
 }
 
 void loop() {
-    // PRINT("loop");
+    // PRINTLN("loop");
 
 	node.loop();
 

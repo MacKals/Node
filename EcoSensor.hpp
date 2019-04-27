@@ -44,7 +44,7 @@ private:
 public:
 
 	void init() {
-		PRINT("Init sensor class.");
+		PRINTLN("Init sensor class.");
 
 		this->sdi12.begin();
 		delay(500);
@@ -57,7 +57,7 @@ public:
 	}
 
 	void attachAllSDI12() {
-		PRINT("Attaching all SDI-12 nodes.");
+		PRINTLN("Attaching all SDI-12 nodes.");
 
 		// clear existing
 		sdi12_addr = "";

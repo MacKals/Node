@@ -12,7 +12,7 @@ EcoNode::EcoNode() {
 }
 
 void EcoNode::init() {
-	PRINT("Init node class.");
+	PRINTLN("Init node class.");
 
 	this->setRTC();
 
@@ -31,7 +31,7 @@ void EcoNode::loop() {
 }
 
 void EcoNode::sendData() {
-	PRINT("sending data");
+	PRINTLN("sending data");
 	this->radio.send(sensors.readAllSensors());
 }
 
@@ -64,10 +64,10 @@ void EcoNode::setRTC() {
 	setSyncProvider(getTeensy3Time);
 
 	if (timeStatus()!= timeSet) {
-		PRINT("Unable to sync with the RTC");
+		PRINTLN("Unable to sync with the RTC");
 	} else {
-		PRINT("RTC has set the system time");
-		PRINT(this->timeAsString());
+		PRINTLN("RTC has set the system time");
+		PRINTLN(this->timeAsString());
 	}
 }
 
