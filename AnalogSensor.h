@@ -16,9 +16,7 @@ private:
 public:
 
     AnalogSensor(char address, uint8_t pin)
-     : Sensor(address) {
-        this->pin = pin;
-    }
+     : Sensor(address), pin(pin) {}
 
     uint16_t readData() {
         analogReadAveraging(10);

@@ -7,6 +7,8 @@
 #ifndef _SENSOR_H
 #define _SENSOR_H
 
+#include <Arduino.h>
+
 class Sensor {
 
 protected:
@@ -19,9 +21,7 @@ public:
     }
 
     // Default constructor
-    Sensor(char address) {
-        this->address = address;
-    }
+    Sensor(char address) : address(address) {}
 
     // Return data read by sensor as a string. Start with address followed b
     // by comma and information

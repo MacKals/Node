@@ -7,12 +7,11 @@
 #include "EcoNode.hpp"
 
 
-//Constructor
-EcoNode::EcoNode() {
-}
-
 void EcoNode::init() {
-	PRINTLN("Init node class.");
+	PRINTLN("Node class initializing.");
+
+	pinMode(LED, OUTPUT);
+	digitalWrite(LED, HIGH);
 
 	this->setRTC();
 
@@ -20,7 +19,9 @@ void EcoNode::init() {
 	this->sensors.init();
 }
 
+
 void EcoNode::loop() {
+
 	this->radio.loop();
 
 	// send message every 10 seconds
@@ -28,11 +29,13 @@ void EcoNode::loop() {
 		this->sendData();
 		this->startTimer(60);
 	}
+
+	return this->loop(); // infinite loop
 }
 
 void EcoNode::sendData() {
 	PRINTLN("sending data");
-	this->radio.send(sensors.readAllSensors());
+	this->radio.send(sensors.getFullDataString());
 }
 
 

@@ -8,8 +8,10 @@
 #define _ECONODE_H
 
 #include "Configuration.hpp"
+
 #include "EcoRadio.hpp"
-#include "EcoSensor.hpp"
+#include "EcoSensors.hpp"
+
 #include <Arduino.h>
 #include <list>
 
@@ -19,19 +21,16 @@
 class EcoNode {
 
     EcoRadio radio;
-	EcoSensor sensors = EcoSensor();
+	EcoSensors sensors;
 
 	int timeLastData;
 
 public:
 
-EcoNode();
-
     void init();
 	void loop();
 
 	void sendData();
-
 
 //     void collectSensorData();
 //     bool transmitDataFromMemory(uint8_t pa);
