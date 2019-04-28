@@ -12,23 +12,20 @@
 class Sensor {
 
 protected:
-    const char address; // sensor address
+    const uint8_t pin;     // digital pin number of connected sensor
+    const uint8_t address; // address assigned to device on our network
 
 public:
-    // Return address of sensor as a character
-    char getAddress() {
-        return address;
-    }
 
-    // Default constructor
-    Sensor(char address) : address(address) {}
+    // Default constructor, address = pin
+    Sensor(uint8_t pin) : pin(pin), address(pin) {}
 
     // Return data read by sensor as a string. Start with address followed b
     // by comma and information
-    virtual String readDataToString()=0;
+    virtual String readDataToString();
 
     // Return true if a sensor is found to be connected
-    virtual bool sensorPresent()=0;
+    virtual bool sensorPresent();
 
     // function() = 0 is called a virtual function. Forces subclasses to implement.
 };

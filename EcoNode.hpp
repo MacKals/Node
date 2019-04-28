@@ -28,9 +28,9 @@ class EcoNode {
 public:
 
     void init();
-	void loop();
+    void loop();
 
-	void sendData();
+    void sendData();
 
 //     void collectSensorData();
 //     bool transmitDataFromMemory(uint8_t pa);

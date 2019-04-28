@@ -15,14 +15,11 @@
 class SDISensor : public Sensor {
 private:
     SDI12 sdiBus;
-    const uint8_t pin;
-
     String sensorAddresses = "";
 
 public:
 
-    SDISensor(char address, uint8_t pin)
-     : Sensor(address), sdiBus(pin), pin(pin) {}
+    SDISensor(uint8_t pin) : Sensor(pin), sdiBus(pin) {}
 
     // Sensor methods
     String readDataToString();
@@ -30,6 +27,7 @@ public:
 
     // SDISensor spesific methods
 public:
+    char getFirstActiveAddress();
     String getAllActiveAddresses();
     void printInfo(char i);
     void init(); // must be called before use

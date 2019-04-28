@@ -19,7 +19,8 @@ String SDISensor::readDataToString() {
 }
 
 bool SDISensor::sensorPresent() {
-    return sensorAddresses.length() > 0;
+    String addr = this->sensorAddresses;
+    return (addr.length() > 0) && !(addr.equals(" "));
 }
 
 // SDISensor spesific methods
@@ -30,9 +31,17 @@ void SDISensor::init() {
     this->sdiBus.begin();
     delay(30); // TODO: incrase? decrease?
 
-    this->sensorAddresses = this->getAllActiveAddresses(); // TODO: change?
+    this->sensorAddresses = this->getFirstActiveAddress();
 }
 
+char SDISensor::getFirstActiveAddress() {
+    for (byte addr = '0'; addr <= '9'; addr++) if (this->checkActive(addr)) {return (char) addr;}   // scan address space 0-9
+    for (byte addr = 'a'; addr <= 'z'; addr++) if (this->checkActive(addr)) {return (char) addr;}   // scan address space a-z
+    for (byte addr = 'A'; addr <= 'Z'; addr++) if (this->checkActive(addr)) {return (char) addr;}   // scan address space A-Z
+
+    PRINTLN("no active address found");
+    return ' ';
+}
 
 String SDISensor::getAllActiveAddresses() {
     PRINTLN("Attaching all SDI-12 nodes.");

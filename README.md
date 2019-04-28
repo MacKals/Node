@@ -9,7 +9,7 @@ The [ASCII format](https://www.arduino.cc/en/Reference/ASCIIchart) is used for e
 
 
 ## Sensor addresses
-Each sensor will need an associated address that is unique for each node. The SDI-12 protocol requires unique char addresses. Analog and digital sensors will get addresses based on the terminal block they are connected to (see silkscreen next to relevant terminals).
+Each sensor will need an associated address that is unique for each node. The SDI-12 protocol requires unique char addresses for devices on the same bus. Due to the requirenments for manually changing addresses, and as this interferes with the header pin based addressing scheme, each header has a separate bus. All sensors will get addresses based on the terminal block they are connected to (see silkscreen next to relevant terminals).
 
 Supported communication protocols
 - SDI-12 (6 headers)
@@ -18,12 +18,11 @@ Supported communication protocols
 - SPI (2 headers)
 - UART (2 headers)
 
-Addressing scheme:
-One char as address
-- SDI-12: use address from bus (a-z, 0-9)
-- Analog/UART/SPI: use address from header (A-Z)
+This allows for reuse-it is possible to configure the analog sensor pins to operate as digital pins (if we do not go with a scheme of an external ADC).
 
-Avoid using the character range A-Z for the SDI bus to prevent conflict with the addresses used to configure headers etc.
+Addressing scheme:
+One uint8 as address corresponding to the digital pin the sensor is connected to. Some of the headers provide bus interfaces (SDI12, SPI), but due to the expansive IO of the system, these are assumed to each hold one device only. 
+
 
 ### Configuring SDI-12 device addresses
 TODO: make instructions

@@ -22,7 +22,7 @@ public:
 		Serial.println("radio object created");
 	}
 
-	bool init() {
+	void init() {
 		SPI.setSCK(RFM95_CLK); // update clock pin
 
 		os_init();    // LMIC init
