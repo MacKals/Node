@@ -7,30 +7,26 @@
 #include "EcoSensors.hpp"
 
 void EcoSensors::attachAnalogSensors() {
-	uint8_t num = sizeof(this->analogPins)/sizeof(this->analogPins[0]);
-
-	for (uint8_t i = 0; i < num; i++) {
-		uint8_t p = this->analogPins[i];
+	for (const uint8_t &p : this->analogPins) {
 		AnalogSensor s(p);
-		if (s.sensorPresent()) {
-			Sensor s2 = (Sensor) s;
-			this->sensors.push_back(s2);
-		}
+		if (s.sensorPresent()) sensors.push_back((Sensor) s);
 	}
-	//
-	// for (const uint8_t &p : this->analogPins) {
-	// 	AnalogSensor s(p);
-	// 	if (s.sensorPresent()) sensors.push_back((Sensor) s);
-	// }
 }
 
 void EcoSensors::attachSDISensors() {
-
 	// TODO: check all pins that are not allready used by analog as well?
+	for (auto p : sdiPins) {
+		SDISensor s(p);
+		s.init();
+		if (s.sensorPresent()) this->sensors.push_back((Sensor) s);
+	}
+}
 
-	// for (auto p : sdiPins) {
-	// 	SDISensor s(p);
-	// 	s.init();
-	// 	if (s.sensorPresent()) sensors.push_back((Sensor) s);
-	// }
+void EcoSensors::attachFlowSensors() {
+	// TODO: check all pins that are not allready used?
+	for (auto p : flowPins) {
+		// TODO: attach interrupt?
+		FlowSensor s(p);
+		if (s.sensorPresent()) this->sensors.push_back((Sensor) s);
+	}
 }

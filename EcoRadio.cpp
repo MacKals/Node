@@ -85,12 +85,12 @@ void onEvent (ev_t ev) {
               Serial.print("devaddr: ");
               Serial.println(devaddr, HEX);
               Serial.print("artKey: ");
-              for (int i=0; i<sizeof(artKey); ++i) {
+              for (uint i=0; i<sizeof(artKey); ++i) {
                 Serial.print(artKey[i], HEX);
               }
               Serial.println("");
               Serial.print("nwkKey: ");
-              for (int i=0; i<sizeof(nwkKey); ++i) {
+              for (uint i=0; i<sizeof(nwkKey); ++i) {
                 Serial.print(nwkKey[i], HEX);
               }
               Serial.println("");

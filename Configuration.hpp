@@ -32,6 +32,7 @@
 
 #define POWER_SAVE
 
+#define DATA_RECORD_INTERVAL 30
 
 
 // ---- RF95 ----

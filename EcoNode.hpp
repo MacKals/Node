@@ -11,17 +11,18 @@
 
 #include "EcoRadio.hpp"
 #include "EcoSensors.hpp"
+#include "EcoTimer.hpp"
 
 #include <Arduino.h>
 #include <list>
 
-#include <TimeLib.h> // sync RTC
 
 
 class EcoNode {
 
     EcoRadio radio;
 	EcoSensors sensors;
+    EcoTimer timer;
 
 	int timeLastData;
 
@@ -39,16 +40,7 @@ public:
 // 	void pollSensor(EcoSensor s);
 	int getAddress();
 
-	// TIME
-	time_t currentTimeInSeconds();
-	void setRTC();
-	String timeAsString();
-
-	// delay time in seconds, false if timer allready set
-	bool startTimer(uint8_t time);
-	bool timerDone();
-private:
-	time_t timerTime;
+    void setRTC();
 };
 
 #endif

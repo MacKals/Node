@@ -11,11 +11,9 @@
 
 class Sensor {
 
-protected:
+public:
     const uint8_t pin;     // digital pin number of connected sensor
     const uint8_t address; // address assigned to device on our network
-
-public:
 
     // Default constructor, address = pin
     Sensor(uint8_t pin) : pin(pin), address(pin) {}

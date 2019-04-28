@@ -7,6 +7,7 @@
 #ifndef _ECOSENSORS_H
 #define _ECOSENSORS_H
 
+#include <Arduino.h>
 #include "Configuration.hpp"
 
 #include "Sensor.h"
@@ -19,31 +20,46 @@
 class EcoSensors {
 private:
     const uint8_t analogPins[4] = {A7, A6, A9, A8};
-    const uint8_t sdiPins[2] = {33, 3};
+    const uint8_t sdiPins[5] = {2, 3, 17, 22, 33};
+    const uint8_t flowPins[2] = {};
+
     // must include array sizes
 
     std::vector<Sensor> sensors;
 
     void attachAnalogSensors();
     void attachSDISensors();
+    void attachFlowSensors();
 
 public:
 
     void init() {
         this->attachAnalogSensors();
         this->attachSDISensors();
+        // this->attachFlowSensors();
+
+        PRINT("Connected sensors: ");
+        for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {
+            PRINT(s->address);
+            PRINT(" ");
+        }
+        PRINTLN("");
     }
 
     String getFullDataString() {
-        String data = "";
-        // TODO: include time-stamp
+
+        time_t t = Teensy3Clock.get(); // s, time since 1.1.1970 (unix time)
+        // TODO: encode t as bits, not ASCII
+        String data = String(t);
 
         // loop through sensors using itterators
         for (auto sensor = this->sensors.begin();
-             sensor != this->sensors.end();
-             ++sensor) {
-            data += sensor->readDataToString();
+                  sensor != this->sensors.end();
+                  ++sensor) {
+            data += "&" + sensor->readDataToString();
         }
+
+        PRINTLN(data);
         return data;
     }
 };
