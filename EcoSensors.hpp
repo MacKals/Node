@@ -8,9 +8,11 @@
 #define _ECOSENSORS_H
 
 #include "Configuration.hpp"
+
 #include "Sensor.h"
 #include "AnalogSensor.h"
 #include "SDISensor.h"
+#include "FlowSensor.h"
 
 #include <vector>
 

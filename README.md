@@ -21,7 +21,7 @@ Supported communication protocols
 This allows for reuse-it is possible to configure the analog sensor pins to operate as digital pins (if we do not go with a scheme of an external ADC).
 
 Addressing scheme:
-One uint8 as address corresponding to the digital pin the sensor is connected to. Some of the headers provide bus interfaces (SDI12, SPI), but due to the expansive IO of the system, these are assumed to each hold one device only. 
+One uint8 as address corresponding to the digital pin the sensor is connected to. Some of the headers provide bus interfaces (SDI12, SPI), but due to the expansive IO of the system, these are assumed to each hold one device only.
 
 
 ### Configuring SDI-12 device addresses
@@ -33,10 +33,16 @@ TODO: make instructions
 3. connect all sensors, label all non SDI-12 sensors and take note of configuration
 4. configure
 
+## Dependencies
+The project relies on a number of Arduino libraries, including:
+- [Arduino-SDI-12-Teensy-35](https://github.com/MacKals/Arduino-SDI-12-Teensy-35)
+- [FlowMeter](https://github.com/sekdiy/FlowMeter)
 
-# Software TODO
+Before building the project, all these libraries need to be installed in the Arduino environment (download zip, extract and drag folder to the Arduino/libraries directory on your computer).
+
+## Software TODO
 -
 
-# ECAD TODO
+## ECAD TODO
 - Include header for config/reset type jumpers?
 - Include headers to expose more IO?
