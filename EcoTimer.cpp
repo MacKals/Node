@@ -7,14 +7,16 @@
 
 #include "EcoTimer.hpp"
 
+
+
 bool EcoTimer::startTimer(uint16_t t) {
 	if (!timerDone()) return false;
 
-	timerTime = currentTimeInSeconds() + t;
+	timerTime = Teensy3Clock.get() + t;
 	return true;
 }
 
 bool EcoTimer::timerDone() {
-	if (currentTimeInSeconds() > timerTime) return true;
+	if (Teensy3Clock.get() > timerTime) return true;
 	return false;
 }

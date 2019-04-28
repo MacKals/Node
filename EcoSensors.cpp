@@ -9,7 +9,7 @@
 void EcoSensors::attachAnalogSensors() {
 	for (const uint8_t &p : this->analogPins) {
 		AnalogSensor s(p);
-		if (s.sensorPresent()) sensors.push_back((Sensor) s);
+		if (s.sensorPresent()) this->sensors.push_back((Sensor) s);
 	}
 }
 

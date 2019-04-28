@@ -34,7 +34,7 @@ private:
 public:
 
     void init() {
-        this->attachAnalogSensors();
+        //this->attachAnalogSensors();
         this->attachSDISensors();
         // this->attachFlowSensors();
 
