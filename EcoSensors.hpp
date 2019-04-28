@@ -20,12 +20,12 @@
 class EcoSensors {
 private:
     const uint8_t analogPins[4] = {A7, A6, A9, A8};
-    const uint8_t sdiPins[5] = {2, 3, 17, 22, 33};
+    const uint8_t sdiPins[2] = {2, 3};//, 17, 22, 33};
     const uint8_t flowPins[2] = {};
 
     // must include array sizes
 
-    std::vector<Sensor> sensors;
+    std::vector<Sensor*> sensors;
 
     void attachAnalogSensors();
     void attachSDISensors();
@@ -40,7 +40,7 @@ public:
 
         PRINT("Connected sensors: ");
         for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {
-            PRINT(s->address);
+            PRINT((*s)->address);
             PRINT(" ");
         }
         PRINTLN("");
@@ -56,7 +56,12 @@ public:
         for (auto sensor = this->sensors.begin();
                   sensor != this->sensors.end();
                   ++sensor) {
-            data += "&" + sensor->readDataToString();
+
+
+            PRINTLN("here");
+            PRINTLN((*sensor)->address);
+            data += "&" + (*sensor)->readDataToString();
+            PRINTLN("not here");
         }
 
         PRINTLN(data);

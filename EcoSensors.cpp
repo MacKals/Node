@@ -8,17 +8,24 @@
 
 void EcoSensors::attachAnalogSensors() {
 	for (const uint8_t &p : this->analogPins) {
-		AnalogSensor s(p);
-		if (s.sensorPresent()) this->sensors.push_back((Sensor) s);
+		AnalogSensor *s = new AnalogSensor(p);
+		if (s->sensorPresent()) this->sensors.push_back(s);
 	}
 }
 
 void EcoSensors::attachSDISensors() {
 	// TODO: check all pins that are not allready used by analog as well?
 	for (auto p : sdiPins) {
-		SDISensor s(p);
-		s.init();
-		if (s.sensorPresent()) this->sensors.push_back((Sensor) s);
+		SDISensor *s = new SDISensor(p);
+		s->init();
+
+		PRINT(s->sensorPresent());
+		PRINT("  ");
+
+		Sensor* cast = s;
+		PRINTLN(cast->sensorPresent());
+
+		if (s->sensorPresent()) this->sensors.push_back(s);
 	}
 }
 
@@ -26,7 +33,7 @@ void EcoSensors::attachFlowSensors() {
 	// TODO: check all pins that are not allready used?
 	for (auto p : flowPins) {
 		// TODO: attach interrupt?
-		FlowSensor s(p);
-		if (s.sensorPresent()) this->sensors.push_back((Sensor) s);
+		FlowSensor *s = new FlowSensor(p);
+		if (s->sensorPresent()) this->sensors.push_back(s);
 	}
 }

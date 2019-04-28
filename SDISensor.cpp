@@ -10,11 +10,15 @@
 // Sensor methods
 
 String SDISensor::readDataToString() {
+    PRINTLN("SDISenso::readDataToString");
     String allData = "";
     for (int i = 0; 0 < this->sensorAddresses.length(); i++) {
         char addr = this->sensorAddresses.charAt(i);
+        PRINTLN(addr);
         allData += takeMeasurement(addr);
+        PRINTLN(allData);
     }
+    PRINTLN("exited loop");
     return allData;
 }
 

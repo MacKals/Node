@@ -18,15 +18,15 @@ private:
     String sensorAddresses = "";
 
 public:
-    
+
     SDISensor(uint8_t pin) : Sensor(pin), sdiBus(pin) {}
 
     // Sensor methods
     String readDataToString();
     bool sensorPresent();
 
+
     // SDISensor spesific methods
-public:
     char getFirstActiveAddress();
     String getAllActiveAddresses();
     void printInfo(char i);

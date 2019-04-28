@@ -20,16 +20,10 @@ public:
 
     // Return data read by sensor as a string. Start with address followed b
     // by comma and information
-    virtual String readDataToString() {
-        PRINTLN("readDataToString not implemented in subclass");
-        return "";
-    }
+    virtual String readDataToString() = 0;
 
     // Return true if a sensor is found to be connected
-    virtual bool sensorPresent() {
-        PRINTLN("sensorPresent not implemented in subclass");
-        return false;
-    }
+    virtual bool sensorPresent() = 0;
 
     // function() = 0 is called a virtual function. Forces subclasses to implement.
 };

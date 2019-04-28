@@ -6,12 +6,23 @@
 
 #include "EcoNode.hpp"
 
+#include <Time.h>
+#include <TimeAlarms.h>
+
+bool ledStatus = false;
+
+void blinkLED() {
+	PRINTLN("LED flip");
+	digitalWrite(LED, ledStatus);
+	ledStatus = !ledStatus;
+}
 
 void EcoNode::init() {
 	PRINTLN("Node class initializing.");
 
 	pinMode(LED, OUTPUT);
 	digitalWrite(LED, HIGH);
+	Alarm.timerRepeat(2, blinkLED);
 
 	this->setRTC();
 
@@ -35,7 +46,8 @@ void EcoNode::loop() {
 
 void EcoNode::sendData() {
 	PRINTLN("sending data");
-	this->radio.send(sensors.getFullDataString());
+	String data = this->sensors.getFullDataString();
+	this->radio.send(data);
 }
 
 
