@@ -139,7 +139,7 @@ String SDISensor::takeMeasurement(char addr){
 	command += addr;
 	command += "D0!"; // SDI-12 command to get data [address][D][dataOption][!]
 	this->sdiBus.sendCommand(command);
-	while(!this->sdiBus.available()>1); // wait for acknowlegement
+	while (!(this->sdiBus.available()>1)); // wait for acknowlegement
 	delay(300); // let the data transfer
 
 	String data = printBufferToString();
@@ -175,7 +175,7 @@ bool SDISensor::addressAttached(char addr) {
 	return this->sensorAddresses.indexOf(addr) == -1 ? false : true;
 }
 
-bool SDISensor::changeAddress(char from, char to) {
+void SDISensor::changeAddress(char from, char to) {
 	PRINTLN("Address " + String(from) + " changed to " + String(to));
 
 	String command = "";

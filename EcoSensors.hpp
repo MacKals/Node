@@ -18,8 +18,9 @@
 
 class EcoSensors {
 private:
-    uint8_t analogPins[] = {};
-    uint8_t sdiPins[] = {};
+    const uint8_t analogPins[4] = {A7, A6, A9, A8};
+    const uint8_t sdiPins[2] = {33, 3};
+    // must include array sizes
 
     std::vector<Sensor> sensors;
 

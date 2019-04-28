@@ -18,7 +18,7 @@ private:
     String sensorAddresses = "";
 
 public:
-
+    
     SDISensor(uint8_t pin) : Sensor(pin), sdiBus(pin) {}
 
     // Sensor methods
@@ -36,7 +36,7 @@ private:
     String printBufferToString();
     String takeMeasurement(char i);
     bool checkActive(char i);
-    bool changeAddress(char from, char to);
+    void changeAddress(char from, char to);
     bool addressAttached(char i);
 };
 
