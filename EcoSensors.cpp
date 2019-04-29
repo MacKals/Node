@@ -21,10 +21,12 @@ void EcoSensors::attachSDISensors() {
 
 		if (s->sensorPresent()) {
 			this->sensors.push_back(s);
+			PRINT("Pin " + String(p) + " found sensor \t");
 			s->printInfo();
 		} else {
 			s->end();
 			delete s;
+			PRINTLN("Pin " + String(p) + " no sensor");
 		}
 	}
 }

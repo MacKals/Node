@@ -12,6 +12,7 @@
 #include "EcoRadio.hpp"
 #include "EcoSensors.hpp"
 #include "EcoTimer.hpp"
+#include "EcoSD.hpp"
 
 #include <Arduino.h>
 #include <list>
@@ -23,6 +24,7 @@ class EcoNode {
     EcoRadio radio;
 	EcoSensors sensors;
     EcoTimer timer;
+    EcoSD sd;
 
 	int timeLastData;
 

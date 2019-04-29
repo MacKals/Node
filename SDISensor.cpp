@@ -42,8 +42,7 @@ char SDISensor::getFirstActiveAddress() {
     for (byte addr = 'a'; addr <= 'z'; addr++) if (this->checkActive(addr)) {return (char) addr;}   // scan address space a-z
     for (byte addr = 'A'; addr <= 'Z'; addr++) if (this->checkActive(addr)) {return (char) addr;}   // scan address space A-Z
 
-    PRINTLN("no active address found");
-    return ' ';
+    return ' '; // no active address found
 }
 
 String SDISensor::getAllActiveAddresses() {
@@ -99,7 +98,7 @@ String SDISensor::printInfoToString(char addr){
 void SDISensor::printInfo() {
     for (int i = 0; i < this->sensorAddresses.length(); i++) {
         char addr = this->sensorAddresses.charAt(i);
-        PRINTLN(String(addr) + " " + this->printInfoToString(addr));
+        PRINTLN("addr: " + String(addr) + ", desc: " + this->printInfoToString(addr));
     }
 }
 
