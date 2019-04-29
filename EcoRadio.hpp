@@ -56,7 +56,7 @@ public:
 		os_runloop_once();
 	}
 
-	void send(String s);
+	bool send(String s);
 
 };
 
