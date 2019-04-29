@@ -17,9 +17,13 @@
 #ifdef DEBUG
  #define PRINT(x)  Serial.print(x)
  #define PRINTLN(x)  Serial.println(x)
+ #define PRINT2(x,y)  Serial.print(x,y)
+ #define PRINTLN2(x,y) Serial.println(x,y)
 #else
  #define PRINT(x)
  #define PRINTLN(x)
+ #define PRINT2(x,y)
+ #define PRINTLN2(x,y)
 #endif
 
 

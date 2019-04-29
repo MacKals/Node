@@ -46,8 +46,8 @@ void EcoNode::loop() {
 }
 
 void EcoNode::sendData() {
-	PRINTLN("sending data");
 	String data = this->sensors.getFullDataString();
+	PRINTLN("sending data \t" + data);
 	this->sd.writeDataToFile(data);
 	this->radio.send(data);
 }

@@ -6,38 +6,20 @@
 
 #include "EcoRadio.hpp"
 
-//
-// For normal use, we require that you edit the sketch to replace FILLMEIN
-// with values assigned by the TTN console. However, for regression tests,
-// we want to be able to compile these scripts. The regression tests define
-// COMPILE_REGRESSION_TEST, and in that case we define FILLMEIN to a non-
-// working but innocuous value.
-//
-#ifdef COMPILE_REGRESSION_TEST
-# define FILLMEIN 0
-#else
-# warning "You must replace the values marked FILLMEIN with real values from the TTN control panel!"
-# define FILLMEIN (#dont edit this, edit the lines that use FILLMEIN)
-#endif
 
+// little-endian format (least-significant-byte)
+// LoRaWAN Connection Parameters
+static u1_t APPEUI[8]={ 0x39, 0xA7, 0x01, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 }; // little-endian
+static u1_t DEVEUI[8]={ 0x5B, 0xF5, 0xF4, 0xFB, 0x08, 0x04, 0xBF, 0x00 }; // little-endian
+static u1_t APPKEY[16] = { 0xF2, 0x81, 0xF2, 0x91, 0x2E, 0x5B, 0x79, 0x5B, 0x08, 0x18, 0x8B, 0xDF, 0x29, 0xBD, 0x98, 0xB4 }; // big-endian
 
-
-// This EUI must be in little-endian format, so least-significant-byte
-// first. When copying an EUI from ttnctl output, this means to reverse
-// the bytes. For TTN issued EUIs the last bytes should be 0xD5, 0xB3,
-// 0x70.
-static const u1_t PROGMEM APPEUI[8]={ 0x39, 0xA7, 0x01, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
 void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
-
-// This should also be in little endian format, see above.
-static const u1_t PROGMEM DEVEUI[8]={ 0x5B, 0xF5, 0xF4, 0xFB, 0x08, 0x04, 0xBF, 0x00 };
 void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
-
-// This key should be in big endian format (or, since it is not really a
-// number but a block of memory, endianness does not really apply). In
-// practice, a key taken from ttnctl can be copied as-is.
-static const u1_t PROGMEM APPKEY[16] = { 0xF2, 0x81, 0xF2, 0x91, 0x2E, 0x5B, 0x79, 0x5B, 0x08, 0x18, 0x8B, 0xDF, 0x29, 0xBD, 0x98, 0xB4 };
 void os_getDevKey (u1_t* buf) {  memcpy_P(buf, APPKEY, 16);}
+
+void EcoRadio::setIDs(String APPEUI, String DEVEUI, String APPKEY) {
+    // TOOD: convert strings on SD to hex and assign to variables
+}
 
 
 // Schedule TX every this many seconds (might become longer due to duty
@@ -54,8 +36,8 @@ const lmic_pinmap lmic_pins = {
 
 
 void onEvent (ev_t ev) {
-    Serial.print(os_getTime());
-    Serial.print(": ");
+    PRINT(os_getTime());
+    PRINT(": \t");
     switch(ev) {
         case EV_SCAN_TIMEOUT:
             PRINTLN(F("EV_SCAN_TIMEOUT"));
@@ -80,24 +62,24 @@ void onEvent (ev_t ev) {
               u1_t nwkKey[16];
               u1_t artKey[16];
               LMIC_getSessionKeys(&netid, &devaddr, nwkKey, artKey);
-              Serial.print("netid: ");
-              Serial.println(netid, DEC);
-              Serial.print("devaddr: ");
-              Serial.println(devaddr, HEX);
-              Serial.print("artKey: ");
+              PRINT("netid: ");
+              PRINTLN2(netid, DEC);
+              PRINT("devaddr: ");
+              PRINTLN2(devaddr, HEX);
+              PRINT("artKey: ");
               for (uint i=0; i<sizeof(artKey); ++i) {
-                Serial.print(artKey[i], HEX);
+                PRINT2(artKey[i], HEX);
               }
-              Serial.println("");
-              Serial.print("nwkKey: ");
+              PRINTLN("");
+              PRINT("nwkKey: ");
               for (uint i=0; i<sizeof(nwkKey); ++i) {
-                Serial.print(nwkKey[i], HEX);
+                PRINT2(nwkKey[i], HEX);
               }
-              Serial.println("");
+              PRINTLN("");
             }
             // Disable link check validation (automatically enabled
             // during join, but because slow data rates change max TX
-	    // size, we don't use it in this example.
+	        // size, we don't use it in this example.
             LMIC_setLinkCheckMode(0);
             break;
 
@@ -145,14 +127,14 @@ void onEvent (ev_t ev) {
             PRINTLN(F("EV_TXSTART"));
             break;
         default:
-            Serial.print(F("Unknown event: "));
+            PRINT(F("Unknown event: "));
             PRINTLN((unsigned) ev);
             break;
     }
 }
 
 
-void EcoRadio:: send(String s) {
+void EcoRadio::send(String s) {
 	uint16_t length = s.length();
 	uint8_t sendArray[length];
 	for (uint16_t i = 0; i < length; i++) {
@@ -161,11 +143,12 @@ void EcoRadio:: send(String s) {
 
 	// Check if there is not a current TX/RX job running
 	if (LMIC.opmode & OP_TXRXPEND) {
+        PRINT(os_getTime());
+        PRINT(": \t");
 		PRINTLN(F("OP_TXRXPEND, not sending"));
 	} else {
 		// Prepare upstream data transmission at the next possible time.
 		LMIC_setTxData2(1, sendArray, length, 0);
-		PRINTLN(F("Packet queued"));
 	}
 	// Next TX is scheduled after TX_COMPLETE event.
 

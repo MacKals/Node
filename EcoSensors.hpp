@@ -21,7 +21,7 @@ class EcoSensors {
 private:
     const uint8_t analogPins[4] = {A7, A6, A9, A8};
     // const uint8_t sdiPins[1] = {3};
-    const uint8_t sdiPins[5] = {2, 3, 17, 22, 33};
+    const uint8_t sdiPins[4] = {2, 3, 17, 22}; //, 33};
     const uint8_t flowPins[2] = {};
 
     // must include array sizes
@@ -57,8 +57,6 @@ public:
         for (auto s = sensors.begin(); s != sensors.end(); ++s) {
             data += "&" + (*s)->readDataToString();
         }
-
-        PRINTLN(data);
         return data;
     }
 };
