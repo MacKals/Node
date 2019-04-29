@@ -36,7 +36,11 @@ void EcoNode::loop() {
 
 	this->radio.loop();
 
-	// send message every 10 seconds
+	if (radio.ready() && sd.cachedData()) {
+		radio.send(sd.popData());
+	}
+
+	// read data and send at given interval
 	if (this->timer.timerDone()) {
 		this->sendData();
 		this->timer.startTimer(DATA_RECORD_INTERVAL);
@@ -48,8 +52,9 @@ void EcoNode::loop() {
 void EcoNode::sendData() {
 	String data = this->sensors.getFullDataString();
 	PRINTLN("sending data \t" + data);
-	this->sd.writeDataToFile(data);
-	this->radio.send(data);
+	if (!this->radio.send(data)) {
+		sd.cachData(data);
+	}
 }
 
 
