@@ -36,9 +36,9 @@ void EcoNode::loop() {
 
 	this->radio.loop();
 
-	if (radio.ready() && sd.cachedData()) {
-		radio.send(sd.popData());
-	}
+	// if (radio.ready() && sd.cachedData()) {
+	// 	radio.send(sd.popData());
+	// }
 
 	// read data and send at given interval
 	if (this->timer.timerDone()) {
