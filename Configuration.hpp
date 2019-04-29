@@ -39,6 +39,10 @@
 #define DATA_RECORD_INTERVAL 30
 
 
+// ---- FILES ----
+#define CONFIG_FILE_NAME "config.txt"
+#define MAX_FILE_SIZE 16000000 // bytes, max size of files on SD card
+
 // ---- RF95 ----
 
 #define RF95_FREQ 915.0 // MHz, transmission frequency

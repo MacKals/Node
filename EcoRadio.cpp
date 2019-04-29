@@ -134,15 +134,14 @@ void onEvent (ev_t ev) {
 }
 
 
-void EcoRadio::send(String s) {
+bool EcoRadio::send(String s) {
 	uint16_t length = s.length();
 	uint8_t sendArray[length];
 	for (uint16_t i = 0; i < length; i++) {
 		sendArray[i] = (uint8_t) s.charAt(i);
 	}
 
-	// Check if there is not a current TX/RX job running
-	if (LMIC.opmode & OP_TXRXPEND) {
+	if (!this->ready()) {
         PRINT(os_getTime());
         PRINT(": \t");
 		PRINTLN(F("OP_TXRXPEND, not sending"));
@@ -152,4 +151,10 @@ void EcoRadio::send(String s) {
     // Prepare upstream data transmission at the next possible time.
 	LMIC_setTxData2(1, sendArray, length, 0);
 	return true;
+}
+
+bool EcoRadio::ready() {
+    // Check if there is not a current TX/RX job running
+    if (LMIC.opmode & OP_TXRXPEND) return false;
+    return true;
 }

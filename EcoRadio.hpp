@@ -57,7 +57,7 @@ public:
 	}
 
 	bool send(String s);
-
+	bool ready();
 };
 
 #endif
