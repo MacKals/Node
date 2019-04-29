@@ -5,13 +5,17 @@
 //  2019-03-23
 
 #include "EcoNode.hpp"
-
+#include "Configuration.hpp"
 EcoNode node;
 
 void setup() {
 
-    Serial.begin(115200);
-    delay(100);
+    #ifdef DEBUG
+        Serial.begin(115200);
+        while (!Serial) {}
+    #endif
+
+    delay(200);
 
     node.init();
 }

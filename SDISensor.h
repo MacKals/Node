@@ -29,8 +29,11 @@ public:
     // SDISensor spesific methods
     char getFirstActiveAddress();
     String getAllActiveAddresses();
-    void printInfo(char i);
+    String printInfoToString(char i);
+    void printInfo();
+
     void init(); // must be called before use
+    void end();
 
 private:
     String printBufferToString();

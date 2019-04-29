@@ -19,13 +19,13 @@ void EcoSensors::attachSDISensors() {
 		SDISensor *s = new SDISensor(p);
 		s->init();
 
-		PRINT(s->sensorPresent());
-		PRINT("  ");
-
-		Sensor* cast = s;
-		PRINTLN(cast->sensorPresent());
-
-		if (s->sensorPresent()) this->sensors.push_back(s);
+		if (s->sensorPresent()) {
+			this->sensors.push_back(s);
+			s->printInfo();
+		} else {
+			s->end();
+			delete s;
+		}
 	}
 }
 
