@@ -48,8 +48,6 @@ TODO: make instructions
 - SPI (2 headers)
 - UART (2 headers)
 
-
-
 ### Identification procedure
 1. configure node to work with The Things Network and physically label the node
 2. configure SDI-12 sensor addresses and label
@@ -60,7 +58,8 @@ TODO: make instructions
 Before building the project, all these libraries need to be installed in the Arduino environment (download zip, extract and drag folder to the Arduino/libraries directory on your computer).
 
 ## Software TODO
--
+- Add CO2 sensor support
+- Fix file bug
 
 ## ECAD TODO
 - Include header for config/reset type jumpers?
