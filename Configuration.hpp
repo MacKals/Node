@@ -36,7 +36,7 @@
 
 #define POWER_SAVE
 
-#define DATA_RECORD_INTERVAL 30
+#define DATA_RECORD_INTERVAL 10
 
 
 // ---- FILES ----

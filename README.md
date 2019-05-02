@@ -1,6 +1,6 @@
 # Codebase for UBC Ecohydrology Sensor Nodes
 
-The code in this repository is made to provide a flexible solution for connecting sensors to a LoRa based node. The code is developed around the Teensy 3.5 microcontroller development board.
+The code in this repository is made to provide a flexible solution for connecting sensors to a [LoRa based sensor node](https://github.com/UBCecohydro/AgWaterMon_CAD). The code is developed around the Teensy 3.5 microcontroller development board.
 
 - Launch the Node.ino file in the Arduino IDE to compile the library.
 - The class EcoNode is launched as the top level system manager, performing scheduling and coordinating the funcitonality of the system. Functionality is encapsulated in subclasses in the following manner:
