@@ -42,6 +42,7 @@ void EcoNode::loop() {
 
 	// read data and send at given interval
 	if (this->timer.timerDone()) {
+		blinkLED();
 		this->sendData();
 		this->timer.startTimer(DATA_RECORD_INTERVAL);
 	}
