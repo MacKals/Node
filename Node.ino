@@ -12,7 +12,7 @@ void setup() {
 
     #ifdef DEBUG
         Serial.begin(115200);
-        // while (!Serial) {}
+        while (!Serial) {}
     #endif
 
     delay(200);

@@ -7,9 +7,16 @@
 #include "EcoSensors.hpp"
 
 void EcoSensors::attachAnalogSensors() {
-	for (const uint8_t &p : this->analogPins) {
+	for (const uint8_t &p : analogPins) {
 		AnalogSensor *s = new AnalogSensor(p);
-		if (s->sensorPresent()) this->sensors.push_back(s);
+		if (s->sensorPresent()) sensors.push_back(s);
+	}
+}
+
+void EcoSensors::attachPWMSensors() {
+	for (const uint8_t &p : sdiPins) {
+		PWMSensor *s = new PWMSensor(p);
+		if (s->sensorPresent()) sensors.push_back(s);
 	}
 }
 

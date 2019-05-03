@@ -20,6 +20,7 @@ To launch code and interface with the microprocessor, install the [Arduino IDE](
 The project relies on a number of Arduino libraries, including:
 - [Arduino-SDI-12-Teensy-35](https://github.com/MacKals/Arduino-SDI-12-Teensy-35) for interfacing with SDI-12 sensors.
 - [Arduino-LMIC](https://github.com/mcci-catena/arduino-lmic) for LoRaWAN communication
+- [Teensy Snooze](https://github.com/duff2013/Snooze) for low power mode
 - (not used, refference) [FlowMeter](https://github.com/sekdiy/FlowMeter)
 
 

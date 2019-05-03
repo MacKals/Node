@@ -14,6 +14,7 @@
 #include "AnalogSensor.h"
 #include "SDISensor.h"
 #include "FlowSensor.h"
+#include "PWMSensor.h"
 
 #include <vector>
 
@@ -29,15 +30,17 @@ private:
     std::vector<Sensor*> sensors;
 
     void attachAnalogSensors();
+    void attachPWMSensors();
     void attachSDISensors();
     void attachFlowSensors();
 
 public:
 
     void init() {
-        //this->attachAnalogSensors();
-        this->attachSDISensors();
-        // this->attachFlowSensors();
+        attachPWMSensors();
+        attachAnalogSensors();
+        attachFlowSensors();
+        attachSDISensors();
 
         PRINT("Connected sensors: ");
         for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {

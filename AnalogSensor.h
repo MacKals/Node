@@ -14,7 +14,9 @@ private:
 
 public:
 
-    AnalogSensor(uint8_t pin) : Sensor(pin) {}
+    AnalogSensor(uint8_t pin) : Sensor(pin) {
+        pinMode(pin, INPUT);
+    }
 
     // Sensor methods
 
@@ -23,12 +25,11 @@ public:
         uint8_t lsb = data & 0xff; // keep only lower digits
         uint8_t msb = (data >> 8); // bit shift
 
-        char c[] = {(char) this->address, (char) msb, (char) lsb};
-        return String(c);
+        return String(address) + String((char) msb) + String((char) lsb);
     }
 
     bool sensorPresent() {
-        return this->readData() >= 10;
+        return readData() >= 10;
     }
 
 
@@ -36,7 +37,7 @@ public:
 
     uint16_t readData() {
         analogReadAveraging(10);
-        return analogRead(this->pin);
+        return analogRead(pin);
     }
 };
 
