@@ -8,49 +8,54 @@
 #define _FLOWSENSOR_H
 
 #include "Sensor.h"
-
-// interrupt must be attached by class, something like this:
-// attachInterrupt(this->pin, this->meterISR, RISING);
-
+#include "Configuration.hpp"
 
 class FlowSensor : public Sensor {
 private:
 
-    volatile uint32_t flowCount = 0; // accessed by ISR
     uint32_t currentCountStartTime = 0; // us
 
-    void meterISR() {
-        flowCount++; // let meter count the pulses
-    }
+    bool initialized = false;
 
 public:
+    volatile uint32_t count = 0; // sense count, accessed by ISR
 
-    FlowSensor(uint8_t pin) : Sensor(pin) {}
-    const uint32_t period = 1000; // ms, 1s between measurement update
+public:
     // Sensor methods
+    FlowSensor(uint8_t pin) : Sensor(pin) {}
+    ~FlowSensor();
 
     String readDataToString() {
-        return String(this->readData());
+        String data = String(getAverageFlow()) + "," + String(getTotalFlow());
+        reset();
+        return data;
     }
 
     bool sensorPresent() {
-        // todo: how to determine this? Wait and see if ticks happen?
-        return true;
+        uint32_t val = analogRead(pin);
+        if (val < 8) return true;
+        if (val == 1023) return true;
+        return false;
     }
 
-
+    
     // AnalogSensor spesific methods
 
-    float readData() {
+    bool init();
 
-        time_t deltaT = millis() - currentCountStartTime;
-        float ticksPerSecond = ((float) this->flowCount) / deltaT;
+    float getTotalFlow() {
+        return count;
+    }
 
+    float getAverageFlow() {
+        time_t deltaT = Teensy3Clock.get() - currentCountStartTime;
+        return ((float) count) / deltaT;
+    }
+
+    void reset() {
         // set up for next measurnment
-        this->flowCount = 0;
-        this->currentCountStartTime = millis();
-
-        return ticksPerSecond;
+        count = 0;
+        currentCountStartTime = Teensy3Clock.get();
     }
 };
 

@@ -43,11 +43,13 @@ void EcoNode::loop() {
 	// read data and send at given interval
 	if (timer.timerDone()) {
 		blinkLED();
-		// endData();
+		sendData();
+
+		// String data = this->sensors.getFullDataString();
+		// PRINTLN("read data \t" + data);
+
 		timer.startTimer(DATA_RECORD_INTERVAL);
 	}
-
-	return this->loop(); // infinite loop
 }
 
 void EcoNode::sendData() {

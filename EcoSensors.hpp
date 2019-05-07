@@ -20,7 +20,8 @@
 
 class EcoSensors {
 private:
-    const uint8_t threePortPins[7] = {2, 3, 17, 22, 33, 34, 35};
+    // const uint8_t threePortPins[7] = {2, 3, 17, 22, 33, 34, 35};
+    const uint8_t threePortPins[3] = {33, 34, 35};
 
     // must include array sizes
 
@@ -36,19 +37,7 @@ private:
 
 public:
 
-    void init() {
-        attachPWMSensors();
-        attachAnalogSensors();
-        attachFlowSensors();
-        // attachSDISensors();
-
-        PRINT("Connected sensors: ");
-        for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {
-            PRINT((*s)->address);
-            PRINT(" ");
-        }
-        PRINTLN("");
-    }
+    void init();
 
     String getFullDataString() {
 

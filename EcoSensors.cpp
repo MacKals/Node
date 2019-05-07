@@ -7,6 +7,20 @@
 #include "EcoSensors.hpp"
 
 
+void EcoSensors::init() {
+	attachPWMSensors();
+	attachFlowSensors();
+	attachAnalogSensors();
+	// attachSDISensors();
+
+	PRINT("Connected sensors: ");
+	for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {
+		PRINT((*s)->address);
+		PRINT(" ");
+	}
+	PRINTLN("");
+}
+
 
 // Check if there is sensor of relevant type on pin and add it to array of sensors if so.
 // Release pointer if not present.
@@ -59,7 +73,7 @@ void EcoSensors::attachSDISensors() {
 		if (!pinInUse(p)) {
 			SDISensor *s = new SDISensor(p);
 			s->init();
-			if (!attachSensorIfPresent(s)) s->end();
+			if (!attachSensorIfPresent(s)) s->end(); // free resources
 		}
 	}
 	PRINTLN();
@@ -68,10 +82,9 @@ void EcoSensors::attachSDISensors() {
 void EcoSensors::attachFlowSensors() {
 	PRINT("Attaching flow sensors: \t");
 	for (auto p : threePortPins) {
-		// TODO: attach interrupt?
 		if (!pinInUse(p)) {
 			FlowSensor *s = new FlowSensor(p);
-			attachSensorIfPresent(s);
+			if (attachSensorIfPresent(s)) s->init(); // activate interrupt
 		}
 	}
 	PRINTLN();
