@@ -6,6 +6,10 @@
 
 #include "EcoSensors.hpp"
 
+
+
+// Check if there is sensor of relevant type on pin and add it to array of sensors if so.
+// Release pointer if not present.
 bool EcoSensors::attachSensorIfPresent(Sensor * s) {
 	if (s->sensorPresent()) {
 		PRINT("Pin " + String(s->pin) + " ok, \t");
@@ -26,9 +30,10 @@ bool EcoSensors::pinInUse(uint8_t pin) {
 	return false;
 }
 
+
 void EcoSensors::attachAnalogSensors() {
-	PRINT("Attaching analog sensors: ");
-	for (const uint8_t &p : analogPins) {
+	PRINT("Attaching analog sensors: \t");
+	for (const uint8_t &p : threePortPins) {
 		if (!pinInUse(p)) {
 			AnalogSensor *s = new AnalogSensor(p);
 			attachSensorIfPresent(s);
@@ -38,8 +43,8 @@ void EcoSensors::attachAnalogSensors() {
 }
 
 void EcoSensors::attachPWMSensors() {
-	PRINT("Attaching PWM sensors: ");
-	for (const uint8_t &p : sdiPins) {
+	PRINT("Attaching PWM sensors: \t\t");
+	for (const uint8_t &p : threePortPins) {
 		if (!pinInUse(p)) {
 			PWMSensor *s = new PWMSensor(p);
 			attachSensorIfPresent(s);
@@ -49,9 +54,8 @@ void EcoSensors::attachPWMSensors() {
 }
 
 void EcoSensors::attachSDISensors() {
-	// TODO: check all pins that are not allready used by analog as well?
-	PRINT("Attaching SDI sensors: ");
-	for (auto p : sdiPins) {
+	PRINT("Attaching SDI sensors: \t");
+	for (auto p : threePortPins) {
 		if (!pinInUse(p)) {
 			SDISensor *s = new SDISensor(p);
 			s->init();
@@ -62,8 +66,8 @@ void EcoSensors::attachSDISensors() {
 }
 
 void EcoSensors::attachFlowSensors() {
-	// TODO: check all pins that are not allready used?
-	for (auto p : flowPins) {
+	PRINT("Attaching flow sensors: \t");
+	for (auto p : threePortPins) {
 		// TODO: attach interrupt?
 		if (!pinInUse(p)) {
 			FlowSensor *s = new FlowSensor(p);

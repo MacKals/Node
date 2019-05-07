@@ -16,6 +16,7 @@ public:
 
     AnalogSensor(uint8_t pin) : Sensor(pin) {
         pinMode(pin, INPUT);
+        analogReadRes(13); // 13 bit analog input, 0V -> 0, 3.3V -> 8192
     }
 
     // Sensor methods
@@ -30,7 +31,26 @@ public:
     }
 
     bool sensorPresent() {
-        return readData() >= 100;
+
+        uint16_t sampleData1 = readData();
+        delay(10);
+        pinMode(pin, INPUT_PULLUP);
+        delay(50);
+        uint16_t sampleData2 = readData();
+
+        // PRINTLN(String(sampleData1) + " followed by " + String(sampleData2));
+
+        // assume connected if low with pullup
+        bool connected = (sampleData2 < 7800);
+
+        // chech if input was high before pullup
+        if (abs(sampleData1 - sampleData2) < 50) {
+            // pullup made little difference, assume sensor connected
+            connected = true;
+        }
+
+        pinMode(pin, INPUT);
+        return connected;
     }
 
 

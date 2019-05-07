@@ -20,10 +20,7 @@
 
 class EcoSensors {
 private:
-    const uint8_t analogPins[5] = {2, 3, 17, 22, 33};
-    // const uint8_t sdiPins[1] = {3};
-    const uint8_t sdiPins[5] = {2, 3, 17, 22, 33};
-    const uint8_t flowPins[0] = {};
+    const uint8_t threePortPins[7] = {2, 3, 17, 22, 33, 34, 35};
 
     // must include array sizes
 
