@@ -20,14 +20,17 @@
 
 class EcoSensors {
 private:
-    const uint8_t analogPins[4] = {A7, A6, A9, A8};
+    const uint8_t analogPins[5] = {2, 3, 17, 22, 33};
     // const uint8_t sdiPins[1] = {3};
-    const uint8_t sdiPins[4] = {2, 3, 17, 22}; //, 33};
-    const uint8_t flowPins[2] = {};
+    const uint8_t sdiPins[5] = {2, 3, 17, 22, 33};
+    const uint8_t flowPins[0] = {};
 
     // must include array sizes
 
     std::vector<Sensor*> sensors;
+
+    bool attachSensorIfPresent(Sensor * s);
+    bool pinInUse(uint8_t pin);
 
     void attachAnalogSensors();
     void attachPWMSensors();
@@ -40,7 +43,7 @@ public:
         attachPWMSensors();
         attachAnalogSensors();
         attachFlowSensors();
-        attachSDISensors();
+        // attachSDISensors();
 
         PRINT("Connected sensors: ");
         for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {

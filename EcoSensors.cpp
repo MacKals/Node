@@ -6,43 +6,69 @@
 
 #include "EcoSensors.hpp"
 
-void EcoSensors::attachAnalogSensors() {
-	for (const uint8_t &p : analogPins) {
-		AnalogSensor *s = new AnalogSensor(p);
-		if (s->sensorPresent()) sensors.push_back(s);
+bool EcoSensors::attachSensorIfPresent(Sensor * s) {
+	if (s->sensorPresent()) {
+		PRINT("Pin " + String(s->pin) + " ok, \t");
+		sensors.push_back(s);
+		return true;
 	}
+
+	// sensor not present
+	PRINT("Pin " + String(s->pin) + " -, \t");
+	delete s;
+	return false;
+}
+
+bool EcoSensors::pinInUse(uint8_t pin) {
+	for (auto s : sensors) {
+		if (s->pin == pin) return true;
+	}
+	return false;
+}
+
+void EcoSensors::attachAnalogSensors() {
+	PRINT("Attaching analog sensors: ");
+	for (const uint8_t &p : analogPins) {
+		if (!pinInUse(p)) {
+			AnalogSensor *s = new AnalogSensor(p);
+			attachSensorIfPresent(s);
+		}
+	}
+	PRINTLN();
 }
 
 void EcoSensors::attachPWMSensors() {
+	PRINT("Attaching PWM sensors: ");
 	for (const uint8_t &p : sdiPins) {
-		PWMSensor *s = new PWMSensor(p);
-		if (s->sensorPresent()) sensors.push_back(s);
+		if (!pinInUse(p)) {
+			PWMSensor *s = new PWMSensor(p);
+			attachSensorIfPresent(s);
+		}
 	}
+	PRINTLN();
 }
 
 void EcoSensors::attachSDISensors() {
 	// TODO: check all pins that are not allready used by analog as well?
+	PRINT("Attaching SDI sensors: ");
 	for (auto p : sdiPins) {
-		SDISensor *s = new SDISensor(p);
-		s->init();
-
-		if (s->sensorPresent()) {
-			this->sensors.push_back(s);
-			PRINT("Pin " + String(p) + " found sensor \t");
-			s->printInfo();
-		} else {
-			s->end();
-			delete s;
-			PRINTLN("Pin " + String(p) + " no sensor");
+		if (!pinInUse(p)) {
+			SDISensor *s = new SDISensor(p);
+			s->init();
+			if (!attachSensorIfPresent(s)) s->end();
 		}
 	}
+	PRINTLN();
 }
 
 void EcoSensors::attachFlowSensors() {
 	// TODO: check all pins that are not allready used?
 	for (auto p : flowPins) {
 		// TODO: attach interrupt?
-		FlowSensor *s = new FlowSensor(p);
-		if (s->sensorPresent()) this->sensors.push_back(s);
+		if (!pinInUse(p)) {
+			FlowSensor *s = new FlowSensor(p);
+			attachSensorIfPresent(s);
+		}
 	}
+	PRINTLN();
 }

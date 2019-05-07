@@ -21,15 +21,16 @@ public:
     // Sensor methods
 
     String readDataToString() {
-        uint16_t data = this->readData();
-        uint8_t lsb = data & 0xff; // keep only lower digits
-        uint8_t msb = (data >> 8); // bit shift
-
-        return String(address) + String((char) msb) + String((char) lsb);
+        return String(address) + "," + String(readData());
+        // uint16_t data = this->readData();
+        // uint8_t lsb = data & 0xff; // keep only lower digits
+        // uint8_t msb = (data >> 8); // bit shift
+        //
+        // return String(address) + String((char) msb) + String((char) lsb);
     }
 
     bool sensorPresent() {
-        return readData() >= 10;
+        return readData() >= 100;
     }
 
 

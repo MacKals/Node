@@ -24,27 +24,27 @@ void EcoNode::init() {
 	digitalWrite(LED, HIGH);
 	Alarm.timerRepeat(2, blinkLED);
 
-	this->setRTC();
+	setRTC();
 
-	this->radio.init();
-	this->sensors.init();
-	this->sd.init();
+	radio.init();
+	sensors.init();
+	sd.init();
 }
 
 
 void EcoNode::loop() {
 
-	this->radio.loop();
+	radio.loop();
 
 	// if (radio.ready() && sd.cachedData()) {
 	// 	radio.send(sd.popData());
 	// }
 
 	// read data and send at given interval
-	if (this->timer.timerDone()) {
+	if (timer.timerDone()) {
 		blinkLED();
-		this->sendData();
-		this->timer.startTimer(DATA_RECORD_INTERVAL);
+		// endData();
+		timer.startTimer(DATA_RECORD_INTERVAL);
 	}
 
 	return this->loop(); // infinite loop
