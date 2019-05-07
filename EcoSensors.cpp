@@ -9,9 +9,9 @@
 
 void EcoSensors::init() {
 	attachPWMSensors();
+	attachSDISensors();
 	// attachFlowSensors();
 	// attachAnalogSensors();
-	attachSDISensors();
 
 	PRINT("Connected sensors: ");
 	for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {
@@ -21,7 +21,13 @@ void EcoSensors::init() {
 	PRINTLN("");
 }
 
-
+// reads data from all sensors and places them in string
+// Format:
+// - values from different sensors separated by &
+// - starts with unix time-stamp
+// - data from all sensors follow in this format:
+//   - pinNumber:rading1,reading2,reading3 (etc for more parameters)
+// example: 1557236143&3:100000.0,21.8&17:1.27,22.8,1&22:1.39,22.0,1&2:2,2194
 String EcoSensors::getFullDataString() {
 
 	time_t t = Teensy3Clock.get(); // s, time since 1.1.1970 (unix time)
@@ -38,7 +44,7 @@ String EcoSensors::getFullDataString() {
 // Check if there is sensor of relevant type on pin and add it to array of sensors if so.
 bool EcoSensors::attachSensorIfPresent(Sensor * s) {
 	if (s->sensorPresent()) {
-		PRINTLN("pin " + String(s->pin) + " ok \t");
+		PRINT("pin " + String(s->pin) + " ok \t");
 		sensors.push_back(s);
 		return true;
 	}
@@ -57,7 +63,7 @@ bool EcoSensors::pinInUse(uint8_t pin) {
 
 
 void EcoSensors::attachAnalogSensors() {
-	PRINT("Attaching analog sensors: \t");
+	PRINT("Attaching analog sensors:\t");
 	for (const uint8_t &p : threePortPins) {
 		if (!pinInUse(p)) {
 			AnalogSensor *s = new AnalogSensor(p);
@@ -68,7 +74,7 @@ void EcoSensors::attachAnalogSensors() {
 }
 
 void EcoSensors::attachPWMSensors() {
-	PRINT("Attaching PWM sensors: \t\t");
+	PRINT("Attaching PWM sensors:\t\t");
 	for (const uint8_t &p : threePortPins) {
 		if (!pinInUse(p)) {
 			PWMSensor *s = new PWMSensor(p);
@@ -79,7 +85,7 @@ void EcoSensors::attachPWMSensors() {
 }
 
 void EcoSensors::attachSDISensors() {
-	PRINT("Attaching SDI sensors: \t\t");
+	PRINT("Attaching SDI sensors:\t\t");
 	for (auto p : threePortPins) {
 		if (!pinInUse(p)) {
 			SDISensor *s = new SDISensor(p);
@@ -94,7 +100,7 @@ void EcoSensors::attachSDISensors() {
 }
 
 void EcoSensors::attachFlowSensors() {
-	PRINT("Attaching flow sensors: \t");
+	PRINT("Attaching flow sensors:\t\t");
 	for (auto p : threePortPins) {
 		if (!pinInUse(p)) {
 			FlowSensor *s = new FlowSensor(p);
