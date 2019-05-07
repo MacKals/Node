@@ -38,14 +38,14 @@ String EcoSD::cachFileName() {
 bool EcoSD::cachData(String data) {
     this->cachNumber++;
     File file = SD.open(cachFileName().c_str(), FILE_WRITE);
-    PRINT(cachFileName() + " \t");
+    PRINTLN("Caching data to file\n" + cachFileName() + " \t");
     if (file) {
         file.print(data);
         file.close();
 
         return true;
     }
-    PRINTLN("Fail");
+    PRINTLN("Failed to cach data");
     return false;
 }
 

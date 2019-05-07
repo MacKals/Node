@@ -35,24 +35,26 @@ void EcoNode::loop() {
 
 	radio.loop();
 
-	// if (radio.ready() && sd.cachedData()) {
-	// 	radio.send();
-	// }
+	if (radio.ready() && sd.cachedData()) {
+		String data = sd.popData();
+		PRINTLN("Popped data \t" + data);
+		sendData(data);
+	}
 
 	// read data and send at given interval
 	if (timer.timerDone()) {
-		blinkLED();
-		// sendData();
-		// PRINTLN("popped data: " + sd.popData());
-		String data = sensors.getFullDataString();
-		PRINTLN("read data \t" + data);
 
+		blinkLED();
+
+		String data = this->sensors.getFullDataString();
+		sendData(data);
+
+		// start new timer for next data-collection
 		timer.startTimer(DATA_RECORD_INTERVAL);
 	}
 }
 
-void EcoNode::sendData() {
-	String data = this->sensors.getFullDataString();
+void EcoNode::sendData(String data) {
 	PRINTLN("sending data \t" + data);
 	if (!this->radio.send(data)) {
 		sd.cachData(data);

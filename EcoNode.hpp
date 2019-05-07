@@ -33,7 +33,7 @@ public:
     void init();
     void loop();
 
-    void sendData();
+    void sendData(String data);
 
 //     void collectSensorData();
 //     bool transmitDataFromMemory(uint8_t pa);
