@@ -20,7 +20,7 @@ String SDISensor::readDataToString() {
 
 bool SDISensor::sensorPresent() {
     String addr = this->sensorAddresses;
-    return (addr.length() > 0) && !(addr.equals(" "));
+    return (addr.length() > 0) && !(addr.charAt(0) == ' ');
 }
 
 // SDISensor spesific methods
@@ -62,7 +62,8 @@ String SDISensor::getAllActiveAddresses() {
 
 String SDISensor::printBufferToString() {
 	String buffer = "";
-	//this->sdiBus.read(); // consume address
+	this->sdiBus.read(); // consume address
+    this->sdiBus.read(); // consume comma
 	while(this->sdiBus.available()) {
 		char c = this->sdiBus.read();
 		if(c == '+') {
@@ -109,7 +110,8 @@ String SDISensor::takeMeasurement(char addr){
 	String command = "";
 	command += addr;
 	command += "M!"; // SDI-12 measurement command format  [address]['M'][!]
-	this->sdiBus.sendCommand(command);
+
+    this->sdiBus.sendCommand(command);
 	delay(30);
 
 	// wait for acknowlegement with format [address][ttt (3 char, seconds)][number of measurments available, 0-9]
@@ -137,8 +139,7 @@ String SDISensor::takeMeasurement(char addr){
 	unsigned long timerStart = millis();
 
 	while((millis() - timerStart) < (1000 * wait)) {
-		if(this->sdiBus.available()) // sensor can interrupt us to let us know it is done early
-		{
+		if(this->sdiBus.available()) { // sensor can interrupt us to let us know it is done early
 			this->sdiBus.clearBuffer();
 			break;
 		}
@@ -153,12 +154,22 @@ String SDISensor::takeMeasurement(char addr){
 	command += addr;
 	command += "D0!"; // SDI-12 command to get data [address][D][dataOption][!]
 	this->sdiBus.sendCommand(command);
-	while (!(this->sdiBus.available()>1)); // wait for acknowlegement
-	delay(300); // let the data transfer
+
+    timerStart = millis();
+	while (!(this->sdiBus.available()>1)) {
+        // wait for acknowlegement
+
+        // timeout
+        if ((millis() - timerStart) > (10000 * wait)) {
+            return "000";
+        }
+    }
+
+    delay(300); // let the data transfer
 
 	String data = printBufferToString();
-	this->sdiBus.clearBuffer();
 
+	this->sdiBus.clearBuffer();
     this->sdiBus.forceHold();
 
 	return data;
@@ -171,7 +182,6 @@ bool SDISensor::checkActive(char addr){
     this->sdiBus.setActive();
 
 	String myCommand = "";
-	myCommand = "";
 	myCommand += (char) addr;        // sends basic 'acknowledge' command [address][!]
 	myCommand += "!";
 
@@ -182,11 +192,12 @@ bool SDISensor::checkActive(char addr){
 		if(this->sdiBus.available()) { // If we here anything, assume we have an active sensor
 			// PRINTLN(this->printBufferToString());
 			this->sdiBus.clearBuffer();
-			return true;
+            this->sdiBus.forceHold();
+
+            return true;
 		}
 	}
 	this->sdiBus.clearBuffer();
-
     this->sdiBus.forceHold();
 
 	return false;

@@ -18,8 +18,8 @@ public:
     // Default constructor, address = pin
     Sensor(uint8_t pin) : pin(pin), address(pin) {}
 
-    // Return data read by sensor as a string. Start with address followed b
-    // by comma and information
+    // Return data read by sensor as a string.
+    // Format: data as strings, entries separated by commas
     virtual String readDataToString() = 0;
 
     // Return true if a sensor is found to be connected

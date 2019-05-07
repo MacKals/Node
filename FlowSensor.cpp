@@ -57,7 +57,7 @@ bool FlowSensor::init() {
         default:
             return false;
     }
-
+    
     pinMode(pin, INPUT);
     interruptSubscribers[subscriberCount] = this;
     attachInterrupt(pin, isr, RISING);

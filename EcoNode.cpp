@@ -12,7 +12,6 @@
 bool ledStatus = false;
 
 void blinkLED() {
-	PRINTLN("LED flip");
 	digitalWrite(LED, ledStatus);
 	ledStatus = !ledStatus;
 }
@@ -37,16 +36,16 @@ void EcoNode::loop() {
 	radio.loop();
 
 	// if (radio.ready() && sd.cachedData()) {
-	// 	radio.send(sd.popData());
+	// 	radio.send();
 	// }
 
 	// read data and send at given interval
 	if (timer.timerDone()) {
 		blinkLED();
-		sendData();
-
-		// String data = this->sensors.getFullDataString();
-		// PRINTLN("read data \t" + data);
+		// sendData();
+		// PRINTLN("popped data: " + sd.popData());
+		String data = sensors.getFullDataString();
+		PRINTLN("read data \t" + data);
 
 		timer.startTimer(DATA_RECORD_INTERVAL);
 	}
