@@ -28,6 +28,9 @@ class EcoNode {
 
 	int timeLastData;
 
+    void setLoRaParameters();
+    String cleanupString(String s);
+
 public:
 
     void init();

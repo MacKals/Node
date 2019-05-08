@@ -45,7 +45,7 @@ bool EcoSD::cachData(String data) {
 
         return true;
     }
-    PRINTLN("Failed to cach data");
+    if (initialized) PRINTLN("Failed to cach data");
     return false;
 }
 
@@ -70,7 +70,7 @@ String EcoSD::popData() {
         return ret;
     }
 
-    PRINTLN("popData failed");
+    if (initialized) PRINTLN("popData failed");
     return "";
 }
 
@@ -82,15 +82,20 @@ bool EcoSD::cachedData() {
 // ---- Config ----
 
 // return as one string, convert one level up
-String EcoSD::getConfigData() {
-    File file = SD.open(CONFIG_FILE_NAME);
+String EcoSD::getLoRaConfigData() {
+    File file = SD.open(LORAWAN_CONFIG_FILE_NAME);
     if (file) {
-
         String ret = "";
-        while (file.available()) ret += file.read();
+        while (file.available()) {
+            char c = file.read();
+            ret += c;
+        }
+        ret.trim(); // remove ending newline
         file.close();
 
         return ret;
     }
+
+    if (initialized) PRINTLN("Could not find " + String(LORAWAN_CONFIG_FILE_NAME));
     return "";
 }

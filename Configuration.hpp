@@ -40,7 +40,7 @@
 
 
 // ---- FILES ----
-#define CONFIG_FILE_NAME "config.txt"
+#define LORAWAN_CONFIG_FILE_NAME "lorawan.txt"
 #define MAX_FILE_SIZE 16000000 // bytes, max size of files on SD card
 
 // ---- RF95 ----

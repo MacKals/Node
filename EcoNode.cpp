@@ -25,21 +25,58 @@ void EcoNode::init() {
 
 	setRTC();
 
+	sd.init();
+	setLoRaParameters();
+	PRINTLN("set the parameters");
 	radio.init();
 	sensors.init();
-	sd.init();
+
 }
 
+// TODO: Use?
+String EcoNode::cleanupString(String s) {
+	s = s.replace(" ", "");
+	s = s.replace("\n", "");
+	s = s.replace("\t", "");
+	return s;
+}
+
+// must be called after sd init and before radio init (?)
+// get parameters for LoRaWAN transmission from SD card
+void EcoNode::setLoRaParameters() {
+	String data = sd.getLoRaConfigData();
+
+	if (data.length() == 0) {
+		PRINTLN("Config file not found");
+		return;
+	}
+
+	uint16_t i1 = data.indexOf('\n');
+	uint16_t i2 = data.indexOf('\n', i1+1);
+	// PRINT("data in file: ");
+	// PRINTLN(data);
+	// PRINTLN(i1);
+	// PRINTLN(i2);
+
+	String appeui = cleanupString(data.substring(0, i1));
+	String deveui = cleanupString(data.substring(i1, i2));
+	String appkey = cleanupString(data.substring(i2)); // from index to end of string
+
+	// PRINTLN(appeui);
+	// PRINTLN(deveui);
+	// PRINTLN(appkey);
+	radio.setLoRaParameters(appeui, deveui, appkey);
+}
 
 void EcoNode::loop() {
 
 	radio.loop();
 
-	if (radio.ready() && sd.cachedData()) {
-		String data = sd.popData();
-		PRINTLN("Popped data \t" + data);
-		sendData(data);
-	}
+	// if (radio.ready() && sd.cachedData()) {
+	// 	String data = sd.popData();
+	// 	PRINTLN("Popped data \t" + data);
+	// 	sendData(data);
+	// }
 
 	// read data and send at given interval
 	if (timer.timerDone()) {
@@ -60,15 +97,6 @@ void EcoNode::sendData(String data) {
 		sd.cachData(data);
 	}
 }
-
-
-
-// can't change address live
-// value between 1 and 63
-int EcoNode::getAddress(){
-   return 1*digitalRead(DIP0) + 2*digitalRead(DIP1) + 4*digitalRead(DIP2) + 8*digitalRead(DIP3) + 16*digitalRead(DIP4) + 32*digitalRead(DIP5);
-}
-
 
 
 

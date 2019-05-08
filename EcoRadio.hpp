@@ -20,17 +20,12 @@
 
 class EcoRadio {
 
-private:
-	void setIDs(String appeui, String deveui, String appkey);
-
 public:
 	EcoRadio() {
-		Serial.println("radio object created");
+		PRINTLN("radio object created");
 	}
 
-	EcoRadio(String appeui, String deveui, String appkey) {
-		setIDs(appeui, deveui, appkey);
-	}
+	void setLoRaParameters(String deveui, String appeui, String appkey);
 
 	void init() {
 		SPI.setSCK(RFM95_CLK); // update clock pin

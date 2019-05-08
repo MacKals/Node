@@ -33,7 +33,7 @@ public:
     bool cachedData();
 
     // ---- Config ----
-    String getConfigData();
+    String getLoRaConfigData();
 };
 
 

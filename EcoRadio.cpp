@@ -9,16 +9,61 @@
 
 // little-endian format (least-significant-byte)
 // LoRaWAN Connection Parameters
-static u1_t APPEUI[8]={ 0x39, 0xA7, 0x01, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 }; // little-endian
-static u1_t DEVEUI[8]={ 0x5B, 0xF5, 0xF4, 0xFB, 0x08, 0x04, 0xBF, 0x00 }; // little-endian
+static u1_t APPEUI[8] = { 0x39, 0xA7, 0x01, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 }; // little-endian
+static u1_t DEVEUI[8] = { 0x5B, 0xF5, 0xF4, 0xFB, 0x08, 0x04, 0xBF, 0x00 }; // little-endian
 static u1_t APPKEY[16] = { 0xF2, 0x81, 0xF2, 0x91, 0x2E, 0x5B, 0x79, 0x5B, 0x08, 0x18, 0x8B, 0xDF, 0x29, 0xBD, 0x98, 0xB4 }; // big-endian
 
 void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
 void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
-void os_getDevKey (u1_t* buf) {  memcpy_P(buf, APPKEY, 16);}
+void os_getDevKey (u1_t* buf) { memcpy_P(buf, APPKEY, 16);}
 
-void EcoRadio::setIDs(String APPEUI, String DEVEUI, String APPKEY) {
-    // TOOD: convert strings on SD to hex and assign to variables
+
+// lef = little endian format, reverse order
+void stringToHex(String s, u1_t *arr, bool lef = false) {
+    for (uint8_t i = 0; i < s.length(); i += 2) {
+        u1_t d = strtol(s.substring(i,i+2).c_str(), 0, 16);
+
+        if (lef) arr[(s.length()-i)/2-1] = d;
+        else arr[i/2] = d;
+    }
+}
+
+void printArray(u1_t *arr, uint8_t size) {
+    PRINT("Array: ");
+    for (uint8_t i = 0; i< size; i++ ) {
+        Serial.print(arr[i], HEX);
+        PRINT(" ");
+    }
+    PRINTLN();
+}
+
+void EcoRadio::setLoRaParameters(String deveui, String appeui, String appkey) {
+
+    // test for valid key lengths
+    if (appeui.length() != 16) {
+        PRINTLN("Wrong length appeui: " + appeui);
+        return;
+    } else if (deveui.length() != 16) {
+        PRINTLN("Wrong length deveui: " + deveui);
+        return;
+    } else if (appkey.length() != 32) {
+        PRINTLN("Wrong length appkey: " + appkey);
+        return;
+    }
+
+    printArray(APPEUI,8);
+    printArray(DEVEUI,8);
+    printArray(APPKEY,16);
+
+    // update key strings
+    stringToHex(appeui, APPEUI, true);
+    stringToHex(deveui, DEVEUI, true);
+    stringToHex(appkey, APPKEY);
+
+    printArray(APPEUI,8);
+    printArray(DEVEUI,8);
+    printArray(APPKEY,16);
+
 }
 
 
