@@ -2,9 +2,23 @@
 
 The code in this repository is made to provide a flexible solution for connecting sensors to a [LoRa based sensor node](https://github.com/UBCecohydro/AgWaterMon_CAD). The code is developed around the Teensy 3.5 microcontroller development board.
 
+to configure the system, you need to place two configuration files on a micro SD card that you insert into the Teensy. This SD card will also function as buffering for when the node cannot establish connection with a LoRaWAN station.
+
+## Supported Sensor Communication Protocols
+- SDI-12 (max 12)
+- Analog single ended (max 12)
+- Flow sensors (max 12)
+- PWM sensors (max 12)
+- Analog differential (max 2, lacks software support)
+- UART (2 headers, lacks software support)
+
+All single wire interfaces can be connected and used with any of the three pin terminal blocks. A config file can be used to set limits for analog sensors etc.
+
+## An overview of the codebase
 - Launch the Node.ino file in the Arduino IDE to compile the library.
 - The class EcoNode is launched as the top level system manager, performing scheduling and coordinating the funcitonality of the system. Functionality is encapsulated in subclasses in the following manner:
     - `EcoRadio` interfaces with the LoRa module and LoRaWAN communication protocol.
+    - `EcoGPS` interfaces with the U-Blox GPS module.
     - `EcoSD` interfaces with the file system on the SD card. This includes buffering, storage and retrival of dropped packets and reading config information.
     - `EcoSensor` initializes Sensor subclasses and handles collecting data from all initialized instances.
         - `Sensor` is a virtual class that is used as a superclass for sensor classes that have the machinery for connecting to various sensor types. The instance of a `Sensor` subclass will be initialized for each of the sensors connected to the system, and through their shared inheritance, all the different subclasses can be placed in a common vector in the EcoSensor class and interfaced with in the same way. Each Sensor subclass must inplement the two functions `readDataToString()` and `sensorPresent()`.
@@ -24,31 +38,14 @@ The project relies on a number of Arduino libraries, including:
 - [Teensy Snooze](https://github.com/duff2013/Snooze) for low power mode
 - (not used, refference) [FlowMeter](https://github.com/sekdiy/FlowMeter)
 
+Before building the project, all these libraries need to be installed in the Arduino environment (download zip, extract and drag folder to the Arduino/libraries directory on your computer).
 
 ## Addressing
-Each sensor node will have an App Key and EUI information to fascilitate encryted communication with The Things Network. The address can be loaded onto a SD card, and will be read into memory on startup.
-
-TODO: Spesify file and format for this configuration.
-
-The [ASCII format](https://www.arduino.cc/en/Reference/ASCIIchart) is used for encoding characters.
-
-
-## Sensor addresses
-Each sensor will need an associated address that is unique for each node so that data can be decoded properly. The address of a sensor is determined by which digital input on the Teensy it is connected to. Each terminal block is connected to a different digital input, and this address is clearly printed in silkscreen next to the connector.
+- Each node has a unique address on the network. The addresses start at 0 and increments.
+- It must be easy to correlate each sensor with the data it produces. This is done by giving each sensor a unique address depending on which header it is connected to on the node. The header has its address in silkscreen close to the header. This address is the digital pin number on the Teensy that is connected to its data-pin.
 
 ### SDI-12 device addresses
-
 The SDI-12 protocol requires unique char addresses for devices on the same bus. This is fulfilled by placing each SDI-12 device on its own bus, making conflicts in addresses impossible. The system is capable of dynamically determining the address of sensors, so the user does not need to worry about this at all. However, to speed connection times up, use the dafult addres of a device, or addresses 0 and 1 as these are the ones that will be ckecked first.
-
-#### Configuring SDI-12 device addresses
-TODO: make instructions
-
-## Supported communication protocols
-- SDI-12 (6 headers)
-- Analog single ended (6 headers)
-- Analog double ended (2 headers)
-- SPI (2 headers)
-- UART (2 headers)
 
 ### Identification procedure
 1. configure node to work with The Things Network and physically label the node
@@ -56,33 +53,6 @@ TODO: make instructions
 3. connect all sensors, label all non SDI-12 sensors and take note of configuration
 4. configure
 
-
-Before building the project, all these libraries need to be installed in the Arduino environment (download zip, extract and drag folder to the Arduino/libraries directory on your computer).
-
-
-# Configuration files
-## LoRaWAN
-To establish a connection with the LoRaWAN server, you need to register the node as a new device on The Things Network. Once you have set the new device up, there is three keys that will have to be transferred to the node: Device EUI, Application EUI and App Key. You can do this by placing a file on the SD card of the node.
-
-### Instrucitons:
-- Place the file in the root directory of the SD card.
-- Name the file "lorawan.txt"
-- Paste the three values (Device EUI, Application EUI and App Key) in that order, by using the copy button of the strings on the TTN website. Do not use little endian format for any of the parameters, copy them exatly as shown.
-- Separate the keys by newline.
-
-You should end up with a file that only contains strings looking somehting like this:
-```
-00749A95AC2874C3
-7063D57E3006A734
-22F2C4EEA5832B46352375752C1853AA
-```
-
-
-
-## Software TODO
-- Add CO2 sensor support
-- Fix file bug
-
-## ECAD TODO
-- Include header for config/reset type jumpers?
-- Include headers to expose more IO?
+## Message Structure
+The [ASCII format](https://www.arduino.cc/en/Reference/ASCIIchart) is used for encoding all data sent over LoRaWAN. That means that a sime hex-to-ascii convertion will give readable results from the message sent over LoRa. Further details about the transmission format is documented in the code-files.
+TODO: document message format
