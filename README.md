@@ -47,12 +47,10 @@ Before building the project, all these libraries need to be installed in the Ard
 ### SDI-12 device addresses
 The SDI-12 protocol requires unique char addresses for devices on the same bus. This is fulfilled by placing each SDI-12 device on its own bus, making conflicts in addresses impossible. The system is capable of dynamically determining the address of sensors, so the user does not need to worry about this at all. However, to speed connection times up, use the default address of a device, or addresses 0 and 1 as these are the ones that will be checked first.
 
-### Identification procedure
-1. configure the node to work with The Things Network and physically label the node
-2. configure SDI-12 sensor addresses and label
-3. connect all sensors, label all non SDI-12 sensors and take note of the configuration
-4. configure
-
 ## Message Structure
 The [ASCII format](https://www.arduino.cc/en/Reference/ASCIIchart) is used for encoding all data sent over LoRaWAN. That means that a simple hex-to-ascii conversion will give readable results from the message sent over LoRa. Further details about the transmission format are documented in the code files.
 TODO: document message format
+
+## Deployment Procedure
+1. connect all sensors you want to use with the node
+2. update copies of the [config files](/configurations) and place them on the Teensy SD card
