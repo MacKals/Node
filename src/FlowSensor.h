@@ -38,7 +38,7 @@ public:
         return false;
     }
 
-    
+
     // AnalogSensor spesific methods
 
     bool init();
