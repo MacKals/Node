@@ -58,6 +58,24 @@ TODO: make instructions
 
 Before building the project, all these libraries need to be installed in the Arduino environment (download zip, extract and drag folder to the Arduino/libraries directory on your computer).
 
+
+# Configuration files
+## LoRaWAN
+To establish a connection with the LoRaWAN server, you need to register the node as a new device on The Things Network. Once you have set the new device up, there is three keys that will have to be transferred to the node: Device EUI, Application EUI and App Key. You can do this by placing a file on the SD card of the node.
+
+### Instrucitons:
+- Place the file in the root directory of the SD card.
+- Name the file "lorawan.txt"
+- Paste the three values (Device EUI, Application EUI and App Key) in that order, by using the copy button of the strings on the TTN website. Do not use little endian format for any of the parameters, copy them exatly as shown.
+- Separate the keys by newline.
+
+You should end up with a file that only contains strings looking somehting like this:
+```
+00749A95AC2874C3
+7063D57E3006A734
+22F2C4EEA5832B46352375752C1853AA
+```
+
 ## Software TODO
 - Add CO2 sensor support
 - Fix file bug

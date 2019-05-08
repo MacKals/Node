@@ -29,7 +29,6 @@ void stringToHex(String s, u1_t *arr, bool lef = false) {
 }
 
 void printArray(u1_t *arr, uint8_t size) {
-    PRINT("Array: ");
     for (uint8_t i = 0; i< size; i++ ) {
         Serial.print(arr[i], HEX);
         PRINT(" ");
@@ -40,30 +39,29 @@ void printArray(u1_t *arr, uint8_t size) {
 void EcoRadio::setLoRaParameters(String deveui, String appeui, String appkey) {
 
     // test for valid key lengths
-    if (appeui.length() != 16) {
-        PRINTLN("Wrong length appeui: " + appeui);
-        return;
-    } else if (deveui.length() != 16) {
+    if (deveui.length() != 16) {
         PRINTLN("Wrong length deveui: " + deveui);
+        return;
+    } else if (appeui.length() != 16) {
+        PRINTLN("Wrong length appeui: " + appeui);
         return;
     } else if (appkey.length() != 32) {
         PRINTLN("Wrong length appkey: " + appkey);
         return;
     }
 
-    printArray(APPEUI,8);
-    printArray(DEVEUI,8);
-    printArray(APPKEY,16);
-
     // update key strings
-    stringToHex(appeui, APPEUI, true);
     stringToHex(deveui, DEVEUI, true);
+    stringToHex(appeui, APPEUI, true);
     stringToHex(appkey, APPKEY);
 
-    printArray(APPEUI,8);
+    // print updated values
+    PRINT("New DEVEUI: ");
     printArray(DEVEUI,8);
+    PRINT("New APPEUI: ");
+    printArray(APPEUI,8);
+    PRINT("New APPKEY: ");
     printArray(APPKEY,16);
-
 }
 
 
