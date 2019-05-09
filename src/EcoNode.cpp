@@ -27,10 +27,10 @@ void EcoNode::init() {
 
 	sd.init();
 	setLoRaParameters();
-	PRINTLN("set the parameters");
 	radio.init();
-	sensors.init();
 
+	sensorMaster.init();
+	// setSensorParameters();
 }
 
 // TODO: Use?
@@ -44,29 +44,39 @@ String EcoNode::cleanupString(String s) {
 // must be called after sd init and before radio init (?)
 // get parameters for LoRaWAN transmission from SD card
 void EcoNode::setLoRaParameters() {
-	String data = sd.getLoRaConfigData();
+	String data = sd.getDataFromFile(LORAWAN_CONFIG_FILE_NAME);
 
-	if (data.length() == 0) {
-		PRINTLN("Config file not found");
-		return;
-	}
+	if (data.length() == 0) return;
 
 	uint16_t i1 = data.indexOf('\n');
 	uint16_t i2 = data.indexOf('\n', i1+1);
-	// PRINT("data in file: ");
-	// PRINTLN(data);
-	// PRINTLN(i1);
-	// PRINTLN(i2);
 
 	String appeui = cleanupString(data.substring(0, i1));
 	String deveui = cleanupString(data.substring(i1, i2));
 	String appkey = cleanupString(data.substring(i2)); // from index to end of string
 
-	// PRINTLN(appeui);
-	// PRINTLN(deveui);
-	// PRINTLN(appkey);
 	radio.setLoRaParameters(appeui, deveui, appkey);
 }
+
+// must be called after sd init
+// gets all sensor types, pins, ranges and types from file and configures setup
+void EcoNode::setSensorParameters() {
+	PRINTLN("Setting sensor parameters");
+	String data = sd.getDataFromFile(SENSORS_CONFIG_FILE_NAME);
+
+	uint32_t i = data.indexOf('\n');
+
+	while (i != -1) {
+		sensorMaster.initSensorFromString(data.substring(0,i)); // process first line in file
+		data = data.substring(i+1); // remove line that was just processed
+		i = data.indexOf('\n');     // get next line end
+	}
+
+	sensorMaster.initSensorFromString(data); // execute final command at end of file
+
+	PRINTLN("done initializing sensors");
+}
+
 
 void EcoNode::loop() {
 
@@ -83,7 +93,7 @@ void EcoNode::loop() {
 
 		blinkLED();
 
-		String data = this->sensors.getFullDataString();
+		String data = this->sensorMaster.getFullDataString();
 		sendData(data);
 
 		// start new timer for next data-collection

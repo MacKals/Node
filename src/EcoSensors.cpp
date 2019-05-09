@@ -21,6 +21,25 @@ void EcoSensors::init() {
 	PRINTLN("");
 }
 
+bool EcoSensors::initSensorFromString(String s) {
+
+	PRINTLN("init from this: " + s);
+
+	// get all parameters in array
+
+	// assign
+
+	// switch (s.charAt(0)) {
+	// 	case 'A': analogSensorFromString(); break;
+	// 	case 'S': ; break;
+	// 	case 'P': ; break;
+	// 	case 'F': ; break;
+	// 	default:
+	// 		PRINTLN("Invalid sensor spesified, does not recognize first character.");
+	// }
+}
+
+
 // reads data from all sensors and places them in string
 // Format:
 // - values from different sensors separated by &

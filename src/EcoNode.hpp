@@ -22,13 +22,14 @@
 class EcoNode {
 
     EcoRadio radio;
-	EcoSensors sensors;
+	EcoSensors sensorMaster;
     EcoTimer timer;
     EcoSD sd;
 
 	int timeLastData;
 
     void setLoRaParameters();
+    void setSensorParameters();
     String cleanupString(String s);
 
 public:

@@ -17,21 +17,30 @@ You should end up with a file that only contains strings looking somehting like 
 ```
 
 ## Sensor Configuration
-In order to tell the system what data is coming from which sensor, a file called `config.txt` is used.
+In order to tell the system what data is coming from which sensor, a file called `sensors.txt` is used.
 
 - `xx` - header number (excluding the D)
-- `max` - max analog voltage the sensor can output
-- `min` - min analog voltage the sensor can output
-- `toMax` - desired reading when the value is max
+- `min` - min analog voltage the sensor can output in volts
+- `max` - max analog voltage the sensor can output in volts
 - `toMin` - desired reading when the value is min
+- `toMax` - desired reading when the value is max
 - `title` - title used to describe information, preferably including units. The title can have spaces
 
 ### Analog sensors
-`Axx,max,min,toMax,toMin,title`
+`A,xx,min,max,toMin,toMax,title`
 ### SDI-12 sensors
-`Sxx,title1,title2,...`
+`S,xx,title1,title2,...`
 Add as many titles as there are data fileds on the SDI sensor
 ### PWM sensors
-`Pxx,toMax,toMin,title`
+`P,xx,toMin,toMax,title`
 ### Flow sensors
-`Fxx,???` TODO: how to decode ticks to 
+`F,xx,???` TODO: how to decode ticks to
+
+
+## Common sensors and their configurations
+Below is a list of sensors used and how they should/could be configured. Make sure to update the `xx` to correspond to the pin you have connected the sensor to.
+
+TODO: expand list, include images
+
+Meter GS3: `S, xx, Dielectric Permittivity, Temperature (C), Electrical Conductivity (uS/cm)`
+SoilWatch 10: `A, xx, 0, 3, 0, 100, Moisture Level`

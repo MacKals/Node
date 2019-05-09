@@ -32,8 +32,8 @@ public:
     String popData();
     bool cachedData();
 
-    // ---- Config ----
-    String getLoRaConfigData();
+    String getDataFromFile(String filename);
+
 };
 
 

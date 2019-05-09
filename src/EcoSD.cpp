@@ -73,6 +73,22 @@ String EcoSD::popData() {
     if (initialized) PRINTLN("popData failed");
     return "";
 }
+// // nicer implementation, but with possible bug for an empty file having been retrieved.
+// String EcoSD::popData() {
+//
+//     if (!cachedData()) return "";
+//
+//     String data = getDataFromFile(cachFileName());
+//
+//     if (data.length() > 0) {
+//         bool removed = SD.remove(cachFileName().c_str());
+//         if (!removed) PRINTLN("Delete failed");
+//         cachNumber--;
+//     }
+//
+//     return data;
+// }
+
 
 bool EcoSD::cachedData() {
     return cachNumber >= 0;
@@ -81,9 +97,11 @@ bool EcoSD::cachedData() {
 
 // ---- Config ----
 
-// return as one string, convert one level up
-String EcoSD::getLoRaConfigData() {
-    File file = SD.open(LORAWAN_CONFIG_FILE_NAME);
+
+// Returns all data in file.
+// Empty string if file not found
+String EcoSD::getDataFromFile(String filename) {
+    File file = SD.open(filename.c_str());
     if (file) {
         String ret = "";
         while (file.available()) {
@@ -96,6 +114,6 @@ String EcoSD::getLoRaConfigData() {
         return ret;
     }
 
-    if (initialized) PRINTLN("Could not find " + String(LORAWAN_CONFIG_FILE_NAME));
+    if (initialized) PRINTLN("Could not find " + filename);
     return "";
 }
