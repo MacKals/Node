@@ -29,7 +29,7 @@ void EcoNode::init() {
 	setLoRaParameters();
 	radio.init();
 
-	sensorMaster.init();
+	// sensorMaster.init();
 	// setSensorParameters();
 }
 

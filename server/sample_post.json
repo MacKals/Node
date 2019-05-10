@@ -1,0 +1,43 @@
+{
+    'app_id': 'ubc_econode_test_network',
+    'dev_id': 'node-02',
+    'hardware_serial': '00739C9EAC9871CA',
+    'port': 1,
+    'counter': 112,
+    'payload_raw': 'MTU1NzM5NjQ0MyYyOjE1OTUyLjAsMjEuNSYzOjEwMDAwMC4wLDIxLjAmMTc6MS40NCwyMS4zLDEmMjI6MS43OCwyMS4xLDE=',
+    'payload_fields': {
+        'data': '1557396443&2:15952.0,21.5&3:100000.0,21.0&17:1.44,21.3,1&22:1.78,21.1,1'
+    },
+    'metadata': {
+        'time': '2019-05-09T17:07:40.190677914Z',
+        'frequency': 904.7,
+        'modulation': 'LORA',
+        'data_rate': 'SF7BW125',
+        'coding_rate': '4/5',
+        'gateways': [{
+            'gtw_id': 'eui-d3adbeefd3adbeef',
+            'timestamp': 1605650667,
+            'time': '',
+            'channel': 4,
+            'rssi': -86,
+            'snr': 15,
+            'rf_chain': 0,
+            'latitude': 49.25707,
+            'longitude': -123.24033,
+            'altitude': 106
+        }, {
+            'gtw_id': 'eui-d3adbeefd3adbeef',
+            'timestamp': 1605650667,
+            'time': '',
+            'antenna': 1,
+            'channel': 20,
+            'rssi': -82,
+            'snr': 13,
+            'rf_chain': 0,
+            'latitude': 49.25707,
+            'longitude': -123.24033,
+            'altitude': 106
+        }]
+    },
+    'downlink_url': 'https://integrations.thethingsnetwork.org/ttn-us-west/api/v2/down/ubc_econode_test_network/aws_1?key=ttn-account-v2.zm5pS0gMuHy7fusSLLlRQrn0axyehGPkHc68uVp1FeY'
+}
