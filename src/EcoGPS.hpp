@@ -12,7 +12,7 @@
 #include <Arduino.h>
 #include <UBLOX.h>
 
-class EcoRadio {
+class EcoGPS {
 
 private:
     UBLOX *gps;
@@ -61,7 +61,9 @@ public:
           PRINT2(gps->getLongitude_deg(),10);    ///< [deg], Longitude
           PRINT("\t");
           PRINTLN(gps->getMSLHeight_ft());      ///< [ft], Height above mean sea level
-        }
+      } else {
+          PRINTLN("GPS not ready");
+      }
     }
 };
 

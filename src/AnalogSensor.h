@@ -12,6 +12,9 @@
 class AnalogSensor : public Sensor {
 private:
 
+    float min, max, toMin, toMax;
+    String title;
+
 public:
 
     AnalogSensor(uint8_t pin) : Sensor(pin) {
@@ -20,6 +23,10 @@ public:
     }
 
     // Sensor methods
+
+    //`A,xx,min,max,toMin,toMax,title`
+    AnalogSensor(uint8_t pin, float min, float max, float toMin, float toMax, String title)
+        : Sensor(pin), min(min), max(max), toMin(toMin), toMax(toMax), title(title) {}
 
     String readDataToString() {
         return String(address) + "," + String(readData());

@@ -8,7 +8,7 @@
 
 
 void EcoSensors::init() {
-	attachPWMSensors();
+	// attachPWMSensors();
 	attachSDISensors();
 	// attachFlowSensors();
 	// attachAnalogSensors();
@@ -21,22 +21,38 @@ void EcoSensors::init() {
 	PRINTLN("");
 }
 
+
 bool EcoSensors::initSensorFromString(String s) {
 
 	PRINTLN("init from this: " + s);
 
-	// get all parameters in array
+	std::vector<String> parameters;
+	uint16_t startIndex = 0;
+	for (uint16_t i = 0; i < s.length(); i++) {
+		if (s.charAt(i) == ',') {
+			parameters.push_back(s.substring(startIndex,i));
+			startIndex = i+1;
+		}
+	}
 
-	// assign
-
-	// switch (s.charAt(0)) {
-	// 	case 'A': analogSensorFromString(); break;
-	// 	case 'S': ; break;
-	// 	case 'P': ; break;
-	// 	case 'F': ; break;
-	// 	default:
-	// 		PRINTLN("Invalid sensor spesified, does not recognize first character.");
-	// }
+	switch (s.charAt(0)) {
+		case 'A':
+			if (parameters.size() == 5) {
+				Sensor *n = new AnalogSensor(parameters[0].toInt(),
+											 parameters[1].toFloat(),
+											 parameters[2].toFloat(),
+											 parameters[3].toFloat(),
+											 parameters[4].toFloat(),
+											 parameters[5]);
+				attachSensorIfPresent(n);
+				return;
+			} else PRINTLN("Wrong number of parameters for analog sensor, is " + String(parameters.size()) + " expecting 4.")
+		case 'S': ; break;
+		case 'P': ; break;
+		case 'F': ; break;
+		default:
+			PRINTLN("Invalid sensor spesified, does not recognize first character.");
+	}
 }
 
 

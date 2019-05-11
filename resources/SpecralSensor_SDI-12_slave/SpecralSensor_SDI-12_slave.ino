@@ -19,20 +19,19 @@
  *
  * Suggested improvements:
  *  - Get away from memory-hungry arduino String objects in favor of char buffers
- *  - Make an int variable for the "number of values to report" instead of the
- *    hard-coded 9s interspersed throughout the code
  */
 
 
 #include <SDI12.h>
 
-#define DATA_PIN 7         // The pin of the SDI-12 data bus
+#define DATA_PIN 3         // The pin of the SDI-12 data bus
+
+#define BLUE A0        // blue led pin
+#define GREEN A1       // green led pin
+#define RED A2         // red led pin
+#define IR A3          // ir led pin
 
 #define DATA_COUNT 4  // number of data-points that will be transmitted over SDI-12
-#define RED 7         // red led pin
-#define IR 7          // ir led pin
-#define GREEN 7       // green led pin
-#define BLUE 7        // blue led pin
 
 #define V_REF 4.096   // V, analog voltage refference
 #define ADC_MAX 1024  // max reading of adc, 2^10 
@@ -46,11 +45,11 @@ int state = 0;
 #define INITIATE_CONCURRENT 1
 #define INITIATE_MEASUREMENT 2
 
-// Create object by which to communicate with the SDI-12 bus on SDIPIN
-SDI12 slaveSDI12(DATA_PIN);
+SDI12 slaveSDI12(DATA_PIN); 
+
 
 float LEDRead(uint8_t pin) {
-  return (V_REF * analogRead(pin)) / ADC_MAX;
+  return ((float) analogRead(pin)) / ADC_MAX;
 }
 
 void pollSensor(float* measurementValues) {
@@ -59,6 +58,7 @@ void pollSensor(float* measurementValues) {
   measurementValues[2] = LEDRead(RED);
   measurementValues[3] = LEDRead(IR);
 }
+
 
 void parseSdi12Cmd(String command, String* dValues) {
 /* Ingests a command from an SDI-12 master, sends the applicable response, and
@@ -69,8 +69,10 @@ void parseSdi12Cmd(String command, String* dValues) {
   // probed OR (b) a '?' for address query.
   // Do nothing if this command is addressed to a different device
   if (command.charAt(0) != sensorAddress && command.charAt(0) != '?') {
+    //Serial.println(command);
     return;
   }
+  //Serial.println("M" + command);
 
   // If execution reaches this point, the slave should respond with something in
   // the form:   <address><responseStr><Carriage Return><Line Feed>
@@ -84,7 +86,7 @@ void parseSdi12Cmd(String command, String* dValues) {
         // Identify command
         // Slave should respond with ID message: 2-char SDI-12 version + 8-char
         // company name + 6-char sensor model + 3-char sensor version + 0-13 char S/N
-        responseStr = "UBC EcoHydrology Specral Sensor 01"; // Substitute proper ID String here
+        responseStr = "13UBC_ECOH0000011.0001"; // Substitute proper ID String here
         break;
       case 'C':
         // Initiate concurrent measurement command
@@ -150,7 +152,7 @@ void formatOutputSDI(float* measurementValues, String* dValues, unsigned int max
   int j = 0;
 
   // upper limit on i should be number of elements in measurementValues
-  for (int i=0; i<4; i++) {
+  for (int i=0; i<DATA_COUNT; i++) {
     // Read float value "i" as a String with 6 deceimal digits
     // (NOTE: SDI-12 specifies max of 7 digits per value; we can only use 6
     //  decimal place precision if integer part is one digit)
@@ -171,6 +173,10 @@ void formatOutputSDI(float* measurementValues, String* dValues, unsigned int max
 
 void setup() {
   Serial.begin(9600);
+
+  Serial.println(OSCCAL, BIN);
+  OSCCAL += 4;
+  Serial.println(OSCCAL, BIN);
   
   slaveSDI12.begin();
   delay(500);
@@ -178,11 +184,10 @@ void setup() {
 }
 
 static float measurementValues[DATA_COUNT]; // floats to hold simulated sensor data
-static String dValues[DATA_COUNT+1];  // 10 String objects to hold the responses to aD0!-aD9! commands
+static String dValues[DATA_COUNT+1];  // 5 String objects to hold the responses to aD0!-aD9! commands
 static String commandReceived = "";  // String object to hold the incoming command
 
 void loop() {
-
   // If a byte is available, an SDI message is queued up. Read in the entire message
   // before proceding.  It may be more robust to add a single character per loop()
   // iteration to a static char buffer; however, the SDI-12 spec requires a precise
@@ -194,6 +199,9 @@ void loop() {
       char charReceived = slaveSDI12.read();
       // Character '!' indicates the end of an SDI-12 command; if the current
       // character is '!', stop listening and respond to the command
+      if (charReceived == '?') Serial.print(charReceived);
+      else Serial.println(charReceived);
+      
       if (charReceived == '!') {
         // Command string is completed; do something with it
         parseSdi12Cmd(commandReceived, dValues);
@@ -212,13 +220,15 @@ void loop() {
       }
     }
   }
-
+  
+  
   // For aM! and aC! commands, parseSdi12Cmd will modify "state" to indicate that
   // a measurement should be taken
   switch (state) {
     case WAIT:
       break;
     case INITIATE_CONCURRENT:
+      //Serial.println("INITIATE_CONCURRENT");
       // Get sensor data
       pollSensor(measurementValues);
       // Populate the "dValues" String array with the values in SDI-12 format
@@ -226,6 +236,7 @@ void loop() {
       state = WAIT;
       break;
     case INITIATE_MEASUREMENT:
+      //Serial.println("INITIATE_MEASUREMENT");
       // Get sensor data
       pollSensor(measurementValues);
       // Populate the "dValues" String array with the values in SDI-12 format

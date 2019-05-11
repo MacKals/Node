@@ -20,8 +20,7 @@
 
 class EcoSensors {
 private:
-    const uint8_t threePortPins[4] = {2, 3, 17, 22};
-    // const uint8_t threePortPins[3] = {33, 34, 35};
+    const uint8_t threePortPins[12] = {14, 15, 16, 17, 18, 19, 20, 35, 36, 37, 38, 39};
 
     // must include array sizes
 

@@ -25,6 +25,8 @@ void EcoNode::init() {
 
 	setRTC();
 
+	// gps.init();
+
 	sd.init();
 	setLoRaParameters();
 	radio.init();
@@ -91,10 +93,12 @@ void EcoNode::loop() {
 	// read data and send at given interval
 	if (timer.timerDone()) {
 
+		// gps.printData();
+
 		blinkLED();
 
 		String data = this->sensorMaster.getFullDataString();
-		sendData(data);
+		// sendData(data);
 
 		// start new timer for next data-collection
 		timer.startTimer(DATA_RECORD_INTERVAL);

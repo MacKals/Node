@@ -13,6 +13,7 @@
 #include "EcoSensors.hpp"
 #include "EcoTimer.hpp"
 #include "EcoSD.hpp"
+#include "EcoGPS.hpp"
 
 #include <Arduino.h>
 #include <list>
@@ -25,6 +26,7 @@ class EcoNode {
 	EcoSensors sensorMaster;
     EcoTimer timer;
     EcoSD sd;
+    EcoGPS gps;
 
 	int timeLastData;
 
