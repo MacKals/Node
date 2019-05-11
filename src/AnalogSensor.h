@@ -17,16 +17,14 @@ private:
 
 public:
 
-    AnalogSensor(uint8_t pin) : Sensor(pin) {
-        pinMode(pin, INPUT);
-        analogReadRes(13); // 13 bit analog input, 0V -> 0, 3.3V -> 8192
-    }
-
     // Sensor methods
 
     //`A,xx,min,max,toMin,toMax,title`
-    AnalogSensor(uint8_t pin, float min, float max, float toMin, float toMax, String title)
-        : Sensor(pin), min(min), max(max), toMin(toMin), toMax(toMax), title(title) {}
+    AnalogSensor(uint8_t pin, float min=0, float max=3.3, float toMin=0, float toMax=1, String title)
+            : Sensor(pin), min(min), max(max), toMin(toMin), toMax(toMax), title(title) {
+        pinMode(pin, INPUT);
+        analogReadRes(13); // 13 bit analog input, 0V -> 0, 3.3V -> 8192
+    }
 
     String readDataToString() {
         return String(address) + "," + String(readData());
@@ -62,10 +60,12 @@ public:
 
 
     // AnalogSensor spesific methods
+    // map(value, fromLow, fromHigh, toLow, toHigh)
 
-    uint16_t readData() {
+    float readData() {
         analogReadAveraging(10);
-        return analogRead(pin);
+        uint16_t x = analogRead(pin);
+        return map(x, low, high, toLow, toHigh);
     }
 };
 
