@@ -32,7 +32,7 @@ void EcoNode::init() {
 	radio.init();
 
 	// sensorMaster.init();
-	// setSensorParameters();
+	setSensorParameters();
 }
 
 // TODO: Use?
@@ -66,7 +66,7 @@ void EcoNode::setSensorParameters() {
 	PRINTLN("Setting sensor parameters");
 	String data = sd.getDataFromFile(SENSORS_CONFIG_FILE_NAME);
 
-	uint32_t i = data.indexOf('\n');
+	int i = data.indexOf('\n');
 
 	while (i != -1) {
 		sensorMaster.initSensorFromString(data.substring(0,i)); // process first line in file
@@ -75,7 +75,6 @@ void EcoNode::setSensorParameters() {
 	}
 
 	sensorMaster.initSensorFromString(data); // execute final command at end of file
-
 	PRINTLN("done initializing sensors");
 }
 

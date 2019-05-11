@@ -97,7 +97,7 @@ String SDISensor::printInfoToString(char addr){
 }
 
 void SDISensor::printInfo() {
-    for (int i = 0; i < this->sensorAddresses.length(); i++) {
+    for (uint8_t i = 0; i < this->sensorAddresses.length(); i++) {
         char addr = this->sensorAddresses.charAt(i);
         PRINTLN("addr: " + String(addr) + ", desc: " + this->printInfoToString(addr));
     }

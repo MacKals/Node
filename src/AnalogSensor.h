@@ -17,14 +17,15 @@ private:
 
 public:
 
-    // Sensor methods
-
     //`A,xx,min,max,toMin,toMax,title`
-    AnalogSensor(uint8_t pin, float min=0, float max=3.3, float toMin=0, float toMax=1, String title)
+    AnalogSensor(uint8_t pin, float min=0, float max=3.3, float toMin=0, float toMax=1, String title="A")
             : Sensor(pin), min(min), max(max), toMin(toMin), toMax(toMax), title(title) {
         pinMode(pin, INPUT);
         analogReadRes(13); // 13 bit analog input, 0V -> 0, 3.3V -> 8192
+        PRINTLN("Analog sensor initialized from: " + String(pin) + " " + String(min) + " " + String(max) + " " + String(toMin) + " " + String(toMax) + " " + title);
     }
+
+    // Sensor methods
 
     String readDataToString() {
         return String(address) + "," + String(readData());
@@ -36,12 +37,11 @@ public:
     }
 
     bool sensorPresent() {
-
-        uint16_t sampleData1 = readData();
+        uint16_t sampleData1 = analogRead(pin);
         delay(10);
         pinMode(pin, INPUT_PULLUP);
         delay(50);
-        uint16_t sampleData2 = readData();
+        uint16_t sampleData2 = analogRead(pin);
 
         // PRINTLN(String(sampleData1) + " followed by " + String(sampleData2));
 
@@ -65,7 +65,7 @@ public:
     float readData() {
         analogReadAveraging(10);
         uint16_t x = analogRead(pin);
-        return map(x, low, high, toLow, toHigh);
+        return map(x, min, max, toMin, toMax);
     }
 };
 

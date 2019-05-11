@@ -11,20 +11,24 @@
 
 #include "Sensor.h"
 #include <SDI12_Teensy35.h>
+#include <vector>
+
+using namespace std;
 
 class SDISensor : public Sensor {
 private:
     SDI12 sdiBus;
     String sensorAddresses = "";
 
-public:
+    String titles;
 
-    SDISensor(uint8_t pin) : Sensor(pin), sdiBus(pin) {}
+public:
+    SDISensor(uint8_t pin, String titles = "S")
+        : Sensor(pin), sdiBus(pin), titles(titles) {}
 
     // Sensor methods
     String readDataToString();
     bool sensorPresent();
-
 
     // SDISensor spesific methods
     char getFirstActiveAddress();

@@ -22,36 +22,52 @@ void EcoSensors::init() {
 }
 
 
-bool EcoSensors::initSensorFromString(String s) {
+bool EcoSensors::initSensorFromString(String inputString) {
+	String input = inputString.trim();
+	PRINTLN("init from this: " + input);
 
-	PRINTLN("init from this: " + s);
-
+	// split string into vector of parameters
 	std::vector<String> parameters;
 	uint16_t startIndex = 0;
-	for (uint16_t i = 0; i < s.length(); i++) {
-		if (s.charAt(i) == ',') {
-			parameters.push_back(s.substring(startIndex,i));
+	for (uint16_t i = startIndex; i < input.length(); i++) {
+		if (input.charAt(i) == ',') {
+			parameters.push_back(input.substring(startIndex,i).trim());
 			startIndex = i+1;
 		}
 	}
+	// handle last part of string (if present)
+	if (startIndex < input.length()) {
+		parameters.push_back(input.substring(startIndex).trim());
+	}
 
-	switch (s.charAt(0)) {
+	// determine sensor identity and initialize relevant sensor if parameter count is right
+	switch (input.charAt(0)) {
+
 		case 'A':
-			if (parameters.size() == 5) {
-				Sensor *n = new AnalogSensor(parameters[0].toInt(),
-											 parameters[1].toFloat(),
+			if (parameters.size() == 7) {
+				Sensor *s = new AnalogSensor(parameters[1].toInt(),
 											 parameters[2].toFloat(),
 											 parameters[3].toFloat(),
 											 parameters[4].toFloat(),
-											 parameters[5]);
-				attachSensorIfPresent(n);
+											 parameters[5].toFloat(),
+											 parameters[6]);
+				sensors.push_back(s);
 				return;
-			} else PRINTLN("Wrong number of parameters for analog sensor, is " + String(parameters.size()) + " expecting 4.")
-		case 'S': ; break;
-		case 'P': ; break;
-		case 'F': ; break;
+			} else PRINTLN("Wrong number of parameters for analog sensor: is " + String(parameters.size()) + ", expecting 7.");
+
+		case 'S':
+			if (parameters.size() > 2) {
+				String titles = "";
+				for (uint8_t i = 2; i < parameters.size(); i++) titles += parameters[i] + ",";
+				Sensor *s = new SDISensor(parameters[1].toInt(), titles);
+				sensors.push_back(s);
+				return;
+			} else PRINTLN("Wrong number of parameters for SDI sensor: is " + String(parameters.size()) + ", must exceed 2.");
+
+		// case 'P': ; break;
+		// case 'F': ; break;
 		default:
-			PRINTLN("Invalid sensor spesified, does not recognize first character.");
+			PRINTLN("Invalid sensor spesified, does not recognize first character in: " + input);
 	}
 }
 
@@ -88,6 +104,7 @@ bool EcoSensors::attachSensorIfPresent(Sensor * s) {
 	PRINT("pin " + String(s->pin) + " -  \t");
 	return false;
 }
+
 
 bool EcoSensors::pinInUse(uint8_t pin) {
 	for (auto s : sensors) {
