@@ -187,6 +187,18 @@ static float measurementValues[DATA_COUNT]; // floats to hold simulated sensor d
 static String dValues[DATA_COUNT+1];  // 5 String objects to hold the responses to aD0!-aD9! commands
 static String commandReceived = "";  // String object to hold the incoming command
 
+int counter = 0;
+
+
+void printBinary(byte inByte)
+{
+  for (int b = 7; b >= 0; b--)
+  {
+    Serial.print(bitRead(inByte, b));
+  }
+}
+
+
 void loop() {
   // If a byte is available, an SDI message is queued up. Read in the entire message
   // before proceding.  It may be more robust to add a single character per loop()
@@ -196,11 +208,20 @@ void loop() {
   if (avail < 0) { slaveSDI12.clearBuffer(); } // Buffer is full; clear
   else if (avail > 0) {
     for (int a = 0; a < avail; a++) {
+      
+//      if (counter == 20) {
+//       // OSCCAL += 1;
+//        Serial.println(OSCCAL, BIN);
+//        counter = 0;
+//      }
+//      counter++;
+      
       char charReceived = slaveSDI12.read();
       // Character '!' indicates the end of an SDI-12 command; if the current
       // character is '!', stop listening and respond to the command
       if (charReceived == '?') Serial.print(charReceived);
-      else Serial.println(charReceived);
+      else printBinary((byte) charReceived);
+      Serial.println("");
       
       if (charReceived == '!') {
         // Command string is completed; do something with it

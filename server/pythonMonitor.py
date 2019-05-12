@@ -8,7 +8,8 @@ try:
     while True:
         bytesToRead = ser.inWaiting() # get the amount of bytes available at the input queue
         if bytesToRead:
-            line = ser.read(bytesToRead) # read the bytes
+            line = ser.readline(bytesToRead) # read the byte
             print(line.strip())
+
 except:
     ser.close()
