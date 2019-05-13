@@ -54,3 +54,21 @@ TODO: document message format
 ## Deployment Procedure
 1. connect all sensors you want to use with the node
 2. update copies of the [config files](/configurations) and place them on the Teensy SD card
+
+# TODOs
+The following are items that remain to be completed.
+
+## Node
+
+- [ ] 
+- [ ] 
+
+## Server
+
+- [ ] 
+- [ ] 
+
+## Spectral Sensor
+
+- [ ] Figure out the issue with SDI-12 output, pertains to internal clock uncertainty?
+- [ ] Potting and confirming environmental 
