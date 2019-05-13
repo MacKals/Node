@@ -32,7 +32,7 @@ void EcoNode::init() {
 	radio.init();
 
 	// sensorMaster.init();
-	setSensorParameters();
+	// setSensorParameters();
 }
 
 // TODO: Use?
@@ -97,7 +97,7 @@ void EcoNode::loop() {
 		blinkLED();
 
 		String data = this->sensorMaster.getFullDataString();
-		// sendData(data);
+		sendData(data);
 
 		// start new timer for next data-collection
 		timer.startTimer(DATA_RECORD_INTERVAL);
