@@ -65,7 +65,6 @@ void EcoNode::initBootCount() {
 		bootCount = 0;
 		EEPROM.write(EEPROM_BOOTCOUNT_LSB_ADDRESS, 0);
 		EEPROM.write(EEPROM_BOOTCOUNT_MSB_ADDRESS, 0);
-
 	}
 
 	PRINTLN("Boot count = " + String(bootCount));
@@ -169,9 +168,8 @@ String digitsToString(int digits){
 	return s;
 }
 
+// digital clock display of the time
 String timeAsString() {
-
-	// digital clock display of the time
 	String s = String(hour());
 	s += digitsToString(minute());
 	s += digitsToString(second());
