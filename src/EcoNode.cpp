@@ -19,6 +19,8 @@ void blinkLED() {
 void EcoNode::init() {
 	PRINTLN("Node class initializing.");
 
+	initBootCount();
+
 	pinMode(LED, OUTPUT);
 	digitalWrite(LED, HIGH);
 	Alarm.timerRepeat(2, blinkLED);
@@ -33,6 +35,33 @@ void EcoNode::init() {
 
 	// sensorMaster.init();
 	// setSensorParameters();
+}
+
+void EcoNode::initBootCount() {
+
+	if (EEPROM.read(EEPROM_INIT_ADDRESS) == EEPROM_INIT_VAL) {
+		// device has been booted with this code before
+
+		uint8_t LSB = EEPROM.read(EEPROM_BOOTCOUNT_LSB_ADDRESS);
+		uint8_t MSB = EEPROM.read(EEPROM_BOOTCOUNT_LSB_ADDRESS);
+
+		// merge to bootCount and increment for current boot
+		bootCount = LSB + (MSB << 8) + 1;
+
+		// split into parts
+		uint8_t newLSB = bootCount & 0xff;
+		uint8_t newMSB = (bootCount >> 8);
+
+		// write new boot-count to sd card
+		if (newLSB != LSB) EEPROM.write(EEPROM_BOOTCOUNT_LSB_ADDRESS, newLSB);
+		if (newMSB != MSB) EEPROM.wirte(EEPROM_BOOTCOUNT_MSB_ADDRESS, newMSB);
+
+	} else {
+		// device has not been booted with this code before
+		bootCount = 0;
+		EEPROM.write(EEPROM_BOOTCOUNT_LSB_ADDRESS, 0);
+		EEPROM.wirte(EEPROM_BOOTCOUNT_MSB_ADDRESS, 0);
+	}
 }
 
 // TODO: Use?
@@ -104,13 +133,33 @@ void EcoNode::loop() {
 	}
 }
 
-void EcoNode::sendData(String data) {
-	PRINTLN("sending data \t" + data);
-	if (!this->radio.send(data)) {
-		sd.cachData(data);
+// send data with radio if there is cached data to send
+void EcoNode::sendDataPacket() {
+
+	if (sd.cachedData()) {
+		String data = sd.popData()
+
+		// try to send message and cache again if not successful
+		if (!this->radio.send(data)) {
+			sd.cachData(data);
+		}
 	}
 }
 
+// read information from sensors and cache information
+void EcoNode::recordDataPacket() {
+	// add boot count
+	String data = bootCount;
+
+	// add time
+	time_t t = Teensy3Clock.get(); // s, time since 1.1.1970 (unix time)
+	data =+ String(t);
+
+	// add data values from sensors
+	data += sensorMaster.getFullDataString();
+
+	sd.cachData(data);
+}
 
 
 // ---- RTC ----

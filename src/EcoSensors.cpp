@@ -80,9 +80,7 @@ bool EcoSensors::initSensorFromString(String inputString) {
 //   - pinNumber:rading1,reading2,reading3 (etc for more parameters)
 // example: 1557236143&3:100000.0,21.8&17:1.27,22.8,1&22:1.39,22.0,1&2:2,2194
 String EcoSensors::getFullDataString() {
-
-	time_t t = Teensy3Clock.get(); // s, time since 1.1.1970 (unix time)
-	String data = String(t);
+	String data = "";
 
 	// loop through sensors using itterators
 	for (auto s = sensors.begin(); s != sensors.end(); ++s) {

@@ -19,7 +19,6 @@
 #include <list>
 
 
-
 class EcoNode {
 
     EcoRadio radio;
@@ -28,27 +27,24 @@ class EcoNode {
     EcoSD sd;
     EcoGPS gps;
 
+    uint16_t bootCount;
+
 	int timeLastData;
 
+    void initBootCount();
     void setLoRaParameters();
     void setSensorParameters();
     String cleanupString(String s);
 
-public:
+    void recordDataPacket();
+    void sendDataPacket();
 
+	int getAddress();
+    void setRTC();
+
+public:
     void init();
     void loop();
-
-    void sendData(String data);
-
-//     void collectSensorData();
-//     bool transmitDataFromMemory(uint8_t pa);
-//
-// private:
-// 	void pollSensor(EcoSensor s);
-	int getAddress();
-
-    void setRTC();
 };
 
 #endif
