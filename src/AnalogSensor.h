@@ -22,33 +22,11 @@ public:
 
     String readDataToString() {
         return String(address) + "," + String(readData());
+        
         // uint16_t data = this->readData();
         // uint8_t lsb = data & 0xff; // keep only lower digits
         // uint8_t msb = (data >> 8); // bit shift
-        //
         // return String(address) + String((char) msb) + String((char) lsb);
-    }
-
-    bool sensorPresent() {
-        uint16_t sampleData1 = analogRead(pin);
-        delay(10);
-        pinMode(pin, INPUT_PULLUP);
-        delay(50);
-        uint16_t sampleData2 = analogRead(pin);
-
-        // PRINTLN(String(sampleData1) + " followed by " + String(sampleData2));
-
-        // assume connected if low with pullup
-        bool connected = (sampleData2 < 7800);
-
-        // chech if input was high before pullup
-        if (abs(sampleData1 - sampleData2) < 50) {
-            // pullup made little difference, assume sensor connected
-            connected = true;
-        }
-
-        pinMode(pin, INPUT);
-        return connected;
     }
 
 

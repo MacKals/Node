@@ -22,9 +22,6 @@ public:
     // Format: data as strings, entries separated by commas
     virtual String readDataToString() = 0;
 
-    // Return true if a sensor is found to be connected
-    virtual bool sensorPresent() = 0;
-
     // function() = 0 is called a virtual function. Forces subclasses to implement.
 };
 

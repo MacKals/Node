@@ -18,11 +18,6 @@ String SDISensor::readDataToString() {
     return allData;
 }
 
-bool SDISensor::sensorPresent() {
-    String addr = this->sensorAddresses;
-    return (addr.length() > 0) && !(addr.charAt(0) == ' ');
-}
-
 // SDISensor spesific methods
 
 void SDISensor::init() {
