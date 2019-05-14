@@ -76,22 +76,6 @@ String EcoSD::popData() {
     if (initialized) PRINTLN("popData failed");
     return "";
 }
-// // nicer implementation, but with possible bug for an empty file having been retrieved.
-// String EcoSD::popData() {
-//
-//     if (!cachedData()) return "";
-//
-//     String data = getDataFromFile(cachFileName());
-//
-//     if (data.length() > 0) {
-//         bool removed = SD.remove(cachFileName().c_str());
-//         if (!removed) PRINTLN("Delete failed");
-//         cachNumber--;
-//     }
-//
-//     return data;
-// }
-
 
 bool EcoSD::cachedData() {
     return cachNumber >= 0;
