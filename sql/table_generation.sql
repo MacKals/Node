@@ -15,17 +15,17 @@ CREATE SCHEMA IF NOT EXISTS `eco_nodes` DEFAULT CHARACTER SET utf8 ;
 USE `eco_nodes` ;
 
 -- -----------------------------------------------------
--- Table `eco_nodes`.`data`
+-- Table `eco_nodes`.`data_points`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `eco_nodes`.`data` (
-  `node` SMALLINT UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `eco_nodes`.`data_points` (
+  `node_id` SMALLINT UNSIGNED NOT NULL,
   `boot_count` SMALLINT UNSIGNED NOT NULL,
-  `sensor` TINYINT UNSIGNED NOT NULL,
-  `parameter` TINYINT UNSIGNED NOT NULL,
-  `read_time` DATETIME NOT NULL COMMENT 'time when data-point was collected',
-  `store_time` DATETIME GENERATED ALWAYS AS ()  COMMENT 'time when data-point was stored in server',
-  `data` FLOAT NOT NULL,
-  PRIMARY KEY (`node`, `boot_count`, `sensor`, `parameter`, `read_time`))
+  `sensor_address` TINYINT UNSIGNED NOT NULL,
+  `parameter_num` TINYINT UNSIGNED NOT NULL,
+  `read_time` DATETIME NOT NULL,
+  `store_time` DATETIME NOT NULL,
+  `data_point` FLOAT NOT NULL,
+  PRIMARY KEY (`node_id`, `boot_count`, `parameter_num`, `read_time`, `sensor_address`))
 ENGINE = InnoDB;
 
 
@@ -33,30 +33,66 @@ ENGINE = InnoDB;
 -- Table `eco_nodes`.`node_setup`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `eco_nodes`.`node_setup` (
-  `address` SMALLINT UNSIGNED NOT NULL,
+  `node_id` SMALLINT UNSIGNED NOT NULL,
   `boot_count` SMALLINT UNSIGNED NOT NULL,
   `boot_time` DATETIME NOT NULL,
-  `store_time` DATETIME GENERATED ALWAYS AS (),
+  `store_time` DATETIME NOT NULL,
   `position` POINT NULL,
   `comment` TEXT NULL,
-  PRIMARY KEY (`address`, `boot_count`))
+  PRIMARY KEY (`node_id`, `boot_count`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `eco_nodes`.`parameter`
+-- Table `eco_nodes`.`parameters`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `eco_nodes`.`parameter` (
-  `node_address` INT UNSIGNED NOT NULL,
-  `node_boot_count` SMALLINT UNSIGNED NOT NULL,
-  `sensor` TINYINT NOT NULL,
-  `parameter` TINYTEXT NOT NULL,
+CREATE TABLE IF NOT EXISTS `eco_nodes`.`parameters` (
+  `node_id` SMALLINT UNSIGNED NOT NULL,
+  `boot_count` SMALLINT UNSIGNED NOT NULL,
+  `sensor_address` TINYINT NOT NULL,
+  `parameter_num` TINYINT NOT NULL,
+  `sensor_type` VARCHAR(2) NOT NULL,
+  `sensor_id` SMALLINT NOT NULL,
+  `data_title` TINYTEXT NULL,
   `unit` TINYTEXT NULL,
-  INDEX `fk_sensor_node_setup1_idx` (`node_address` ASC, `node_boot_count` ASC) VISIBLE,
-  PRIMARY KEY (`sensor`, `node_address`, `node_boot_count`),
+  INDEX `fk_sensor_node_setup1_idx` (`node_id` ASC, `boot_count` ASC),
+  PRIMARY KEY (`node_id`, `boot_count`, `sensor_address`, `parameter_num`),
   CONSTRAINT `fk_sensor_node_setup1`
-    FOREIGN KEY (`node_address` , `node_boot_count`)
-    REFERENCES `eco_nodes`.`node_setup` (`address` , `boot_count`)
+    FOREIGN KEY (`node_id` , `boot_count`)
+    REFERENCES `eco_nodes`.`node_setup` (`node_id` , `boot_count`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `eco_nodes`.`sensors`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `eco_nodes`.`sensors` (
+  `sensor_type` VARCHAR(2) NOT NULL,
+  `sensor_id` SMALLINT NOT NULL,
+  `brand` TINYTEXT NULL,
+  `description` TEXT NULL,
+  PRIMARY KEY (`sensor_id`, `sensor_type`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `eco_nodes`.`calibrations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `eco_nodes`.`calibrations` (
+  `sensor_sensor_id` SMALLINT NOT NULL,
+  `sensor_sensor_type` VARCHAR(2) NOT NULL,
+  `time` DATETIME NOT NULL,
+  `minVoltage` FLOAT NULL,
+  `maxVoltage` FLOAT NULL,
+  `minReading` FLOAT NULL,
+  `maxReading` FLOAT NULL,
+  PRIMARY KEY (`time`, `sensor_sensor_type`, `sensor_sensor_id`),
+  INDEX `fk_calibration_sensor1_idx` (`sensor_sensor_id` ASC, `sensor_sensor_type` ASC),
+  CONSTRAINT `fk_calibration_sensor1`
+    FOREIGN KEY (`sensor_sensor_id` , `sensor_sensor_type`)
+    REFERENCES `eco_nodes`.`sensors` (`sensor_id` , `sensor_type`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

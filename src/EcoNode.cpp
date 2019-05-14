@@ -11,7 +11,7 @@
 
 void EcoNode::activateLED(bool on) {
 	pinMode(LED, OUTPUT);
-	digitalWrite(LED, ledStatus);
+	digitalWrite(LED, on);
 	ledStatus = on;
 }
 
