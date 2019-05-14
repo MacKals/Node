@@ -20,15 +20,11 @@ private:
     SDI12 sdiBus;
     String sensorAddresses = "";
 
-    String titles;
-
 public:
-    SDISensor(uint8_t pin, String titles = "S")
-        : Sensor(pin), sdiBus(pin), titles(titles) {}
+    SDISensor(uint8_t pin) : Sensor(pin), sdiBus(pin) {}
 
     // Sensor methods
     String readDataToString();
-    bool sensorPresent();
 
     // SDISensor spesific methods
     char getFirstActiveAddress();

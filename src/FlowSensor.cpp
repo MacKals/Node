@@ -6,6 +6,16 @@
 
 #include "FlowSensor.h"
 
+
+String readDataToString() {
+    String data = String(getAverageFlow()) + "," + String(getTotalFlow());
+    reset();
+    return data;
+}
+
+// AnalogSensor spesific methods
+
+
 /*
 The following is a hack as it is not poassible to have an ISR call a class
 member function. Instead, we use global funcitons that know which instance
@@ -57,7 +67,7 @@ bool FlowSensor::init() {
         default:
             return false;
     }
-    
+
     pinMode(pin, INPUT);
     interruptSubscribers[subscriberCount] = this;
     attachInterrupt(pin, isr, RISING);
@@ -66,6 +76,22 @@ bool FlowSensor::init() {
 
     initialized = true;
     return true;
+}
+
+
+float FlowSensor::getTotalFlow() {
+    return count;
+}
+
+float FlowSensor::getAverageFlow() {
+    time_t deltaT = Teensy3Clock.get() - currentCountStartTime;
+    return ((float) count) / deltaT;
+}
+
+void FlowSensor::reset() {
+    // set up for next measurnment
+    count = 0;
+    currentCountStartTime = Teensy3Clock.get();
 }
 
 // assume this is the last instance

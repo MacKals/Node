@@ -28,14 +28,10 @@ public:
         return String(address) + String((char) msb) + String((char) lsb);
     }
 
-    bool sensorPresent() {
-        return readDatAs16Bit() != 0;
-    }
-
 
     // AnalogSensor spesific methods
 
-    uint16_t readDatAs16Bit() {
+    uint16_t readDataAs16Bit() {
         return (uint16_t) (readData() * 0xfffe); // 2^16-1
 
     }

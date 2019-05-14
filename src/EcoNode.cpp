@@ -11,7 +11,7 @@
 
 void EcoNode::activateLED(bool on) {
 	pinMode(LED, OUTPUT);
-	digitalWrite(LED, ledStatus);
+	digitalWrite(LED, on);
 	ledStatus = on;
 }
 
@@ -29,12 +29,9 @@ void EcoNode::init() {
 	sd.init();
 	setLoRaParameters();
 	radio.init();
-	// gps.init();
+	gps.init();
 	// sensorMaster.init();
 	// setSensorParameters();
-
-	radioTimer.startTimer(TRANSMIT_INTERVAL);
-	dataTimer.startTimer(RECORD_INTERVAL);
 
 	activateLED(false); // turn LED off
 }
@@ -121,6 +118,11 @@ void EcoNode::setSensorParameters() {
 void EcoNode::loop() {
 
 	radio.loop();
+
+	// if (gpsTimer.timerDone()) {
+	// 	gps.printData();
+	// 	gpsTimer.startTimer(TRANSMIT_INTERVAL);
+	// }
 
 	// send data from file
 	if (radioTimer.timerDone() && sd.cachedData() && radio.ready()) {
