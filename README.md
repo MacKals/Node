@@ -56,19 +56,29 @@ TODO: document message format
 2. update copies of the [config files](/configurations) and place them on the Teensy SD card
 
 # TODOs
-The following are items that remain to be completed.
+The following are items that remain to be completed as of May 13, 2019.
 
 ## Node
 
-- [ ] 
-- [ ] 
+- [ ] Configuration file reformatting (INI format).
+- [ ] GPS integration.
+- [ ] Power rails switch (w/ knowledge of sensors on each rail).
+- [ ] Decouple time of data acquisition and transmission.
+
+    Device Verification
+    - [ ] Weather station
+    - [ ] Flow sensor decoding (interrupt with sleep on?)
 
 ## Server
 
-- [ ] 
-- [ ] 
+- [ ] Finalize database schema for each SQL table, and necessary tables.
+- [ ] Implement view.
+- [ ] Web interface for pulling data from the database.
+- [ ] Security feature addition (for invalid data).
 
 ## Spectral Sensor
 
-- [ ] Figure out the issue with SDI-12 output, pertains to internal clock uncertainty?
-- [ ] Potting and confirming environmental 
+- [ ] Figure out the issue with SDI-12 output (pertains to internal clock uncertainty?). Add external oscillator if necessary.
+- [ ] Conformal coating (confirming environmental resilience).
+- [ ] Tune gains for each LED.
+- [ ] Validate output characteristics against high performance equipment.
