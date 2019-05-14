@@ -29,12 +29,9 @@ void EcoNode::init() {
 	sd.init();
 	setLoRaParameters();
 	radio.init();
-	// gps.init();
+	gps.init();
 	// sensorMaster.init();
 	// setSensorParameters();
-
-	radioTimer.startTimer(TRANSMIT_INTERVAL);
-	dataTimer.startTimer(RECORD_INTERVAL);
 
 	activateLED(false); // turn LED off
 }
@@ -122,17 +119,22 @@ void EcoNode::loop() {
 
 	radio.loop();
 
-	// send data from file
-	if (radioTimer.timerDone() && sd.cachedData() && radio.ready()) {
-		sendDataPacket();
-		radioTimer.startTimer(TRANSMIT_INTERVAL);
+	if (gpsTimer.timerDone()) {
+		gps.printData();
+		gpsTimer.startTimer(TRANSMIT_INTERVAL);
 	}
 
-	// read data to file
-	if (dataTimer.timerDone()) {
-		recordDataPacket();
-		dataTimer.startTimer(RECORD_INTERVAL);
-	}
+	// // send data from file
+	// if (radioTimer.timerDone() && sd.cachedData() && radio.ready()) {
+	// 	sendDataPacket();
+	// 	radioTimer.startTimer(TRANSMIT_INTERVAL);
+	// }
+	//
+	// // read data to file
+	// if (dataTimer.timerDone()) {
+	// 	recordDataPacket();
+	// 	dataTimer.startTimer(RECORD_INTERVAL);
+	// }
 }
 
 // send data with radio if there is cached data to send

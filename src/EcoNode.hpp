@@ -24,6 +24,7 @@ class EcoNode {
 
     EcoTimer dataTimer;
     EcoTimer radioTimer;
+    EcoTimer gpsTimer;
 
     EcoRadio radio;
 	EcoSensors sensorMaster;
