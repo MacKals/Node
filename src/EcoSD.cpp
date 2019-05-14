@@ -100,7 +100,6 @@ bool EcoSD::cachedData() {
 
 // ---- Config ----
 
-
 // Returns all data in file.
 // Empty string if file not found
 String EcoSD::getDataFromFile(String filename) {
@@ -119,4 +118,55 @@ String EcoSD::getDataFromFile(String filename) {
 
     if (initialized) PRINTLN("Could not find " + filename);
     return "";
+}
+
+Bool EcoSD::readFromConfig(int validPins[]) {
+
+    const size_t bufferLen = 100;
+    char buffer[bufferLen];
+
+    if (!SD.begin(SDCARD)){
+      PRINTLN("Could not find the SD card");
+      return false;
+    }
+
+    IniFile ini(filename);
+
+    if (!ini.open()) {
+      PRINT("ini file ")
+      PRINT(ini.getFilename());
+      PRINTLN(" not valid.");
+      return false;
+    }
+
+    PRINTLN("Ini file exists, reading values...");
+
+    String entries[2] = {"Type", "SN"};
+
+    for (i = 0; i < validPins.size()-1; i++) {
+
+      if (ini.findSection(to_string(validPins[i]), buffer, len, IniFileState::funcFindSection)){ //found the section
+
+        for (j = 0; j < entries.size()-1; j++) { //entries for each connected sensor
+
+          if (ini.getValue(to_string(validPins[i]), entries[j], buffer, bufferLen)){
+
+          } else {
+            PRINT("Did not find the following field for sensor on pin ");
+            PRINT(to_string(validPins[i]));
+            PRINT(": ");
+            PRINTLN(entries[j]);
+          }
+        }
+
+      } else {
+        PRINTLN("didn't find the section. Delete me.")
+      }
+
+    }
+}
+
+
+
+
 }

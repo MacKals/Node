@@ -10,6 +10,7 @@
 
 #include <SD.h>
 #include "Configuration.hpp"
+#include <IniFile.h>
 
 class EcoSD {
 private:
@@ -31,8 +32,9 @@ public:
     bool cachData(String data);
     String popData();
     bool cachedData();
-
     String getDataFromFile(String filename);
+
+
 
 };
 

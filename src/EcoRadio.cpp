@@ -187,7 +187,7 @@ bool EcoRadio::send(String s) {
 	if (!this->ready()) {
         PRINT(os_getTime());
         PRINT(": \t");
-		PRINTLN(F("OP_TXRXPEND, not sending"));
+		    PRINTLN(F("OP_TXRXPEND, not sending"));
         return false;
 	}
 
