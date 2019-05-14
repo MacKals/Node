@@ -15,9 +15,9 @@
 #define DEBUG // comment out to deactivate serial printing
 
 #ifdef DEBUG
- #define PRINT(x)  Serial.print(x)
- #define PRINTLN(x)  Serial.println(x)
- #define PRINT2(x,y)  Serial.print(x,y)
+ #define PRINT(x)      Serial.print(x)
+ #define PRINTLN(x)    Serial.println(x)
+ #define PRINT2(x,y)   Serial.print(x,y)
  #define PRINTLN2(x,y) Serial.println(x,y)
 #else
  #define PRINT(x)
@@ -36,7 +36,16 @@
 
 #define POWER_SAVE
 
-#define DATA_RECORD_INTERVAL 10
+#define RECORD_INTERVAL   30 // s, time between data-collections
+#define TRANSMIT_INTERVAL 20 // s, time between transmit attempts
+
+
+// ---- EEPROM ----
+#define EEPROM_INIT_ADDRESS 100 // byte to check if system has been initialized before
+#define EEPROM_INIT_VAL 88      // a number between 0 and 255
+
+#define EEPROM_BOOTCOUNT_MSB_ADDRESS 101 // byte to check boot count, most significant
+#define EEPROM_BOOTCOUNT_LSB_ADDRESS 102 // byte to check boot count, least significant
 
 
 // ---- FILES ----

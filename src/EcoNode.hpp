@@ -16,39 +16,43 @@
 #include "EcoGPS.hpp"
 
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <list>
-
 
 
 class EcoNode {
 
+    EcoTimer dataTimer;
+    EcoTimer radioTimer;
+
     EcoRadio radio;
 	EcoSensors sensorMaster;
-    EcoTimer timer;
     EcoSD sd;
     EcoGPS gps;
 
-	int timeLastData;
+    uint16_t bootCount;
 
+	time_t timeLastData;
+
+    void initBootCount();
     void setLoRaParameters();
     void setSensorParameters();
     String cleanupString(String s);
 
-public:
+    void recordDataPacket();
+    void sendDataPacket();
 
+	int getAddress();
+    void setRTC();
+
+    // LED
+    bool ledStatus = false;
+    void blinkLED();
+    void activateLED(bool on = true);
+
+public:
     void init();
     void loop();
-
-    void sendData(String data);
-
-//     void collectSensorData();
-//     bool transmitDataFromMemory(uint8_t pa);
-//
-// private:
-// 	void pollSensor(EcoSensor s);
-	int getAddress();
-
-    void setRTC();
 };
 
 #endif

@@ -15,7 +15,7 @@ One `data message` becomes many rows in the `data table`.
 ### Configuration messages
 - Node
 - Boot counter
-- GPS Coordinates
+- GPS position
 - Repeating blocks of:
     - Sensor ID
     - **Data labels**

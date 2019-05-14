@@ -23,7 +23,6 @@ bool EcoSD::init() {
     initialized = false;
     PRINTLN("SD card failed or not present");
     return false;
-
 }
 
 
@@ -36,16 +35,20 @@ String EcoSD::cachFileName() {
 }
 
 bool EcoSD::cachData(String data) {
-    this->cachNumber++;
+    // return if SD card not initialized
+    if (!initialized) return false;
+
+    cachNumber++;
     File file = SD.open(cachFileName().c_str(), FILE_WRITE);
-    PRINTLN("Caching data to file\n" + cachFileName() + " \t");
     if (file) {
+        PRINTLN("Caching data to file " + cachFileName());
         file.print(data);
         file.close();
-
         return true;
     }
-    if (initialized) PRINTLN("Failed to cach data");
+    // else
+    PRINTLN("Failed to cach data");
+    cachNumber--; // no need to increment, did not store data
     return false;
 }
 
