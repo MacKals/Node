@@ -17,6 +17,6 @@ bool EcoTimer::startTimer(uint16_t t) {
 }
 
 bool EcoTimer::timerDone() {
-	if (Teensy3Clock.get() > timerTime) return true;
+	return Teensy3Clock.get() > timerTime); 
 	return false;
 }
