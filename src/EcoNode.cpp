@@ -45,7 +45,7 @@ void EcoNode::initBootCount() {
 		// device has been booted with this code before
 
 		uint8_t LSB = EEPROM.read(EEPROM_BOOTCOUNT_LSB_ADDRESS);
-		uint8_t MSB = EEPROM.read(EEPROM_BOOTCOUNT_LSB_ADDRESS);
+		uint8_t MSB = EEPROM.read(EEPROM_BOOTCOUNT_MSB_ADDRESS);
 
 		// merge to bootCount and increment for current boot
 		bootCount = LSB + (MSB << 8) + 1;
@@ -54,16 +54,24 @@ void EcoNode::initBootCount() {
 		uint8_t newLSB = bootCount & 0xff;
 		uint8_t newMSB = (bootCount >> 8);
 
+		// PRINTLN("Previous bootCount:\t MSB=" + String(MSB) + ", LSB=" + String(LSB));
+		// PRINTLN("New bootCount: \t\t MSB=" + String(newMSB) + ", LSB=" + String(newLSB));
+
 		// write new boot-count to sd card
 		if (newLSB != LSB) EEPROM.write(EEPROM_BOOTCOUNT_LSB_ADDRESS, newLSB);
 		if (newMSB != MSB) EEPROM.write(EEPROM_BOOTCOUNT_MSB_ADDRESS, newMSB);
 
 	} else {
 		// device has not been booted with this code before
+		EEPROM.write(EEPROM_INIT_ADDRESS, EEPROM_INIT_VAL); // register boot
+
 		bootCount = 0;
 		EEPROM.write(EEPROM_BOOTCOUNT_LSB_ADDRESS, 0);
 		EEPROM.write(EEPROM_BOOTCOUNT_MSB_ADDRESS, 0);
+
 	}
+
+	PRINTLN("Boot count = " + String(bootCount));
 }
 
 // TODO: Use?

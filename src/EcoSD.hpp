@@ -27,9 +27,7 @@ public:
     bool init();
 
     // ---- Buffering ----
-private:
     String cachFileName();
-public:
     bool cachData(String data);
     String popData();
     bool cachedData();

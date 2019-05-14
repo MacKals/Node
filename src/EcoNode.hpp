@@ -32,7 +32,7 @@ class EcoNode {
 
     uint16_t bootCount;
 
-	int timeLastData;
+	time_t timeLastData;
 
     void initBootCount();
     void setLoRaParameters();
