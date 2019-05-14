@@ -15,7 +15,7 @@ void EcoSensors::init() {
 
 	PRINT("Connected sensors: ");
 	for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {
-		PRINT((*s)->address);
+		PRINT((*s)->pin);
 		PRINT(" ");
 	}
 	PRINTLN("");

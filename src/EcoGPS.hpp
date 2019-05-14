@@ -3,7 +3,8 @@
 //
 //  Erik MacLennan, Morten Kals
 //  2019-05-08
-
+//
+// UBLOX library:
 
 #ifndef _ECOGPS_H
 #define _ECOGPS_H
@@ -18,7 +19,7 @@ private:
     UBLOX *gps;
 
     uint8_t RST_n = 3;
-    uint8_t INT = 3;
+    uint8_t INT = 5;
 
 public:
     void init() {
@@ -28,7 +29,7 @@ public:
 
         pinMode(INT, INPUT);
 
-        gps = new UBLOX(Serial1, 115200);
+        gps = new UBLOX(Serial1, 9600);
         gps->begin();
     }
 
@@ -37,6 +38,7 @@ public:
     }
 
     void printData() {
+        PRINTLN("GPS data from fix: " + String(gps->isGnssFixOk()));
 
         // checking to see if a good packet has
         // been received and displaying some
@@ -60,7 +62,7 @@ public:
           PRINT("\t");
           PRINT2(gps->getLongitude_deg(),10);    ///< [deg], Longitude
           PRINT("\t");
-          PRINTLN(gps->getMSLHeight_ft());      ///< [ft], Height above mean sea level
+          PRINTLN(gps->getMSLHeight_m());      ///< [ft], Height above mean sea level
       } else {
           PRINTLN("GPS not ready");
       }
