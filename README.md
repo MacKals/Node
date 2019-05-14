@@ -65,7 +65,7 @@ The following are items that remain to be completed as of May 13, 2019.
 - [ ] Power rails switch (w/ knowledge of sensors on each rail).
 - [ ] Decouple time of data acquisition and transmission.
 
-    Device Verification
+    ### Device Verification
     - [ ] Weather station
     - [ ] Flow sensor decoding (interrupt with sleep on?)
 
