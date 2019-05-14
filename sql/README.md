@@ -1,6 +1,5 @@
 # High level data overview
 
-
 ## LoRaWAN messages
 ### Data messages
 - Node
@@ -8,6 +7,7 @@
 - **Timestamp**
 - Repeating blocks of:
     - Sensor ID
+    - Sensor SN
     - **Data values**
 
 One `data message` becomes many rows in the `data table`.
@@ -15,7 +15,7 @@ One `data message` becomes many rows in the `data table`.
 ### Configuration messages
 - Node
 - Boot counter
-- Sensor ID
+- GPS Coordinates
 - Repeating blocks of:
     - Sensor ID
     - **Data labels**
@@ -53,14 +53,14 @@ One `configuration message` becomes one row in the `node configuration table` an
 - Time
 - Description
 
-
 The node and sensor configuration tables are relational. One node configuration maps to many sensor configurations.
 
-## Refference
+## Reference
 Data field descirption:
 - Node (id of node sending message)
 - Boot counter (count of how many power-cycles node has done. New configuration can only be applied after power-cycle.)
-- Sensor ID (determined by which terminal block on the node the senor is connected to, see silkscreen labels)
-- Parameter (inedx oultining which sensor value is encoded)
+- Sensor ID (determined by which terminal block on the node the sensor is connected to, see silkscreen labels on board)
+- Sensor SN (serial number assigned to specific sensor device for the purpose of device tracking/calibration.)
+- Parameter (inedx outlining which sensor value is encoded)
 - Read time (date and timestamp for when data was collected)
 - Reading (data value, the point of the exersise)
