@@ -119,22 +119,22 @@ void EcoNode::loop() {
 
 	radio.loop();
 
-	if (gpsTimer.timerDone()) {
-		gps.printData();
-		gpsTimer.startTimer(TRANSMIT_INTERVAL);
+	// if (gpsTimer.timerDone()) {
+	// 	gps.printData();
+	// 	gpsTimer.startTimer(TRANSMIT_INTERVAL);
+	// }
+
+	// send data from file
+	if (radioTimer.timerDone() && sd.cachedData() && radio.ready()) {
+		sendDataPacket();
+		radioTimer.startTimer(TRANSMIT_INTERVAL);
 	}
 
-	// // send data from file
-	// if (radioTimer.timerDone() && sd.cachedData() && radio.ready()) {
-	// 	sendDataPacket();
-	// 	radioTimer.startTimer(TRANSMIT_INTERVAL);
-	// }
-	//
-	// // read data to file
-	// if (dataTimer.timerDone()) {
-	// 	recordDataPacket();
-	// 	dataTimer.startTimer(RECORD_INTERVAL);
-	// }
+	// read data to file
+	if (dataTimer.timerDone()) {
+		recordDataPacket();
+		dataTimer.startTimer(RECORD_INTERVAL);
+	}
 }
 
 // send data with radio if there is cached data to send

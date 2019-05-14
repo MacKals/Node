@@ -84,7 +84,7 @@ String EcoSensors::getFullDataString() {
 
 	// loop through sensors using itterators
 	for (auto s = sensors.begin(); s != sensors.end(); ++s) {
-		data += "&" + String((*s)->address) + ":";  // sensor address
+		data += "&" + String((*s)->pin) + ":";  // sensor address
 		data += (*s)->readDataToString();			// append data
 	}
 	return data;
