@@ -36,7 +36,9 @@
 
 #define POWER_SAVE
 
-#define DATA_RECORD_INTERVAL 10
+#define RECORD_INTERVAL   30 // s, time between data-collections
+#define TRANSMIT_INTERVAL 20 // s, time between transmit attempts
+
 
 // ---- EEPROM ----
 #define EEPROM_INIT_ADDRESS 100 // byte to check if system has been initialized before

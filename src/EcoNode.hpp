@@ -16,14 +16,17 @@
 #include "EcoGPS.hpp"
 
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <list>
 
 
 class EcoNode {
 
+    EcoTimer dataTimer;
+    EcoTimer radioTimer;
+
     EcoRadio radio;
 	EcoSensors sensorMaster;
-    EcoTimer timer;
     EcoSD sd;
     EcoGPS gps;
 
@@ -41,6 +44,11 @@ class EcoNode {
 
 	int getAddress();
     void setRTC();
+
+    // LED
+    bool ledStatus = false;
+    void blinkLED();
+    void activateLED(bool on = true);
 
 public:
     void init();

@@ -7,8 +7,6 @@
 
 #include "EcoTimer.hpp"
 
-
-
 bool EcoTimer::startTimer(uint16_t t) {
 	if (!timerDone()) return false;
 

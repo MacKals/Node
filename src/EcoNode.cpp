@@ -9,32 +9,34 @@
 #include <Time.h>
 #include <TimeAlarms.h>
 
-bool ledStatus = false;
+void EcoNode::activateLED(bool on) {
+	pinMode(LED, OUTPUT);
+	digitalWrite(LED, ledStatus);
+	ledStatus = on;
+}
 
-void blinkLED() {
+void EcoNode::blinkLED() {
 	digitalWrite(LED, ledStatus);
 	ledStatus = !ledStatus;
 }
 
 void EcoNode::init() {
 	PRINTLN("Node class initializing.");
+	activateLED();
 
 	initBootCount();
-
-	pinMode(LED, OUTPUT);
-	digitalWrite(LED, HIGH);
-	Alarm.timerRepeat(2, blinkLED);
-
 	setRTC();
-
-	// gps.init();
-
 	sd.init();
 	setLoRaParameters();
 	radio.init();
-
+	// gps.init();
 	// sensorMaster.init();
 	// setSensorParameters();
+
+	radioTimer.startTimer(TRANSMIT_INTERVAL);
+	dataTimer.startTimer(RECORD_INTERVAL);
+
+	activateLED(false); // turn LED off
 }
 
 void EcoNode::initBootCount() {
@@ -54,13 +56,13 @@ void EcoNode::initBootCount() {
 
 		// write new boot-count to sd card
 		if (newLSB != LSB) EEPROM.write(EEPROM_BOOTCOUNT_LSB_ADDRESS, newLSB);
-		if (newMSB != MSB) EEPROM.wirte(EEPROM_BOOTCOUNT_MSB_ADDRESS, newMSB);
+		if (newMSB != MSB) EEPROM.write(EEPROM_BOOTCOUNT_MSB_ADDRESS, newMSB);
 
 	} else {
 		// device has not been booted with this code before
 		bootCount = 0;
 		EEPROM.write(EEPROM_BOOTCOUNT_LSB_ADDRESS, 0);
-		EEPROM.wirte(EEPROM_BOOTCOUNT_MSB_ADDRESS, 0);
+		EEPROM.write(EEPROM_BOOTCOUNT_MSB_ADDRESS, 0);
 	}
 }
 
@@ -104,7 +106,7 @@ void EcoNode::setSensorParameters() {
 	}
 
 	sensorMaster.initSensorFromString(data); // execute final command at end of file
-	PRINTLN("done initializing sensors");
+	PRINTLN("Done initializing sensors");
 }
 
 
@@ -112,32 +114,23 @@ void EcoNode::loop() {
 
 	radio.loop();
 
-	// if (radio.ready() && sd.cachedData()) {
-	// 	String data = sd.popData();
-	// 	PRINTLN("Popped data \t" + data);
-	// 	sendData(data);
-	// }
+	// send data from file
+	if (radioTimer.timerDone() && sd.cachedData() && radio.ready()) {
+		sendDataPacket();
+		radioTimer.startTimer(TRANSMIT_INTERVAL);
+	}
 
-	// read data and send at given interval
-	if (timer.timerDone()) {
-
-		// gps.printData();
-
-		blinkLED();
-
-		String data = this->sensorMaster.getFullDataString();
-		sendData(data);
-
-		// start new timer for next data-collection
-		timer.startTimer(DATA_RECORD_INTERVAL);
+	// read data to file
+	if (dataTimer.timerDone()) {
+		recordDataPacket();
+		dataTimer.startTimer(RECORD_INTERVAL);
 	}
 }
 
 // send data with radio if there is cached data to send
 void EcoNode::sendDataPacket() {
-
 	if (sd.cachedData()) {
-		String data = sd.popData()
+		String data = sd.popData();
 
 		// try to send message and cache again if not successful
 		if (!this->radio.send(data)) {
@@ -148,14 +141,8 @@ void EcoNode::sendDataPacket() {
 
 // read information from sensors and cache information
 void EcoNode::recordDataPacket() {
-	// add boot count
 	String data = bootCount;
-
-	// add time
-	time_t t = Teensy3Clock.get(); // s, time since 1.1.1970 (unix time)
-	data =+ String(t);
-
-	// add data values from sensors
+	data += String(Teensy3Clock.get()); // s, time since 1.1.1970 (unix time)
 	data += sensorMaster.getFullDataString();
 
 	sd.cachData(data);
