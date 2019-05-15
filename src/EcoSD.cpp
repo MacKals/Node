@@ -104,9 +104,9 @@ String EcoSD::getDataFromFile(String filename) {
     return "";
 }
 
-vector<tuple <uint8_t, String, uint32_t >> EcoSD::readFromConfig(const vector<uint8_t> validPins) {
+vector<vector<String>> EcoSD::readFromConfig(const vector<uint8_t> validPins) {
 
-    vector<tuple<uint8_t, String, uint32_t>> retvec;
+    vector<vector<String>> retvec;
     const size_t bufferLen = 100;
     char buffer[bufferLen];
 
