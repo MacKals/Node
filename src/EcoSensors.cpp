@@ -90,6 +90,17 @@ String EcoSensors::getFullDataString() {
 	return data;
 }
 
+String EcoSensors::getFullConfiguration() {
+	String config = "";
+
+	// loop through sensors using itterators
+	for (auto s = sensors.begin(); s != sensors.end(); ++s) {
+		config += "&" + String((*s)->pin) + ":";  // sensor address
+		config += String((*s)->serialNum);        // sensor serial number
+	}
+	return config;
+}
+
 // Check if there is sensor of relevant type on pin and add it to array of sensors if so.
 bool EcoSensors::attachSensorIfPresent(Sensor * s) {
 	if (s->sensorPresent()) {

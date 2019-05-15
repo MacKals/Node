@@ -41,6 +41,7 @@ class EcoNode {
     String cleanupString(String s);
 
     void recordDataPacket();
+    void recordConfiguraton();
     void sendDataPacket();
 
 	int getAddress();

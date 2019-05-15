@@ -33,6 +33,7 @@ void EcoNode::init() {
 	// sensorMaster.init();
 	// setSensorParameters();
 
+	recordConfiguraton();
 	activateLED(false); // turn LED off
 }
 
@@ -148,13 +149,23 @@ void EcoNode::sendDataPacket() {
 	}
 }
 
-// read information from sensors and cache information
+// read information from sensors and cache information for sending
 void EcoNode::recordDataPacket() {
-	String data = bootCount;
+	String data = String(bootCount) + "&";
 	data += String(Teensy3Clock.get()); // s, time since 1.1.1970 (unix time)
 	data += sensorMaster.getFullDataString();
 
 	sd.cachData(data);
+}
+
+// read configuration from sensors and cache information for sending
+// C as first character indicates a config message
+void EcoNode::recordConfiguraton() {
+	String config = "C" + String(bootCount) + "&";
+	config += String(Teensy3Clock.get());
+	config += sensorMaster.getFullConfiguration();
+
+	sd.cachData(config);
 }
 
 

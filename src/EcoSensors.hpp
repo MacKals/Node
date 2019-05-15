@@ -37,6 +37,7 @@ private:
 public:
     void init();
     String getFullDataString();
+    String getFullConfiguration();
     bool initSensorFromString(String s);
 };
 
