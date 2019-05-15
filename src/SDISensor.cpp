@@ -22,14 +22,14 @@ String SDISensor::readDataToString() {
 
 void SDISensor::init() {
     // SDI-12 bus must be initialized with begin method
-    this->sdiBus.begin();
+    sdiBus.begin();
     delay(30); // TODO: incrase? decrease?
 
-    this->sensorAddresses = this->getFirstActiveAddress();
+    sensorAddresses = getFirstActiveAddress();
 }
 
 void SDISensor::end() {
-    this->sdiBus.end();
+    sdiBus.end();
 }
 
 char SDISensor::getFirstActiveAddress() {
@@ -57,10 +57,10 @@ String SDISensor::getAllActiveAddresses() {
 
 String SDISensor::printBufferToString() {
 	String buffer = "";
-	this->sdiBus.read(); // consume address
-    this->sdiBus.read(); // consume comma
-	while(this->sdiBus.available()) {
-		char c = this->sdiBus.read();
+	sdiBus.read(); // consume address
+    sdiBus.read(); // consume comma
+	while(sdiBus.available()) {
+		char c = sdiBus.read();
 		if(c == '+') {
 			if (buffer.length() != 0) buffer += ',';
 		} else if (c == '-') {
@@ -79,6 +79,7 @@ String SDISensor::printBufferToString() {
 String SDISensor::printInfoToString(char addr){
 
     this->sdiBus.setActive();
+    sdiBus.clearBuffer();
 
 	String command = "";
 	command += (char) addr;
@@ -87,6 +88,7 @@ String SDISensor::printInfoToString(char addr){
 	delay(30);
 
     String info = printBufferToString();
+    sdiBus.clearBuffer();
     this->sdiBus.forceHold();
     return info;
 }
@@ -94,7 +96,7 @@ String SDISensor::printInfoToString(char addr){
 void SDISensor::printInfo() {
     for (uint8_t i = 0; i < this->sensorAddresses.length(); i++) {
         char addr = this->sensorAddresses.charAt(i);
-        PRINTLN("addr: " + String(addr) + ", desc: " + this->printInfoToString(addr));
+        PRINTLN("Pin: " + String(pin) + ", addr: " + String(addr) + ", desc: " + printInfoToString(addr));
     }
 }
 

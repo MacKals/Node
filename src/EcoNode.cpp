@@ -136,9 +136,9 @@ void EcoNode::sendDataPacket() {
 
 // read information from sensors and cache information for sending
 void EcoNode::recordDataPacket() {
-	String data = String(bootCount);
-	data += "&" + String(Teensy3Clock.get()); // s, time since 1.1.1970 (unix time)
-	data += "&" + sensorMaster.getFullDataString();
+	String data = String(bootCount) + "&";
+	data += String(Teensy3Clock.get()); // s, time since 1.1.1970 (unix time)
+	data += sensorMaster.getFullDataString();
 	PRINTLN("Read data packet: " + data);
 	sd.cachData(data);
 }
