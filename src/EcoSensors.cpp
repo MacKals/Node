@@ -16,17 +16,17 @@ void EcoSensors::init(EcoSD sd) {
   vector<tuple <uint8_t, String, uint32_t >> connected = sd.readFromConfig(threePortPins);
 
 	for (auto & sensor : connected){
-		switch (get<String>(sensor))) { //sensor type string
-			case "SDI": case "SDI-12": case "SDI12":
+		switch (get<String>(sensor).charAt(0)) { //sensor type string
+			case 'S': case 's':
 				sensors.push_back(new SDISensor(get<0>(sensor), get<2>(sensor)));
 				break;
-			case "Analog": case "analog":
+			case 'A': case 'a':
 				sensors.push_back(new AnalogSensor(get<0>(sensor), get<2>(sensor)));
 				break;
-			case "flow": case "Flow":
+			case 'F': case 'f':
 				sensors.push_back(new FlowSensor(get<0>(sensor), get<2>(sensor)));
 				break;
-			case "PWM": case "pwm":
+			case 'P': case 'p':
 				sensors.push_back(new PWMSensor(get<0>(sensor), get<2>(sensor)));
 				break;
 			default:
@@ -74,6 +74,13 @@ String EcoSensors::getFullConfiguration() {
 	return config;
 }
 
+// Check if there is sensor of relevant type on pin and add it to array of sensors if so.
+bool EcoSensors::attachSensorIfPresent(Sensor * s) {
+	if (s->sensorPresent()) {
+		PRINT("pin " + String(s->pin) + " ok \t");
+		sensors.push_back(s);
+		return true;
+	}
 
 
 bool EcoSensors::pinInUse(uint8_t pin) {
