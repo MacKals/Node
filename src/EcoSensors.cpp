@@ -74,18 +74,6 @@ String EcoSensors::getFullConfiguration() {
 	return config;
 }
 
-// Check if there is sensor of relevant type on pin and add it to array of sensors if so.
-bool EcoSensors::attachSensorIfPresent(Sensor * s) {
-	if (s->sensorPresent()) {
-		PRINT("pin " + String(s->pin) + " ok \t");
-		sensors.push_back(s);
-		return true;
-	}
-
-	// sensor not present
-	PRINT("pin " + String(s->pin) + " -  \t");
-	return false;
-}
 
 
 bool EcoSensors::pinInUse(uint8_t pin) {
