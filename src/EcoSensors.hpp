@@ -15,12 +15,15 @@
 #include "SDISensor.h"
 #include "FlowSensor.h"
 #include "PWMSensor.h"
+#include "EcoSD.hpp"
 
 #include <vector>
+#include <tuple>
+
 
 class EcoSensors {
 private:
-    const uint8_t threePortPins[12] = {14, 15, 16, 17, 18, 19, 20, 35, 36, 37, 38, 39};
+    const vector<uint8_t> threePortPins {14, 15, 16, 17, 18, 19, 20, 35, 36, 37, 38, 39};
 
     // must include array sizes
 
@@ -35,7 +38,7 @@ private:
     void attachFlowSensors();
 
 public:
-    void init();
+    void init(EcoSD sd);
     String getFullDataString();
     bool initSensorFromString(String s);
 };

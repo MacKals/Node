@@ -7,13 +7,13 @@
 #include "FlowSensor.h"
 
 
-String readDataToString() {
+String FlowSensor::readDataToString() {
     String data = String(getAverageFlow()) + "," + String(getTotalFlow());
     reset();
     return data;
 }
 
-// AnalogSensor spesific methods
+// AnalogSensor specific methods
 
 
 /*

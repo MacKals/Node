@@ -14,26 +14,25 @@ private:
 
 public:
 
-    PWMSensor(uint8_t pin) : Sensor(pin) {
+    PWMSensor(uint8_t pin, uint32_t serialNum) : Sensor(pin, serialNum) {
         pinMode(pin, INPUT);
     }
 
     // Sensor methods
 
     String readDataToString() {
-        uint16_t data = readDatAs16Bit();
+        uint16_t data = readDataAs16Bit();
         uint8_t lsb = data & 0xff; // keep only lower digits
         uint8_t msb = (data >> 8); // bit shift
 
-        return String(address) + String((char) msb) + String((char) lsb);
+        return String(pin) + String((char) msb) + String((char) lsb);
     }
 
 
-    // AnalogSensor spesific methods
+    // AnalogSensor specific methods
 
     uint16_t readDataAs16Bit() {
         return (uint16_t) (readData() * 0xfffe); // 2^16-1
-
     }
 
     double readData() {
