@@ -29,7 +29,7 @@ void EcoNode::init() {
 	sd.init();
 	setLoRaParameters();
 	radio.init();
-	gps.init();
+	// gps.init();
 	sensorMaster.init(sd);
 	//setSensorParameters();
 
@@ -107,7 +107,7 @@ void EcoNode::loop() {
 	// }
 
 	// send data from file
-	if (radioTimer.timerDone() && sd.cachedData() && radio.ready()) {
+	if (radioTimer.timerDone()) {
 		sendDataPacket();
 		radioTimer.startTimer(TRANSMIT_INTERVAL);
 	}
@@ -121,7 +121,7 @@ void EcoNode::loop() {
 
 // send data with radio if there is cached data to send
 void EcoNode::sendDataPacket() {
-	if (sd.cachedData()) {
+	if (sd.cachedData() && radio.ready()) {
 		String data = sd.popData();
 
 		// try to send message and cache again if not successful
@@ -133,10 +133,10 @@ void EcoNode::sendDataPacket() {
 
 // read information from sensors and cache information for sending
 void EcoNode::recordDataPacket() {
-	String data = String(bootCount) + "&";
-	data += String(Teensy3Clock.get()); // s, time since 1.1.1970 (unix time)
-	data += sensorMaster.getFullDataString();
-
+	String data = String(bootCount);
+	data += "&" + String(Teensy3Clock.get()); // s, time since 1.1.1970 (unix time)
+	data += "&" + sensorMaster.getFullDataString();
+	PRINTLN("Read data packet: " + data);
 	sd.cachData(data);
 }
 
@@ -146,7 +146,7 @@ void EcoNode::recordConfiguraton() {
 	String config = "C" + String(bootCount) + "&";
 	config += String(Teensy3Clock.get());
 	config += sensorMaster.getFullConfiguration();
-
+	PRINTLN("Read config: " + config);
 	sd.cachData(config);
 }
 

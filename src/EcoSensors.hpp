@@ -29,7 +29,6 @@ private:
 
     std::vector<Sensor*> sensors;
 
-    bool attachSensorIfPresent(Sensor * s);
     bool pinInUse(uint8_t pin);
 
     void attachAnalogSensors();

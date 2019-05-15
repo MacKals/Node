@@ -110,11 +110,6 @@ vector<vector<String>> EcoSD::readFromConfig(const vector<uint8_t> validPins) {
     const size_t bufferLen = 100;
     char buffer[bufferLen];
 
-    if (!SD.begin(SDCARD)){
-      PRINTLN("Could not find the SD card");
-      return retvec;
-    }
-
     IniFile ini("config.ini");
 
     if (!ini.open()) {
@@ -126,38 +121,40 @@ vector<vector<String>> EcoSD::readFromConfig(const vector<uint8_t> validPins) {
 
     PRINTLN("Ini file exists, reading values...");
 
-    String entries[2] = {"Type", "SN"};
+    const char entryType[] = "type";
+    const char entrySN[] = "SN";
 
-    for (int j = 0; j < validPins.size()-1; j++) {
+    for (uint j = 0; j < validPins.size(); j++) {
 
+        PRINTLN("LF " + String(validPins[j]) + " " + String(entryType));
 
-      if (ini.getValue((const char*) validPins.at(j), entries[0].c_str(), buffer, bufferLen)){ //found the section
-      //if (ini.findSection(String(validPins.at(j)), buffer, bufferLen, state)){ //found the section
+        if (ini.getValue(String(validPins[j]).c_str(), entryType, buffer, bufferLen)) { //found the section
+        //if (ini.findSection(String(validPins.at(j)), buffer, bufferLen, state)){ //found the section
 
-        tuple<uint8_t, String, uint32_t> cur = std::make_tuple(0, "", 0);
+            tuple<uint8_t, String, uint32_t> cur = std::make_tuple(0, "", 0);
 
-        uint16_t i  = 0;
-        for (auto & entry : entries) { //entries for each connected sensor
+            get<0>(cur) = validPins[j];
 
-          if (ini.getValue((const char*) validPins.at(j), entry.c_str(), buffer, bufferLen)){
+            if (ini.getValue(String(validPins[j]).c_str(), entryType, buffer, bufferLen)){
+                get<1>(cur) = String(buffer);
+            } else {
+                PRINTLN("Did not find 2 " + String(entryType));
+              break;
+            }
 
-            get<0>(cur) = ini.getValue((const char*) validPins.at(j), entry.c_str(), buffer, bufferLen);
+            if (ini.getValue(String(validPins[j]).c_str(), entrySN, buffer, bufferLen)){
+                get<2>(cur) = String(buffer).toInt();
+            } else {
+                PRINTLN("Did not find " + String(entrySN));
+                break;
+            }
 
-          } else {
-            PRINT("Did not find the following field for sensor on pin ");
-            PRINT(String(validPins.at(j)));
-            PRINT(": ");
-            PRINTLN(entry);
-            break;
-          }
+            PRINTLN("read " + String(get<0>(cur)) + ", " + String(get<1>(cur)) + ", " + String(get<2>(cur)));
+            retvec.push_back(cur);
 
-          i++;
-          retvec.push_back(cur);
+        } else {
+            PRINTLN("didn't find the section. Delete me.");
         }
-
-
-      } else {
-        PRINTLN("didn't find the section. Delete me.");
-      }
     }
+    return retvec;
 }
