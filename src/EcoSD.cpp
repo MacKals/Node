@@ -14,7 +14,7 @@ bool EcoSD::init() {
         }
 
         // set cachNumber to current file head
-        cachNumber = 0;
+        cachNumber = 1;
         while (SD.exists(cachFileName().c_str())) {
             cachNumber++;
         }
@@ -81,7 +81,7 @@ String EcoSD::popData() {
 }
 
 bool EcoSD::cachedData() {
-    return cachNumber >= 0;
+    return cachNumber > 0;
 }
 
 
