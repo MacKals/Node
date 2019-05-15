@@ -41,7 +41,6 @@ public:
     void init(EcoSD sd);
     String getFullDataString();
     String getFullConfiguration();
-    bool initSensorFromString(String s);
 };
 
 

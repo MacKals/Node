@@ -96,24 +96,6 @@ void EcoNode::setLoRaParameters() {
 	radio.setLoRaParameters(appeui, deveui, appkey);
 }
 
-// must be called after sd init
-// gets all sensor types, pins, ranges and types from file and configures setup
-void EcoNode::setSensorParameters() {
-	// PRINTLN("Setting sensor parameters");
-	// String data = sd.getDataFromFile(SENSORS_CONFIG_FILE_NAME);
-	//
-	// int i = data.indexOf('\n');
-	//
-	// while (i != -1) {
-	// 	sensorMaster.initSensorFromString(data.substring(0,i)); // process first line in file
-	// 	data = data.substring(i+1); // remove line that was just processed
-	// 	i = data.indexOf('\n');     // get next line end
-	// }
-	//
-	// sensorMaster.init(data); // execute final command at end of file
-	// PRINTLN("Done initializing sensors");
-}
-
 
 void EcoNode::loop() {
 
