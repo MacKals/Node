@@ -13,6 +13,8 @@ bool EcoSD::init() {
             SD.mkdir(cachDirectory.c_str());
         }
 
+        // set cachNumber to current file head
+        cachNumber = 0;
         while (SD.exists(cachFileName().c_str())) {
             cachNumber++;
         }
@@ -48,14 +50,14 @@ bool EcoSD::cachData(String data) {
         return true;
     }
     // else
+    cachNumber--;
     PRINTLN("Failed to cach data");
-    cachNumber--; // no need to increment, did not store data
     return false;
 }
 
 String EcoSD::popData() {
-
-    if (!cachedData()) return "";
+    // return if SD card not initialized
+    if (!initialized || !cachedData()) return "";
 
     File file = SD.open(cachFileName().c_str());
     if (file) {
@@ -74,7 +76,7 @@ String EcoSD::popData() {
         return ret;
     }
 
-    if (initialized) PRINTLN("popData failed");
+    PRINTLN("popData failed");
     return "";
 }
 
@@ -151,5 +153,6 @@ vector<vector<String>> EcoSD::getSensorsFromConfig(const vector<uint8_t> validPi
             PRINTLN("Nothing connected on pin: " + String(pin));
         }
     }
+    ini.close();
     return retvec;
 }
