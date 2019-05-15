@@ -114,9 +114,8 @@ vector<String> EcoSD::getLoRaWANFromConfig() {
     char buffer[bufferLen];
 
     if (ini.open()) {
-        PRINTLN("ini file " + String(ini.getFilename()) + " not valid.");
 
-        vector<String> fields = {"application_EUI", "device_EUI",  "app_key"};
+        vector<String> fields = {"device_EUI", "application_EUI", "app_key"};
 
         for(auto & field : fields){
             if (ini.getValue("lorawan", field.c_str(), buffer, bufferLen)){
