@@ -82,18 +82,21 @@ String EcoNode::cleanupString(String s) {
 // must be called after sd init and before radio init (?)
 // get parameters for LoRaWAN transmission from SD card
 void EcoNode::setLoRaParameters() {
-	String data = sd.getDataFromFile(LORAWAN_CONFIG_FILE_NAME);
 
-	if (data.length() == 0) return;
+	vector<String> lora = sd.getLoRaWANFromConfig();
+	radio.setLoRaParameters(lora[0], lora[1], lora[2]);
 
-	uint16_t i1 = data.indexOf('\n');
-	uint16_t i2 = data.indexOf('\n', i1+1);
-
-	String appeui = cleanupString(data.substring(0, i1));
-	String deveui = cleanupString(data.substring(i1, i2));
-	String appkey = cleanupString(data.substring(i2)); // from index to end of string
-
-	radio.setLoRaParameters(appeui, deveui, appkey);
+	//String data = sd.getDataFromFile(LORAWAN_CONFIG_FILE_NAME);
+	//
+	// if (data.length() == 0) return;
+	//
+	// uint16_t i1 = data.indexOf('\n');
+	// uint16_t i2 = data.indexOf('\n', i1+1);
+	//
+	// String appeui = cleanupString(data.substring(0, i1));
+	// String deveui = cleanupString(data.substring(i1, i2));
+	// String appkey = cleanupString(data.substring(i2)); // from index to end of string
+	//radio.setLoRaParameters(appeui, deveui, appkey);
 }
 
 
