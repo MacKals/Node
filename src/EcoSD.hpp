@@ -22,7 +22,7 @@ private:
     IniFile ini = IniFile("config.ini");
     const String extension = ".txt";
     const String cachDirectory = "cach";
-    uint16_t cachNumber = 0;
+    uint16_t cachNumber;
 
 public:
 
