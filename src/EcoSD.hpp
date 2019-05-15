@@ -19,14 +19,14 @@ class EcoSD {
 private:
     const int chipSelect;
     bool initialized = false;
-
+    IniFile ini = IniFile("config.ini");
     const String extension = ".txt";
     const String cachDirectory = "cach";
     uint16_t cachNumber = 0;
 
 public:
 
-    EcoSD(int chipSelect = BUILTIN_SDCARD) : chipSelect(chipSelect) {}
+    EcoSD(int chipSelect = SDCARD) : chipSelect(chipSelect) {}
 
     bool init();
 
@@ -36,7 +36,7 @@ public:
     String popData();
     bool cachedData();
     String getDataFromFile(String filename);
-    vector<tuple <uint8_t, String, uint32_t >> readFromConfig(const vector<uint8_t> validPins);
+    vector<vector<String>> getSensorsFromConfig(const vector<uint8_t> validPins);
 
 };
 

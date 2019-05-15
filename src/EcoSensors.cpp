@@ -13,24 +13,25 @@ void EcoSensors::init(EcoSD sd) {
 	// attachFlowSensors();
 	// attachAnalogSensors();
 
-  vector<tuple <uint8_t, String, uint32_t >> connected = sd.readFromConfig(threePortPins);
+  vector<vector<String>> connected = sd.getSensorsFromConfig(threePortPins);
 
 	for (auto & sensor : connected){
-		switch (get<String>(sensor).charAt(0)) { //sensor type string
+		switch ('a') { //sensor type string sensor[1].charAt(0)
 			case 'S': case 's':
-                SDISensor *s = new SDISensor(get<0>(sensor), get<2>(sensor));
-                s->init();
-                s->printInfo();
-				sensors.push_back(s);
-				break;
+                {
+                    SDISensor *s = new SDISensor(sensor[0].toInt(), sensor[2]);
+                    s->init();
+				    sensors.push_back(s);
+				    break;
+                }
 			case 'A': case 'a':
-				sensors.push_back(new AnalogSensor(get<0>(sensor), get<2>(sensor)));
+				sensors.push_back(new AnalogSensor(sensor[0].toInt(), sensor[2]));
 				break;
 			case 'F': case 'f':
-				sensors.push_back(new FlowSensor(get<0>(sensor), get<2>(sensor)));
+				sensors.push_back(new FlowSensor(sensor[0].toInt(), sensor[2]));
 				break;
 			case 'P': case 'p':
-				sensors.push_back(new PWMSensor(get<0>(sensor), get<2>(sensor)));
+				sensors.push_back(new PWMSensor(sensor[0].toInt(), sensor[2]));
 				break;
 			default:
 			PRINTLN("Couldn't match sensor type string from config to a valid type.");

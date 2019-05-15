@@ -4,6 +4,15 @@
 //  Erik MacLennan, Morten Kals
 //  2019-03-23
 
+namespace std {
+void __throw_bad_alloc() {
+  Serial.println("Unable to allocate memory");
+}
+void __throw_length_error( char const*e ) {
+  Serial.print("Length Error :"); Serial.println(e);
+}
+}
+
 #include "EcoNode.hpp"
 #include "Configuration.hpp"
 EcoNode node;
