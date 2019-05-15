@@ -6,8 +6,9 @@ bool EcoSD::init() {
 
     if (SD.begin(chipSelect)) {
         initialized = true;
-        PRINTLN("SD card initialized");
+        PRINTLN("SD card initialized.");
 
+        // file caching details
         if (!SD.exists(cachDirectory.c_str())) {
             SD.mkdir(cachDirectory.c_str());
         }
@@ -104,56 +105,50 @@ String EcoSD::getDataFromFile(String filename) {
     return "";
 }
 
-vector<vector<String>> EcoSD::readFromConfig(const vector<uint8_t> validPins) {
+// sends all sensors, each with format of {"Pin", "Sensor Type", "SN"}
+vector<vector<String>> EcoSD::getSensorsFromConfig(const vector<uint8_t> validPins) {
 
     vector<vector<String>> retvec;
+    vector<String> cur;
     const size_t bufferLen = 100;
     char buffer[bufferLen];
 
-    IniFile ini("config.ini");
-
     if (!ini.open()) {
-      PRINT("ini file ");
-      PRINT(ini.getFilename());
-      PRINTLN(" not valid.");
+      PRINTLN("ini file " + String(ini.getFilename()) + " not valid.");
       return retvec;
     }
 
-    PRINTLN("Ini file exists, reading values...");
+    PRINTLN("ini file exists, reading values...");
 
-    const char entryType[] = "type";
-    const char entrySN[] = "SN";
+    // expected fields for each sensor
+    // const string entryType = "type";
+    // const string entrySN = "SN";
 
-    for (uint j = 0; j < validPins.size(); j++) {
+    vector<String> fields = {"type", "SN"};
 
-        PRINTLN("LF " + String(validPins[j]) + " " + String(entryType));
+    for (auto& pin : validPins) {
 
-        if (ini.getValue(String(validPins[j]).c_str(), entryType, buffer, bufferLen)) { //found the section
-        //if (ini.findSection(String(validPins.at(j)), buffer, bufferLen, state)){ //found the section
+        //PRINTLN("LF " + String(pin) + " " + String(entryType));
 
-            tuple<uint8_t, String, uint32_t> cur = std::make_tuple(0, "", 0);
+        if (ini.getValue(String(pin).c_str(), fields[0].c_str(), buffer, bufferLen)) { //found the section (by checking entryType field)
 
-            get<0>(cur) = validPins[j];
+            cur = {String(pin)};
+            //cur.push_back(String(pin));
 
-            if (ini.getValue(String(validPins[j]).c_str(), entryType, buffer, bufferLen)){
-                get<1>(cur) = String(buffer);
-            } else {
-                PRINTLN("Did not find 2 " + String(entryType));
-              break;
+            for (auto &field : fields){
+
+                if (ini.getValue(String(pin).c_str(), field.c_str(), buffer, bufferLen)){
+                    cur.push_back(String(buffer));
+                } else {
+                    PRINTLN("Did not find " + String(field) + " for sensor on pin " + String(pin));
+                    break;
+                }
             }
 
-            if (ini.getValue(String(validPins[j]).c_str(), entrySN, buffer, bufferLen)){
-                get<2>(cur) = String(buffer).toInt();
-            } else {
-                PRINTLN("Did not find " + String(entrySN));
-                break;
-            }
-
-            PRINTLN("read " + String(get<0>(cur)) + ", " + String(get<1>(cur)) + ", " + String(get<2>(cur)));
+            PRINTLN("from config: pin: " + String(pin) + ", type: " + cur[1] + ", SN: " + cur[2]);
             retvec.push_back(cur);
-
         } else {
-            PRINTLN("didn't find the section. Delete me.");
+            PRINTLN("Nothing connected on pin: " + String(pin));
         }
     }
     return retvec;

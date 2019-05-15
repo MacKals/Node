@@ -14,7 +14,7 @@ private:
 
 public:
 
-    PWMSensor(uint8_t pin, uint32_t serialNum) : Sensor(pin, serialNum) {
+    PWMSensor(uint8_t pin, String serialNum) : Sensor(pin, serialNum) {
         pinMode(pin, INPUT);
     }
 

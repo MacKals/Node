@@ -21,7 +21,7 @@ private:
     String sensorAddresses = "";
 
 public:
-    SDISensor(uint8_t pin, uint32_t serialNum) : Sensor(pin, serialNum), sdiBus(pin) {}
+    SDISensor(uint8_t pin, String serialNum) : Sensor(pin, serialNum), sdiBus(pin) {}
 
     // Sensor methods
     String readDataToString();

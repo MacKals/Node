@@ -22,7 +22,7 @@ public:
 
 public:
     // Sensor methods
-    FlowSensor(uint8_t pin, uint32_t serialNum) : Sensor(pin, serialNum) {}
+    FlowSensor(uint8_t pin, String serialNum) : Sensor(pin, serialNum) {}
     ~FlowSensor();
 
     String readDataToString();

@@ -13,10 +13,10 @@ class Sensor {
 
 public:
     const uint8_t pin;     // pin number of connected sensor
-    const uint32_t serialNum; // serial number for specific unit connected
+    const String serialNum; // serial number for specific unit connected
 
     // Default constructor, address = pin
-    Sensor(uint8_t pin, uint32_t serialNum) : pin(pin), serialNum(serialNum) {}
+    Sensor(uint8_t pin, String serialNum) : pin(pin), serialNum(serialNum) {}
 
     // Return data read by sensor as a string.
     // Format: data as strings, entries separated by commas
