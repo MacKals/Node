@@ -20,6 +20,7 @@ void EcoSensors::init(EcoSD sd) {
 			case 'S': case 's':
                 SDISensor *s = new SDISensor(get<0>(sensor), get<2>(sensor));
                 s->init();
+                s->printInfo();
 				sensors.push_back(s);
 				break;
 			case 'A': case 'a':
@@ -60,7 +61,7 @@ String EcoSensors::getFullDataString() {
 	// loop through sensors using iterators
 	for (auto s = sensors.begin(); s != sensors.end(); ++s) {
 		data += "&" + String((*s)->pin) + ":";  // sensor address
-		data += (*s)->readDataToString();			// append data
+		data += (*s)->readDataToString();		// append data
 	}
 	return data;
 }
