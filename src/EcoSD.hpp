@@ -22,7 +22,7 @@ private:
 
     const String extension = ".txt";
     const String cachDirectory = "cach";
-    int32_t cachNumber = 0;
+    uint16_t cachNumber = 0;
 
 public:
 

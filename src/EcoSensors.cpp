@@ -18,7 +18,9 @@ void EcoSensors::init(EcoSD sd) {
 	for (auto & sensor : connected){
 		switch (get<String>(sensor).charAt(0)) { //sensor type string
 			case 'S': case 's':
-				sensors.push_back(new SDISensor(get<0>(sensor), get<2>(sensor)));
+                SDISensor *s = new SDISensor(get<0>(sensor), get<2>(sensor));
+                s->init();
+				sensors.push_back(s);
 				break;
 			case 'A': case 'a':
 				sensors.push_back(new AnalogSensor(get<0>(sensor), get<2>(sensor)));
@@ -73,14 +75,6 @@ String EcoSensors::getFullConfiguration() {
 	}
 	return config;
 }
-
-// Check if there is sensor of relevant type on pin and add it to array of sensors if so.
-bool EcoSensors::attachSensorIfPresent(Sensor * s) {
-	if (s->sensorPresent()) {
-		PRINT("pin " + String(s->pin) + " ok \t");
-		sensors.push_back(s);
-		return true;
-	}
 
 
 bool EcoSensors::pinInUse(uint8_t pin) {
