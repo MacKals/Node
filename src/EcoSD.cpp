@@ -1,6 +1,6 @@
 
 #include "EcoSD.hpp"
-
+using namespace std;
 
 bool EcoSD::init() {
 
@@ -104,53 +104,58 @@ String EcoSD::getDataFromFile(String filename) {
     return "";
 }
 
-Bool EcoSD::readFromConfig(int validPins[]) {
+vector<tuple <uint8_t, String, uint32_t >> EcoSD::readFromConfig(const vector<uint8_t> validPins) {
 
+    vector<tuple<uint8_t, String, uint32_t>> retvec;
     const size_t bufferLen = 100;
     char buffer[bufferLen];
 
     if (!SD.begin(SDCARD)){
       PRINTLN("Could not find the SD card");
-      return false;
+      return retvec;
     }
 
-    IniFile ini(filename);
+    IniFile ini("config.ini");
 
     if (!ini.open()) {
-      PRINT("ini file ")
+      PRINT("ini file ");
       PRINT(ini.getFilename());
       PRINTLN(" not valid.");
-      return false;
+      return retvec;
     }
 
     PRINTLN("Ini file exists, reading values...");
 
     String entries[2] = {"Type", "SN"};
 
-    for (i = 0; i < validPins.size()-1; i++) {
+    for (int j = 0; j < validPins.size()-1; j++) {
 
-      if (ini.findSection(to_string(validPins[i]), buffer, len, IniFileState::funcFindSection)){ //found the section
+      if (ini.findSection(String(validPins.at(j)), buffer, bufferLen, IniFileState::funcFindSection)){ //found the section
 
-        for (j = 0; j < entries.size()-1; j++) { //entries for each connected sensor
+        tuple<uint8_t, String, uint32_t> cur = std::make_tuple(0, "", 0);
 
-          if (ini.getValue(to_string(validPins[i]), entries[j], buffer, bufferLen)){
+        uint16_t i  = 0;
+        for (auto & entry : entries) { //entries for each connected sensor
+
+          if (ini.getValue(String(validPins.at(j)), entry, buffer, bufferLen)){
+
+            get<0>(cur) = ini.getValue(String(validPins.at(j)), entry, buffer, bufferLen);
 
           } else {
             PRINT("Did not find the following field for sensor on pin ");
-            PRINT(to_string(validPins[i]));
+            PRINT(String(pin));
             PRINT(": ");
-            PRINTLN(entries[j]);
+            PRINTLN(entry);
+            break;
           }
+
+          i++;
+          retvec.push_back(cur);
         }
 
+
       } else {
-        PRINTLN("didn't find the section. Delete me.")
+        PRINTLN("didn't find the section. Delete me.");
       }
-
     }
-}
-
-
-
-
 }

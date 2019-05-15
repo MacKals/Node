@@ -11,6 +11,9 @@
 #include <SD.h>
 #include "Configuration.hpp"
 #include <IniFile.h>
+#include <vector>
+#include <tuple>
+using namespace std;
 
 class EcoSD {
 private:
@@ -33,8 +36,7 @@ public:
     String popData();
     bool cachedData();
     String getDataFromFile(String filename);
-
-
+    vector<tuple <uint8_t, String, uint32_t >> readFromConfig(const vector<uint8_t> validPins);
 
 };
 

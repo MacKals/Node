@@ -13,7 +13,7 @@ class AnalogSensor : public Sensor {
 
 public:
 
-    AnalogSensor(uint8_t pin) : Sensor(pin) {
+    AnalogSensor(uint8_t pin, uint32_t serialNum) : Sensor(pin, serialNum) {
         pinMode(pin, INPUT);
         analogReadRes(13); // 13 bit analog input, 0V -> 0, 3.3V -> 8192
     }
@@ -21,8 +21,8 @@ public:
     // Sensor methods
 
     String readDataToString() {
-        return String(address) + "," + String(readData());
-        
+        return String(readData());
+
         // uint16_t data = this->readData();
         // uint8_t lsb = data & 0xff; // keep only lower digits
         // uint8_t msb = (data >> 8); // bit shift

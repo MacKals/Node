@@ -38,7 +38,7 @@ public:
     }
 
     void printData() {
-        PRINTLN("GPS data from fix: " + String(gps->isGnssFixOk()));
+      //  PRINTLN("GPS data from fix: " + String(gps->isGnssFixOk()));
 
         // checking to see if a good packet has
         // been received and displaying some

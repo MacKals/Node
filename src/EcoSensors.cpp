@@ -7,11 +7,33 @@
 #include "EcoSensors.hpp"
 
 
-void EcoSensors::init() {
+void EcoSensors::init(EcoSD sd) {
 	// attachPWMSensors();
-	attachSDISensors();
+	// attachSDISensors();
 	// attachFlowSensors();
 	// attachAnalogSensors();
+
+  vector<tuple <uint8_t, String, uint32_t >> connected = sd.readFromConfig(threePortPins);
+
+	for (auto & sensor : connected){
+		switch (get<String>(sensor))) { //sensor type string
+			case "SDI": case "SDI-12": case "SDI12":
+				sensors.push_back(new SDISensor(get<0>(sensor), get<2>(sensor)));
+				break;
+			case "Analog": case "analog":
+				sensors.push_back(new AnalogSensor(get<0>(sensor), get<2>(sensor)));
+				break;
+			case "flow": case "Flow":
+				sensors.push_back(new FlowSensor(get<0>(sensor), get<2>(sensor)));
+				break;
+			case "PWM": case "pwm":
+				sensors.push_back(new PWMSensor(get<0>(sensor), get<2>(sensor)));
+				break;
+			default:
+			PRINTLN("Couldn't match sensor type string from config to a valid type.");
+		}
+
+	}
 
 	PRINT("Connected sensors: ");
 	for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {
@@ -67,7 +89,7 @@ bool EcoSensors::initSensorFromString(String inputString) {
 		// case 'P': ; break;
 		// case 'F': ; break;
 		default:
-			PRINTLN("Invalid sensor spesified, does not recognize first character in: " + input);
+			PRINTLN("Invalid sensor specified, does not recognize first character in: " + input);
 	}
 }
 
@@ -77,12 +99,12 @@ bool EcoSensors::initSensorFromString(String inputString) {
 // - values from different sensors separated by &
 // - starts with unix time-stamp
 // - data from all sensors follow in this format:
-//   - pinNumber:rading1,reading2,reading3 (etc for more parameters)
+//   - pinNumber:reading1,reading2,reading3 (etc for more parameters)
 // example: 1557236143&3:100000.0,21.8&17:1.27,22.8,1&22:1.39,22.0,1&2:2,2194
 String EcoSensors::getFullDataString() {
 	String data = "";
 
-	// loop through sensors using itterators
+	// loop through sensors using iterators
 	for (auto s = sensors.begin(); s != sensors.end(); ++s) {
 		data += "&" + String((*s)->pin) + ":";  // sensor address
 		data += (*s)->readDataToString();			// append data
@@ -123,51 +145,51 @@ bool EcoSensors::pinInUse(uint8_t pin) {
 }
 
 
-void EcoSensors::attachAnalogSensors() {
-	PRINT("Attaching analog sensors:\t");
-	for (const uint8_t &p : threePortPins) {
-		if (!pinInUse(p)) {
-			AnalogSensor *s = new AnalogSensor(p);
-			if (!attachSensorIfPresent(s)) delete s;
-		}
-	}
-	PRINTLN();
-}
-
-void EcoSensors::attachPWMSensors() {
-	PRINT("Attaching PWM sensors:\t\t");
-	for (const uint8_t &p : threePortPins) {
-		if (!pinInUse(p)) {
-			PWMSensor *s = new PWMSensor(p);
-			if (!attachSensorIfPresent(s)) delete s;
-		}
-	}
-	PRINTLN();
-}
-
-void EcoSensors::attachSDISensors() {
-	PRINT("Attaching SDI sensors:\t\t");
-	for (auto p : threePortPins) {
-		if (!pinInUse(p)) {
-			SDISensor *s = new SDISensor(p);
-			s->init();
-			if (!attachSensorIfPresent(s)) {
-				s->end(); // free resources
-				delete s;
-			}
-		}
-	}
-	PRINTLN();
-}
-
-void EcoSensors::attachFlowSensors() {
-	PRINT("Attaching flow sensors:\t\t");
-	for (auto p : threePortPins) {
-		if (!pinInUse(p)) {
-			FlowSensor *s = new FlowSensor(p);
-			if (attachSensorIfPresent(s)) s->init(); // activate interrupt
-			else delete s;
-		}
-	}
-	PRINTLN();
-}
+// void EcoSensors::attachAnalogSensors() {
+// 	PRINT("Attaching analog sensors:\t");
+// 	for (const uint8_t &p : threePortPins) {
+// 		if (!pinInUse(p)) {
+// 			AnalogSensor *s = new AnalogSensor(p);
+// 			if (!attachSensorIfPresent(s)) delete s;
+// 		}
+// 	}
+// 	PRINTLN();
+// }
+//
+// void EcoSensors::attachPWMSensors() {
+// 	PRINT("Attaching PWM sensors:\t\t");
+// 	for (const uint8_t &p : threePortPins) {
+// 		if (!pinInUse(p)) {
+// 			PWMSensor *s = new PWMSensor(p);
+// 			if (!attachSensorIfPresent(s)) delete s;
+// 		}
+// 	}
+// 	PRINTLN();
+// }
+//
+// void EcoSensors::attachSDISensors() {
+// 	PRINT("Attaching SDI sensors:\t\t");
+// 	for (auto p : threePortPins) {
+// 		if (!pinInUse(p)) {
+// 			SDISensor *s = new SDISensor(p);
+// 			s->init();
+// 			if (!attachSensorIfPresent(s)) {
+// 				s->end(); // free resources
+// 				delete s;
+// 			}
+// 		}
+// 	}
+// 	PRINTLN();
+// }
+//
+// void EcoSensors::attachFlowSensors() {
+// 	PRINT("Attaching flow sensors:\t\t");
+// 	for (auto p : threePortPins) {
+// 		if (!pinInUse(p)) {
+// 			FlowSensor *s = new FlowSensor(p);
+// 			if (attachSensorIfPresent(s)) s->init(); // activate interrupt
+// 			else delete s;
+// 		}
+// 	}
+// 	PRINTLN();
+// }

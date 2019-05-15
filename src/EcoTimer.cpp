@@ -15,10 +15,5 @@ bool EcoTimer::startTimer(uint16_t t) {
 }
 
 bool EcoTimer::timerDone() {
-<<<<<<< HEAD
 	return (Teensy3Clock.get() > timerTime); 
-	return false;
-=======
-	return Teensy3Clock.get() > timerTime);
->>>>>>> 68ac6ba591d205451e1aecd0e9807d183a0a11a2
 }
