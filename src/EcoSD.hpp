@@ -37,7 +37,7 @@ public:
     bool cachedData();
     String getDataFromFile(String filename);
     vector<vector<String>> getSensorsFromConfig(const vector<uint8_t> validPins);
-
+    vector<String> getLoRaWANFromConfig();
 };
 
 

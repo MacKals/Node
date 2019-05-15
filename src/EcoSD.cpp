@@ -105,51 +105,77 @@ String EcoSD::getDataFromFile(String filename) {
     return "";
 }
 
-// sends all sensors, each with format of {"Pin", "Sensor Type", "SN"}
-vector<vector<String>> EcoSD::getSensorsFromConfig(const vector<uint8_t> validPins) {
+vector<String> EcoSD::getLoRaWANFromConfig() {
 
-    vector<vector<String>> retvec;
-    vector<String> cur;
+    PRINTLN("Getting network info from config...");
+    vector<String> lorawanID;
+
     const size_t bufferLen = 100;
     char buffer[bufferLen];
 
-    if (!ini.open()) {
-      PRINTLN("ini file " + String(ini.getFilename()) + " not valid.");
-      return retvec;
-    }
+    if (ini.open()) {
+        PRINTLN("ini file " + String(ini.getFilename()) + " not valid.");
 
-    PRINTLN("ini file exists, reading values...");
+        vector<String> fields = {"application_EUI", "device_EUI",  "app_key"};
 
-    // expected fields for each sensor
-    // const string entryType = "type";
-    // const string entrySN = "SN";
-
-    vector<String> fields = {"type", "SN"};
-
-    for (auto& pin : validPins) {
-
-        //PRINTLN("LF " + String(pin) + " " + String(entryType));
-
-        if (ini.getValue(String(pin).c_str(), fields[0].c_str(), buffer, bufferLen)) { //found the section (by checking entryType field)
-
-            cur = {String(pin)};
-            //cur.push_back(String(pin));
-
-            for (auto &field : fields){
-
-                if (ini.getValue(String(pin).c_str(), field.c_str(), buffer, bufferLen)){
-                    cur.push_back(String(buffer));
-                } else {
-                    PRINTLN("Did not find " + String(field) + " for sensor on pin " + String(pin));
-                    break;
-                }
+        for(auto & field : fields){
+            if (ini.getValue("lorawan", field.c_str(), buffer, bufferLen)){
+                lorawanID.push_back(String(buffer));
+            } else {
+                PRINTLN("Did not find " + String(field));
+                break;
             }
-
-            PRINTLN("from config: pin: " + String(pin) + ", type: " + cur[1] + ", SN: " + cur[2]);
-            retvec.push_back(cur);
-        } else {
-            PRINTLN("Nothing connected on pin: " + String(pin));
         }
+    } else {
+        PRINTLN("ini file " + String(ini.getFilename()) + " not valid.");
     }
+
+    return lorawanID;
+}
+// sends all sensors, each with format of {"Pin", "Sensor Type", "SN"}
+vector<vector<String>> EcoSD::getSensorsFromConfig(const vector<uint8_t> validPins) {
+
+    PRINTLN("Getting connected sensor info from config");
+    vector<vector<String>> retvec;
+    vector<String> cur;
+    String notConnected = "";
+    const size_t bufferLen = 100;
+    char buffer[bufferLen];
+
+    if (ini.open()) {
+
+        vector<String> fields = {"type", "SN"};
+
+        for (auto& pin : validPins) {
+
+            //PRINTLN("LF " + String(pin) + " " + String(entryType));
+
+            if (ini.getValue(String(pin).c_str(), fields[0].c_str(), buffer, bufferLen)) { //found the section (by checking entryType field)
+
+                cur = {String(pin)};
+                //cur.push_back(String(pin));
+
+                for (auto &field : fields){
+
+                    if (ini.getValue(String(pin).c_str(), field.c_str(), buffer, bufferLen)){
+                        cur.push_back(String(buffer));
+                    } else {
+                        PRINTLN("Did not find " + String(field) + " for sensor on pin " + String(pin));
+                        break;
+                    }
+                }
+
+                PRINTLN("from config: pin: " + String(pin) + ", type: " + cur[1] + ", SN: " + cur[2]);
+                retvec.push_back(cur);
+            } else {
+                notConnected += " " + String(pin);
+            }
+        }
+        ini.close();
+    } else {
+        PRINTLN("ini file " + String(ini.getFilename()) + " not valid.");
+    }
+
+    PRINTLN("Nothing connected on pins: " + notConnected);
     return retvec;
 }
