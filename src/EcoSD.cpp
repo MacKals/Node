@@ -130,20 +130,22 @@ vector<tuple <uint8_t, String, uint32_t >> EcoSD::readFromConfig(const vector<ui
 
     for (int j = 0; j < validPins.size()-1; j++) {
 
-      if (ini.findSection(String(validPins.at(j)), buffer, bufferLen, IniFileState::funcFindSection)){ //found the section
+
+      if (ini.getValue((const char*) validPins.at(j), entries[0].c_str(), buffer, bufferLen)){ //found the section
+      //if (ini.findSection(String(validPins.at(j)), buffer, bufferLen, state)){ //found the section
 
         tuple<uint8_t, String, uint32_t> cur = std::make_tuple(0, "", 0);
 
         uint16_t i  = 0;
         for (auto & entry : entries) { //entries for each connected sensor
 
-          if (ini.getValue(String(validPins.at(j)), entry, buffer, bufferLen)){
+          if (ini.getValue((const char*) validPins.at(j), entry.c_str(), buffer, bufferLen)){
 
-            get<0>(cur) = ini.getValue(String(validPins.at(j)), entry, buffer, bufferLen);
+            get<0>(cur) = ini.getValue((const char*) validPins.at(j), entry.c_str(), buffer, bufferLen);
 
           } else {
             PRINT("Did not find the following field for sensor on pin ");
-            PRINT(String(pin));
+            PRINT(String(validPins.at(j)));
             PRINT(": ");
             PRINTLN(entry);
             break;
