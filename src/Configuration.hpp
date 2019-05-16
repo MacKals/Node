@@ -36,8 +36,8 @@
 
 #define POWER_SAVE
 
-#define RECORD_INTERVAL   90 // s, time between data-collections
-#define TRANSMIT_INTERVAL 60 // s, time between transmit attempts
+#define RECORD_INTERVAL   20 // s, time between data-collections
+#define TRANSMIT_INTERVAL 10 // s, time between transmit attempts
 
 
 // ---- EEPROM ----

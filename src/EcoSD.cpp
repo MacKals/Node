@@ -37,29 +37,45 @@ String EcoSD::cacheFileName() {
     return cacheDirectory + "/" + String(n) + this->extension;
 }
 
-bool EcoSD::cacheData(String data) {
+bool EcoSD::cacheData(String data, String filename) {
     // return if SD card not initialized
     if (!initialized) return false;
 
-    cacheNumber++;
-    File file = SD.open(cacheFileName().c_str(), FILE_WRITE);
+    bool spesifiedFilename = (filename.length() != 0);
+
+    // use normal cacheing naming scheme
+    if (!spesifiedFilename) {
+        cacheNumber++;
+        filename = cacheFileName();
+    } else {
+        // append path and extension
+        filename = cacheDirectory + "/" + filename + this->extension;
+    }
+
+    File file = SD.open(filename.c_str(), FILE_WRITE);
     if (file) {
-        PRINTLN("cacheing data to file " + cacheFileName());
+        PRINTLN("cacheing data to file " + filename);
         file.print(data);
         file.close();
         return true;
     }
     // else
-    cacheNumber--;
-    PRINTLN("Failed to cache data");
+    if (!spesifiedFilename) cacheNumber--;
+    PRINTLN("Failed to cache data to file " + filename);
     return false;
 }
 
-String EcoSD::popData() {
+String EcoSD::popData(String filename) {
     // return if SD card not initialized
-    if (!initialized || !cachedData()) return "";
+    if (!initialized) return "";
 
-    File file = SD.open(cacheFileName().c_str());
+    // use normal cacheing naming scheme
+    if (filename.length() == 0) {
+        if (!cachedData()) return "";
+        filename = cacheFileName();
+    } else if (!cachedData(filename)) return "";
+
+    File file = SD.open(filename.c_str());
     if (file) {
         String ret = "";
         while (file.available()) {
@@ -69,7 +85,7 @@ String EcoSD::popData() {
         ret.trim(); // remove ending newline
         file.close();
 
-        bool removed = SD.remove(cacheFileName().c_str());
+        bool removed = SD.remove(filename.c_str());
         if (!removed) PRINTLN("Delete failed");
 
         cacheNumber--;
@@ -84,6 +100,13 @@ bool EcoSD::cachedData() {
     return cacheNumber > 0;
 }
 
+bool EcoSD::cachedData(String filename) {
+    if (initialized) {
+        File file = SD.open(filename.c_str());
+        if (file) return true;
+    }
+    return false;
+}
 
 // ---- Config ----
 

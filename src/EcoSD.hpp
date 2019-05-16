@@ -32,10 +32,13 @@ public:
 
     // ---- Buffering ----
     String cacheFileName();
-    bool cacheData(String data);
-    String popData();
+    bool cacheData(String data, String filename = "");
+    String popData(String filename = "");
     bool cachedData();
+    bool cachedData(String filename);
+    
     String getDataFromFile(String filename);
+
     vector<vector<String>> getSensorsFromConfig(const vector<uint8_t> validPins);
     vector<String> getLoRaWANFromConfig();
 };

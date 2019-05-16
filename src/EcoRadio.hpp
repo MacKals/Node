@@ -48,9 +48,10 @@ public:
 		os_runloop_once();
 	}
 
-	bool send(String s);
+	void send(String s);
 	bool ready();
-	bool messageSentSuccessfully = false;
+
+	bool sendSucceeded();
 };
 
 #endif
