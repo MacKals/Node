@@ -129,16 +129,18 @@ void EcoNode::loop() {
 	#endif
 }
 
+#define ON_AIR_DATA_FILENAME "oad"
+
 // send data with radio if there is cached data to send
 void EcoNode::sendDataPacket() {
 	if (sd.cachedData() && radio.ready()) {
-		String data = sd.popData();
 
-		// try to send message and cache again if not successful
-		if (!this->radio.send(data)) {
-			sd.cacheData(data);
-		}
-		if (!radio.transmitSuccessfull()) sd.cachData(data);
+		String data = sd.popData(ON_AIR_DATA_FILENAME);
+
+		if (radio.sendSucceeded() || data.length() == 0) data = sd.popData(); // overwrite
+
+		sd.cacheData(data, ON_AIR_DATA_FILENAME); // cahce to on air file
+		radio.send(data); // try to send message
 	}
 }
 

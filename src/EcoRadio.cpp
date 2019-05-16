@@ -17,9 +17,8 @@ void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
 void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
 void os_getDevKey (u1_t* buf) { memcpy_P(buf, APPKEY, 16);}
 
-volatile bool joined = false;
-volatile bool _transmitSuccessfull = false;
-volatile ev_t _lastEvent = EV_TXSTART;
+bool sendSucceededVar = true;
+
 // lef = little endian format, reverse order
 void stringToHex(String s, u1_t *arr, bool lef = false) {
     for (uint8_t i = 0; i < s.length(); i += 2) {
@@ -164,7 +163,7 @@ void onEvent (ev_t ev) {
             PRINTLN(F("EV_REJOIN_FAILED"));
             break;
         case EV_TXCOMPLETE:
-            messageSentSuccessfully = true;
+            sendSucceededVar = true; // confirmation of successfull message reciept
             PRINTLN(F("EV_TXCOMPLETE (includes waiting for RX windows)"));
             if (LMIC.txrxFlags & TXRX_ACK)
               PRINTLN(F("Received ack"));
@@ -209,25 +208,23 @@ void onEvent (ev_t ev) {
 }
 
 
-bool EcoRadio::send(String s) {
-    messageSentSuccessfully = false;
+void EcoRadio::send(String s) {
+    sendSucceededVar = false; // set ready to wait for reciept
+
+    if (!this->ready()) {
+        PRINT(String(os_getTime()) + ": \t");
+		PRINTLN(F("OP_TXRXPEND, not sending"));
+        return;
+	}
+
 	uint16_t length = s.length();
 	uint8_t sendArray[length];
 	for (uint16_t i = 0; i < length; i++) {
 		sendArray[i] = (uint8_t) s.charAt(i);
 	}
 
-	if (!ready()) {
-        PRINT(os_getTime());
-        PRINT(": \t");
-		    PRINTLN(F("OP_TXRXPEND, not sending"));
-        return false;
-	}
-
     // Prepare upstream data transmission at the next possible time.
 	LMIC_setTxData2(1, sendArray, length, 0);
-    _transmitSuccessfull = false;
-	return true;
 }
 
 bool EcoRadio::ready() {
@@ -250,6 +247,6 @@ bool EcoRadio::transmitting() {
     return true;
 }
 
-bool EcoRadio::transmitSuccessfull() {
-    return _transmitSuccessfull;
+bool EcoRadio::sendSucceeded() {
+    return sendSucceededVar;
 }

@@ -65,7 +65,7 @@ The following are items that remain to be completed as of May 13, 2019.
 - [ ] Power rails switch (w/ knowledge of sensors on each rail).
 - [x] Decouple time of data acquisition and transmission.
 - [ ] Low power mode.
-- [ ] Packet dropping action.
+- [x] Ensure packet delivery to TTN.
 - [ ] Revise document for config file details.
 
     ### Device Verification

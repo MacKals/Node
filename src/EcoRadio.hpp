@@ -28,9 +28,10 @@ public:
 		os_runloop_once(); // queries replies from LORA module, must keep runing
 	}
 
-	bool send(String s);
+	void send(String s);
 	bool ready();
-	bool messageSentSuccessfully = false;
+
+	bool sendSucceeded();
 };
 
 #endif
