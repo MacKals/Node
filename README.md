@@ -60,10 +60,13 @@ The following are items that remain to be completed as of May 13, 2019.
 
 ## Node
 
-- [ ] Configuration file reformatting (INI format).
+- [x] Configuration file reformatting (INI format).
 - [ ] GPS integration.
 - [ ] Power rails switch (w/ knowledge of sensors on each rail).
-- [ ] Decouple time of data acquisition and transmission.
+- [x] Decouple time of data acquisition and transmission.
+- [ ] Low power mode.
+- [ ] Packet dropping action.
+- [ ] Revise document for config file details.
 
     ### Device Verification
     - [ ] Weather station
