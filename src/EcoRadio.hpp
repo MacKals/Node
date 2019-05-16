@@ -23,7 +23,6 @@ private:
 	void setLoRaParameters(String deveui, String appeui, String appkey);
 
 public:
-	void init(EcoSD sd);
 
 	void loop() {
 		os_runloop_once(); // queries replies from LORA module, must keep runing
@@ -31,9 +30,7 @@ public:
 
 	bool send(String s);
 	bool ready();
-
-	bool transmitting();
-	bool transmitSuccessfull();
+	bool messageSentSuccessfully = false;
 };
 
 #endif

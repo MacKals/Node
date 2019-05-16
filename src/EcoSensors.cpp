@@ -15,11 +15,8 @@ void EcoSensors::init(EcoSD sd) {
         digitalWrite(p, HIGH);
     }
 
-    vector<vector<String>> connected = sd.getSensorsFromConfig(threePortPins);
-
-	for (auto & sensor : connected) {
-
-		switch (sensor[1].charAt(0)) {
+	for (auto & sensor : connected){
+		switch (sensor[1].charAt(0)) { //sensor type string sensor[1].charAt(0)
 			case 'S': case 's':
                 {
                     SDISensor *s = new SDISensor(sensor[0].toInt(), sensor[2]);

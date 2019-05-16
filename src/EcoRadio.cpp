@@ -164,6 +164,7 @@ void onEvent (ev_t ev) {
             PRINTLN(F("EV_REJOIN_FAILED"));
             break;
         case EV_TXCOMPLETE:
+            messageSentSuccessfully = true;
             PRINTLN(F("EV_TXCOMPLETE (includes waiting for RX windows)"));
             if (LMIC.txrxFlags & TXRX_ACK)
               PRINTLN(F("Received ack"));
@@ -209,6 +210,7 @@ void onEvent (ev_t ev) {
 
 
 bool EcoRadio::send(String s) {
+    messageSentSuccessfully = false;
 	uint16_t length = s.length();
 	uint8_t sendArray[length];
 	for (uint16_t i = 0; i < length; i++) {

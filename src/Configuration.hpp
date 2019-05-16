@@ -35,6 +35,10 @@
 
 #define POWER_ON_TO_READ_TIME 500 // ms, time from sensors powered to reading taken
 
+#define RECORD_INTERVAL   90 // s, time between data-collections
+#define TRANSMIT_INTERVAL 60 // s, time between transmit attempts
+
+
 // ---- EEPROM ----
 #define EEPROM_INIT_ADDRESS 100 // byte to check if system has been initialized before
 #define EEPROM_INIT_VAL 88      // a number between 0 and 255
