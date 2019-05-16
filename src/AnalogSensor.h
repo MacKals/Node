@@ -21,7 +21,7 @@ public:
     // Sensor methods
 
     String readDataToString() {
-        return String(readData());
+        return String(readData()/3.3); // volts
 
         // uint16_t data = this->readData();
         // uint8_t lsb = data & 0xff; // keep only lower digits

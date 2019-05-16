@@ -21,9 +21,6 @@
 class EcoRadio {
 
 public:
-	EcoRadio() {
-		PRINTLN("radio object created");
-	}
 
 	void setLoRaParameters(String deveui, String appeui, String appkey);
 
@@ -53,6 +50,7 @@ public:
 
 	bool send(String s);
 	bool ready();
+	bool messageSentSuccessfully = false;
 };
 
 #endif
