@@ -129,7 +129,7 @@ void EcoNode::sendDataPacket() {
 
 		// try to send message and cache again if not successful
 		if (!this->radio.send(data)) {
-			sd.cachData(data);
+			sd.cacheData(data);
 		}
 	}
 }
@@ -140,7 +140,7 @@ void EcoNode::recordDataPacket() {
 	data += String(Teensy3Clock.get()); // s, time since 1.1.1970 (unix time)
 	data += sensorMaster.getFullDataString();
 	PRINTLN("Read data packet: " + data);
-	sd.cachData(data);
+	sd.cacheData(data);
 }
 
 // read configuration from sensors and cache information for sending
@@ -150,7 +150,7 @@ void EcoNode::recordConfiguraton() {
 	config += String(Teensy3Clock.get());
 	config += sensorMaster.getFullConfiguration();
 	PRINTLN("Read config: " + config);
-	sd.cachData(config);
+	sd.cacheData(config);
 }
 
 

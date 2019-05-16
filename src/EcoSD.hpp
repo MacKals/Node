@@ -21,8 +21,8 @@ private:
     bool initialized = false;
     IniFile ini = IniFile("config.ini");
     const String extension = ".txt";
-    const String cachDirectory = "cach";
-    uint32_t cachNumber;
+    const String cacheDirectory = "cache";
+    uint32_t cacheNumber;
 
 public:
 
@@ -31,8 +31,8 @@ public:
     bool init();
 
     // ---- Buffering ----
-    String cachFileName();
-    bool cachData(String data);
+    String cacheFileName();
+    bool cacheData(String data);
     String popData();
     bool cachedData();
     String getDataFromFile(String filename);

@@ -17,8 +17,8 @@ private:
     bool initialized = false;
 
 
-    const String cachDirectory = "cach";
-    int32_t cachNumber = 0;
+    const String cacheDirectory = "cache";
+    int32_t cacheNumber = 0;
 
     const String extension = ".txt";
 
@@ -32,14 +32,14 @@ public:
             initialized = true;
             PRINTLN("SD card initialized");
 
-            if (!SD.exists(cachDirectory.c_str())) {
-                SD.mkdir(cachDirectory.c_str());
+            if (!SD.exists(cacheDirectory.c_str())) {
+                SD.mkdir(cacheDirectory.c_str());
             }
 
-            while (SD.exists(cachFileName().c_str())) {
-                cachNumber++;
+            while (SD.exists(cacheFileName().c_str())) {
+                cacheNumber++;
             }
-            cachNumber--;
+            cacheNumber--;
 
             return true;
         }
@@ -53,16 +53,16 @@ public:
 
     // ---- Buffering ----
 
-    String cachFileName() {
+    String cacheFileName() {
         char n[100] = {};
-        sprintf(n, "%08d", this->cachNumber);
-        return cachDirectory + "/" + String(n) + this->extension;
+        sprintf(n, "%08d", this->cacheNumber);
+        return cacheDirectory + "/" + String(n) + this->extension;
     }
 
-    bool cachData(String data) {
-        this->cachNumber++;
-        File file = SD.open(cachFileName().c_str(), FILE_WRITE);
-        PRINT(cachFileName() + " \t");
+    bool cacheData(String data) {
+        this->cacheNumber++;
+        File file = SD.open(cacheFileName().c_str(), FILE_WRITE);
+        PRINT(cacheFileName() + " \t");
         if (file) {
             file.print(data);
             file.close();
@@ -77,7 +77,7 @@ public:
 
         if (!cachedData()) return "";
 
-        File file = SD.open(cachFileName().c_str());
+        File file = SD.open(cacheFileName().c_str());
         if (file) {
             String ret = "";
             while (file.available()) {
@@ -87,10 +87,10 @@ public:
             ret.remove(ret.length()); // remove ending newline
             file.close();
 
-            bool removed = SD.remove(cachFileName().c_str());
+            bool removed = SD.remove(cacheFileName().c_str());
             if (!removed) PRINTLN("Delete failed");
 
-            cachNumber--;
+            cacheNumber--;
             return ret;
         }
 
@@ -99,7 +99,7 @@ public:
     }
 
     bool cachedData() {
-        return cachNumber >= 0;
+        return cacheNumber >= 0;
     }
 
 
