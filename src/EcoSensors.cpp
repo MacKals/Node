@@ -8,14 +8,17 @@
 
 
 void EcoSensors::init(EcoSD sd) {
-	// attachPWMSensors();
-	// attachSDISensors();
-	// attachFlowSensors();
-	// attachAnalogSensors();
 
-  vector<vector<String>> connected = sd.getSensorsFromConfig(threePortPins);
+    // set all power contol pins to output and turn on
+    for (auto & p : powerControlPins) {
+        pinMode(p, OUTPUT);
+        digitalWrite(p, HIGH);
+    }
 
-	for (auto & sensor : connected){
+    vector<vector<String>> connected = sd.getSensorsFromConfig(threePortPins);
+
+	for (auto & sensor : connected) {
+
 		switch ('a') { //sensor type string sensor[1].charAt(0)
 			case 'S': case 's':
                 {
@@ -36,8 +39,10 @@ void EcoSensors::init(EcoSD sd) {
 			default:
 			PRINTLN("Couldn't match sensor type string from config to a valid type.");
 		}
-
 	}
+
+    // power off sensors
+    for (auto & p : powerControlPins) digitalWrite(p, LOW);
 
 	PRINT("Connected sensors: ");
 	for (auto s = this->sensors.begin(); s != this->sensors.end(); ++s) {
@@ -47,6 +52,23 @@ void EcoSensors::init(EcoSD sd) {
 	PRINTLN("");
 }
 
+// powers sensors on if on switched power-rail, nothing otherwise
+void EcoSensors::powerOn(uint8_t pin) {
+    for (uint8_t i = 0; i < poweredPins.size(); i++) {
+        if (poweredPins[i] == pin) {
+            digitalWrite(powerControlPins[i], HIGH);
+            delay(40);
+        }
+    }
+}
+
+void EcoSensors::powerOff(uint8_t pin) {
+    for (uint8_t i = 0; i < poweredPins.size(); i++) {
+        if (poweredPins[i] == pin) {
+            digitalWrite(powerControlPins[i], LOW);
+        }
+    }
+}
 
 
 // reads data from all sensors and places them in string
@@ -61,8 +83,10 @@ String EcoSensors::getFullDataString() {
 
 	// loop through sensors using iterators
 	for (auto s = sensors.begin(); s != sensors.end(); ++s) {
+        powerOn((*s)->pin); // power on and delay if on powered domain
 		data += "&" + String((*s)->pin) + ":";  // sensor address
 		data += (*s)->readDataToString();		// append data
+        powerOff((*s)->pin); // power off
 	}
 	return data;
 }

@@ -17,8 +17,9 @@ void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
 void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
 void os_getDevKey (u1_t* buf) { memcpy_P(buf, APPKEY, 16);}
 
+volatile bool joined = false;
 volatile bool _transmitSuccessfull = false;
-
+volatile ev_t _lastEvent = EV_TXSTART;
 // lef = little endian format, reverse order
 void stringToHex(String s, u1_t *arr, bool lef = false) {
     for (uint8_t i = 0; i < s.length(); i += 2) {
@@ -80,6 +81,7 @@ const lmic_pinmap lmic_pins = {
 
 
 void onEvent (ev_t ev) {
+    _lastEvent = ev;
     PRINT(os_getTime());
     PRINT(": \t");
     switch(ev) {
@@ -125,6 +127,7 @@ void onEvent (ev_t ev) {
             // during join, but because slow data rates change max TX
 	        // size, we don't use it in this example.
             LMIC_setLinkCheckMode(0);
+            joined = true;
             break;
 
         case EV_RFU1:
@@ -186,7 +189,7 @@ bool EcoRadio::send(String s) {
 		sendArray[i] = (uint8_t) s.charAt(i);
 	}
 
-	if (transmitting()) {
+	if (!ready()) {
         PRINT(os_getTime());
         PRINT(": \t");
 		    PRINTLN(F("OP_TXRXPEND, not sending"));
@@ -195,18 +198,25 @@ bool EcoRadio::send(String s) {
 
     // Prepare upstream data transmission at the next possible time.
 	LMIC_setTxData2(1, sendArray, length, 0);
+    _transmitSuccessfull = false;
 	return true;
 }
 
 bool EcoRadio::ready() {
     // Check if there is not a current TX/RX job running
-    if (LMIC.opmode & OP_TXRXPEND) return false;
-    return true;
+    return !(LMIC.opmode & OP_TXRXPEND);
 }
 
 bool EcoRadio::transmitting() {
-    return LMIC.opmode & OP_TXRXPEND;
+    switch (_lastEvent) {
+        case 20:
+        case EV_TXCOMPLETE:
+            return false;
+    }
+
+    return true;
 }
+
 bool EcoRadio::transmitSuccessfull() {
     return _transmitSuccessfull;
 }

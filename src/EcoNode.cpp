@@ -108,24 +108,25 @@ void EcoNode::loop() {
 	// 	gpsTimer.startTimer(TRANSMIT_INTERVAL);
 	// }
 
+	// read data to file
+	if (dataTimer.timerDone()) {
+		recordDataPacket();
+		dataTimer.startTimer(RECORD_INTERVAL);
+		PRINTLN("timer done");
+	}
+
 	// send data from file
 	if (radioTimer.timerDone()) {
 		sendDataPacket();
 		radioTimer.startTimer(TRANSMIT_INTERVAL);
 	}
 
-	// read data to file
-	if (dataTimer.timerDone()) {
-		recordDataPacket();
-		dataTimer.startTimer(RECORD_INTERVAL);
-	}
-
 	// schedule sleep
-	uint8_t sec = dataTimer.minSecondsLeft(radioTimer);
-	uint8_t min = dataTimer.minMinutesLeft(radioTimer);
-	uint8_t hour = dataTimer.minHoursLeft(radioTimer);
-
-    alarm.setRtcTimer(hour, min, sec); // hour, min, sec, wake again after this time
+	// uint8_t sec = dataTimer.minSecondsLeft(radioTimer);
+	// uint8_t min = dataTimer.minMinutesLeft(radioTimer);
+	// uint8_t hour = dataTimer.minHoursLeft(radioTimer);
+	//
+    // alarm.setRtcTimer(hour, min, sec); // hour, min, sec, wake again after this time
 }
 
 // send data with radio if there is cached data to send
@@ -134,8 +135,10 @@ void EcoNode::sendDataPacket() {
 		String data = sd.popData();
 
 		// try to send message and cache again if not successful
-		this->radio.send(data);
-		while (radio.transmitting()) radio.loop();
+		radio.send(data);
+		while (radio.transmitting()) {
+			radio.loop();
+		}
 		if (!radio.transmitSuccessfull()) sd.cachData(data);
 	}
 }
