@@ -53,6 +53,9 @@ public:
 
 	bool send(String s);
 	bool ready();
+
+	bool transmitting();
+	bool transmitSuccessfull();
 };
 
 #endif

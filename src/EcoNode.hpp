@@ -17,6 +17,8 @@
 
 #include <Arduino.h>
 #include <EEPROM.h>
+#include <Snooze.h>
+
 #include <list>
 
 
@@ -30,6 +32,9 @@ class EcoNode {
 	EcoSensors sensorMaster;
     EcoSD sd;
     EcoGPS gps;
+
+    SnoozeAlarm	alarm;
+
 
     uint16_t bootCount;
 

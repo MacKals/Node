@@ -23,7 +23,7 @@
 
 class EcoSensors {
 private:
-    const vector<uint8_t> threePortPins {14, 15, 16, 17, 18, 19, 20, 35, 36, 37, 38, 39};
+    const vector<uint8_t> threePortPins {15, 16, 17, 18, 19, 20, 21, 35, 36, 37, 38, 39};
 
     // must include array sizes
 

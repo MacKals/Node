@@ -17,6 +17,7 @@ void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
 void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
 void os_getDevKey (u1_t* buf) { memcpy_P(buf, APPKEY, 16);}
 
+volatile bool _transmitSuccessfull = false;
 
 // lef = little endian format, reverse order
 void stringToHex(String s, u1_t *arr, bool lef = false) {
@@ -144,6 +145,7 @@ void onEvent (ev_t ev) {
               Serial.print(LMIC.dataLen);
               PRINTLN(F(" bytes of payload"));
             }
+            _transmitSuccessfull = true;
             // Schedule next transmission
             // os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
             break;
@@ -184,7 +186,7 @@ bool EcoRadio::send(String s) {
 		sendArray[i] = (uint8_t) s.charAt(i);
 	}
 
-	if (!this->ready()) {
+	if (transmitting()) {
         PRINT(os_getTime());
         PRINT(": \t");
 		    PRINTLN(F("OP_TXRXPEND, not sending"));
@@ -200,4 +202,11 @@ bool EcoRadio::ready() {
     // Check if there is not a current TX/RX job running
     if (LMIC.opmode & OP_TXRXPEND) return false;
     return true;
+}
+
+bool EcoRadio::transmitting() {
+    return LMIC.opmode & OP_TXRXPEND;
+}
+bool EcoRadio::transmitSuccessfull() {
+    return _transmitSuccessfull;
 }

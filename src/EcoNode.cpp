@@ -23,6 +23,7 @@ void EcoNode::blinkLED() {
 void EcoNode::init() {
 	PRINTLN("Node class initializing.");
 	activateLED();
+	SnoozeBlock config_teensy35(alarm);
 
 	initBootCount();
 	setRTC();
@@ -102,8 +103,6 @@ void EcoNode::setLoRaParameters() {
 
 void EcoNode::loop() {
 
-	radio.loop();
-
 	// if (gpsTimer.timerDone()) {
 	// 	gps.printData();
 	// 	gpsTimer.startTimer(TRANSMIT_INTERVAL);
@@ -120,6 +119,13 @@ void EcoNode::loop() {
 		recordDataPacket();
 		dataTimer.startTimer(RECORD_INTERVAL);
 	}
+
+	// schedule sleep
+	uint8_t sec = dataTimer.minSecondsLeft(radioTimer);
+	uint8_t min = dataTimer.minMinutesLeft(radioTimer);
+	uint8_t hour = dataTimer.minHoursLeft(radioTimer);
+
+    alarm.setRtcTimer(hour, min, sec); // hour, min, sec, wake again after this time
 }
 
 // send data with radio if there is cached data to send
@@ -128,9 +134,9 @@ void EcoNode::sendDataPacket() {
 		String data = sd.popData();
 
 		// try to send message and cache again if not successful
-		if (!this->radio.send(data)) {
-			sd.cachData(data);
-		}
+		this->radio.send(data);
+		while (radio.transmitting()) radio.loop();
+		if (!radio.transmitSuccessfull()) sd.cachData(data);
 	}
 }
 
