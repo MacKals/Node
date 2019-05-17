@@ -121,7 +121,7 @@ void EcoNode::loop() {
 		radioTimer.startTimer(TRANSMIT_INTERVAL);
 	}
 
-	// schedule sleep
+	// // schedule sleep
 	// uint8_t sec = dataTimer.minSecondsLeft(radioTimer);
 	// uint8_t min = dataTimer.minMinutesLeft(radioTimer);
 	// uint8_t hour = dataTimer.minHoursLeft(radioTimer);
