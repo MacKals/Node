@@ -54,7 +54,7 @@ class EcoNode {
     // LED
     bool ledStatus = false;
     void blinkLED();
-    void activateLED(bool on = true);
+    void activateLED(bool state = true);
 
 public:
     void init();

@@ -40,7 +40,7 @@ void printArray(u1_t *arr, uint8_t size) {
 
 void EcoRadio::init(EcoSD sd) {
 
-    // set LoRaWAN parameters from ini 
+    // set LoRaWAN parameters from ini
     vector<String> lora = sd.getLoRaWANFromConfig();
 	setLoRaParameters(lora[0], lora[1], lora[2]);
 
@@ -106,7 +106,6 @@ const lmic_pinmap lmic_pins = {
 
 
 void onEvent (ev_t ev) {
-    _lastEvent = ev;
     PRINT(os_getTime());
     PRINT(": \t");
     switch(ev) {
@@ -204,6 +203,8 @@ void onEvent (ev_t ev) {
             PRINTLN((unsigned) ev);
             break;
     }
+
+    _lastEvent = ev;
 }
 
 
@@ -234,6 +235,11 @@ bool EcoRadio::ready() {
 
 bool EcoRadio::transmitting() {
     switch (_lastEvent) {
+        case EV_SCAN_TIMEOUT:
+        case EV_REJOIN_FAILED:
+        case EV_JOIN_FAILED:
+        case EV_RESET:
+
         case 20:
         case EV_TXCOMPLETE:
             return false;

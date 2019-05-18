@@ -9,21 +9,24 @@
 #include <Time.h>
 #include <TimeAlarms.h>
 
-void EcoNode::activateLED(bool on) {
-	pinMode(LED, OUTPUT);
-	digitalWrite(LED, on);
-	ledStatus = on;
+void EcoNode::activateLED(bool state) {
+	digitalWrite(LED, state);
+	ledStatus = state;
 }
 
 void EcoNode::blinkLED() {
-	digitalWrite(LED, ledStatus);
 	ledStatus = !ledStatus;
+	digitalWrite(LED, ledStatus);
 }
 
 void EcoNode::init() {
 	PRINTLN("Node class initializing.");
+
+	// status LED
+	pinMode(LED, OUTPUT);
 	activateLED();
 
+	// for power management
 	config_teensy35 = new SnoozeBlock(alarm);
 
 	initBootCount();
@@ -74,6 +77,7 @@ void EcoNode::initBootCount() {
 
 
 void EcoNode::loop() {
+	// led on when teensy avtive
 	activateLED();
 
 	// if (gpsTimer.timerDone()) {
@@ -97,23 +101,32 @@ void EcoNode::loop() {
 
 	activateLED(false);
 
-	// schedule sleep
-	uint8_t sec = dataTimer.minSecondsLeft(radioTimer);
-	uint8_t min = dataTimer.minMinutesLeft(radioTimer);
-	uint8_t hour = dataTimer.minHoursLeft(radioTimer);
+	#ifdef POWER_SAVE
+		// schedule sleep
+		uint8_t sec = dataTimer.minSecondsLeft(radioTimer);
+		uint8_t min = dataTimer.minMinutesLeft(radioTimer);
+		uint8_t hour = dataTimer.minHoursLeft(radioTimer);
 
-	PRINTLN("Delay for: " + String(hour) +":" + String(min) + ":" + String(sec));
+		PRINTLN("Delay for: " + String(hour) +":" + String(min) + ":" + String(sec));
 
-    alarm.setRtcTimer(hour, min, sec); // hour, min, sec, wake again after this time
+		//wait for printing to complete
+		#ifdef DEBUG
+			delay(1000);
+		#endif
 
-	int i = Snooze.hibernate( *config_teensy35 );
+		// avoid going to sleep with a timer set to zero
+		if (hour || min || sec > 2) {
+			alarm.setRtcTimer(hour, min, sec); // hour, min, sec, wake again after this time
+			int i = Snooze.hibernate( *config_teensy35 );
+		}
 
-	#ifdef DEBUG
 		// re-establish serial connection
-        Serial.begin(115200);
-        while (!Serial) {}
-    #endif
-
+		#ifdef DEBUG
+	        Serial.begin(115200);
+	        while (!Serial) {}
+			delay(1000);
+	    #endif
+	#endif
 }
 
 // send data with radio if there is cached data to send

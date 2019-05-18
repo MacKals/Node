@@ -10,9 +10,14 @@
 #define _CONFIG_H
 
 
-// ---- DEBUG ----
+#define RECORD_INTERVAL   60 // s, time between data-collections
+#define TRANSMIT_INTERVAL 30 // s, time between transmit attempts
 
-#define DEBUG // comment out to deactivate serial printing
+// ---- POWER SAVE ----
+// #define POWER_SAVE
+
+// ---- DEBUG ----
+// #define DEBUG // comment out to deactivate serial printing
 
 #ifdef DEBUG
  #define PRINT(x)      Serial.print(x)
@@ -27,17 +32,6 @@
 #endif
 
 
-// ---- POWER SAVE ----
-// Methods and calls to remove when wanting to conserve power
-// but that might have to make operator more carefull.
-// Limitations:
-// - all sensors must be connected when system power up
-//
-
-#define POWER_SAVE
-
-#define RECORD_INTERVAL   60 // s, time between data-collections
-#define TRANSMIT_INTERVAL 30 // s, time between transmit attempts
 
 #define POWER_ON_TO_READ_TIME 500 // ms, time from sensors powered to reading taken
 
