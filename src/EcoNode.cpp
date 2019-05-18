@@ -74,6 +74,7 @@ void EcoNode::initBootCount() {
 
 
 void EcoNode::loop() {
+	activateLED();
 
 	// if (gpsTimer.timerDone()) {
 	// 	gps.printData();
@@ -82,17 +83,19 @@ void EcoNode::loop() {
 
 	// read data to file
 	if (dataTimer.timerDone()) {
+		dataTimer.startTimer(RECORD_INTERVAL); // restart timer without delay
 		recordDataPacket();
-		dataTimer.startTimer(RECORD_INTERVAL);
 		PRINTLN("reading done");
 	}
 
 	// send data from file
 	if (radioTimer.timerDone()) {
+		radioTimer.startTimer(TRANSMIT_INTERVAL); // restart timer without delay
 		sendDataPacket();
-		radioTimer.startTimer(TRANSMIT_INTERVAL);
 		PRINTLN("radio done");
 	}
+
+	activateLED(false);
 
 	// schedule sleep
 	uint8_t sec = dataTimer.minSecondsLeft(radioTimer);
@@ -102,10 +105,15 @@ void EcoNode::loop() {
 	PRINTLN("Delay for: " + String(hour) +":" + String(min) + ":" + String(sec));
 
     alarm.setRtcTimer(hour, min, sec); // hour, min, sec, wake again after this time
-	delay(1000);
 
-	int i = Snooze.sleep( *config_teensy35 );
-	blinkLED();
+	int i = Snooze.hibernate( *config_teensy35 );
+
+	#ifdef DEBUG
+		// re-establish serial connection
+        Serial.begin(115200);
+        while (!Serial) {}
+    #endif
+
 }
 
 // send data with radio if there is cached data to send
