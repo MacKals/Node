@@ -21,15 +21,15 @@ bool EcoTimer::timerDone() {
 
 uint8_t EcoTimer::minSecondsLeft(EcoTimer t) {
 	time_t tMin = min(this->timerTime, t.timerTime);
-	return tMin % 60;
+	return max((tMin-Teensy3Clock.get()) % 60, 0);
 }
 
 uint8_t EcoTimer::minMinutesLeft(EcoTimer t) {
 	time_t tMin = min(this->timerTime, t.timerTime);
-	return (tMin / 60) % 60;
+	return max(((tMin-Teensy3Clock.get()) / 60) % 60, 0);
 }
 
 uint8_t EcoTimer::minHoursLeft(EcoTimer t) {
 	time_t tMin = min(this->timerTime, t.timerTime);
-	return tMin / 3600;
+	return max((tMin-Teensy3Clock.get()) / 3600, 0);
 }

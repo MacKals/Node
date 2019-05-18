@@ -10,12 +10,12 @@
 #include "Sensor.h"
 
 class AnalogSensor : public Sensor {
-
+    const uint8_t resolution = 13;
 public:
 
     AnalogSensor(uint8_t pin, String serialNum) : Sensor(pin, serialNum) {
         pinMode(pin, INPUT);
-        analogReadRes(13); // 13 bit analog input, 0V -> 0, 3.3V -> 8192
+        analogReadRes(resolution); // 13 bit analog input, 0V -> 0, 3.3V -> 8192
     }
 
     // Sensor methods
@@ -34,7 +34,7 @@ public:
 
     float readData() {
         analogReadAveraging(10);
-        return analogRead(pin);
+        return (3.3 * analogRead(pin))/(2^resolution);
     }
 };
 

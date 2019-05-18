@@ -19,7 +19,7 @@ void EcoSensors::init(EcoSD sd) {
 
 	for (auto & sensor : connected) {
 
-		switch ('a') { //sensor type string sensor[1].charAt(0)
+		switch (sensor[1].charAt(0)) {
 			case 'S': case 's':
                 {
                     SDISensor *s = new SDISensor(sensor[0].toInt(), sensor[2]);

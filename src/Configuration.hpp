@@ -37,7 +37,7 @@
 #define POWER_SAVE
 
 #define RECORD_INTERVAL   60 // s, time between data-collections
-#define TRANSMIT_INTERVAL 10 // s, time between transmit attempts
+#define TRANSMIT_INTERVAL 30 // s, time between transmit attempts
 
 #define POWER_ON_TO_READ_TIME 500 // ms, time from sensors powered to reading taken
 

@@ -34,7 +34,7 @@ class EcoNode {
     EcoGPS gps;
 
     SnoozeAlarm	alarm;
-
+    SnoozeBlock *config_teensy35;
 
     uint16_t bootCount;
 
@@ -43,7 +43,6 @@ class EcoNode {
     void initBootCount();
     void setLoRaParameters();
     void setSensorParameters();
-    String cleanupString(String s);
 
     void recordDataPacket();
     void recordConfiguraton();
