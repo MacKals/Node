@@ -30,7 +30,7 @@ public:
     }
 
 
-    // AnalogSensor spesific methods
+    // AnalogSensor specific methods
 
     float readData() {
         analogReadAveraging(10);

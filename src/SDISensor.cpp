@@ -10,22 +10,26 @@
 // Sensor methods
 
 String SDISensor::readDataToString() {
-    String allData = "";
-    for (int i = 0; i < this->sensorAddresses.length(); i++) {
-        char addr = this->sensorAddresses.charAt(i);
-        allData += takeMeasurement(addr);
-    }
-    return allData;
+    if (canHandleContinuousMeasurement) return takeContinuousMeasurement();
+    return takeMeasurement();
 }
 
-// SDISensor spesific methods
+// SDISensor specific methods
 
 void SDISensor::init() {
     // SDI-12 bus must be initialized with begin method
     sdiBus.begin();
-    delay(30); // TODO: incrase? decrease?
+    delay(30);
+    sensorAddress = getFirstActiveAddress();
 
-    sensorAddresses = getFirstActiveAddress();
+    // now to see if continuous measurements are supported
+    String command = String(sensorAddress) + "R7!";
+    this->sdiBus.sendCommand(command);
+    PRINTLN("sending: " + command);
+    delay(100);
+
+    String response = printBufferToString();
+    PRINTLN("this is what I get: " + response);
 }
 
 void SDISensor::end() {
@@ -76,16 +80,16 @@ String SDISensor::printBufferToString() {
 
 // gets identification information from a sensor, and prints it to the serial port
 // expects a character between '0'-'9', 'a'-'z', or 'A'-'Z'.
-String SDISensor::printInfoToString(char addr){
+String SDISensor::printInfoToString(){
 
     this->sdiBus.setActive();
     sdiBus.clearBuffer();
 
-	String command = "";
-	command += (char) addr;
-	command += "I!";
+	String command = sensorAddress + "I!";
+	// command += (char) addr;
+	// command += "I!";
 	this->sdiBus.sendCommand(command);
-	delay(30);
+	delay(100);
 
     String info = printBufferToString();
     sdiBus.clearBuffer();
@@ -94,26 +98,22 @@ String SDISensor::printInfoToString(char addr){
 }
 
 void SDISensor::printInfo() {
-    for (uint8_t i = 0; i < this->sensorAddresses.length(); i++) {
-        char addr = this->sensorAddresses.charAt(i);
-        PRINTLN("Pin: " + String(pin) + ", addr: " + String(addr) + ", desc: " + printInfoToString(addr));
-    }
+    PRINTLN("Pin: " + String(pin) + ", addr: " + String(sensorAddress) + ", desc: " + printInfoToString());
 }
 
-String SDISensor::takeMeasurement(char addr){
+String SDISensor::takeMeasurement(){
 
     this->sdiBus.setActive();
 
 	String command = "";
-	command += addr;
+	command += String(sensorAddress);
 	command += "M!"; // SDI-12 measurement command format  [address]['M'][!]
 
     this->sdiBus.sendCommand(command);
-	delay(30);
+	delay(60);
 
 	// wait for acknowlegement with format [address][ttt (3 char, seconds)][number of measurments available, 0-9]
 	String sdiResponse = "";
-	delay(30);
 	while (this->sdiBus.available()) // build response string
 	{
 		char c = this->sdiBus.read();
@@ -148,7 +148,7 @@ String SDISensor::takeMeasurement(char addr){
 
 	// in this example we will only take the 'DO' measurement
 	command = "";
-	command += addr;
+	command += String(sensorAddress);
 	command += "D0!"; // SDI-12 command to get data [address][D][dataOption][!]
 	this->sdiBus.sendCommand(command);
 
@@ -170,6 +170,10 @@ String SDISensor::takeMeasurement(char addr){
     this->sdiBus.forceHold();
 
 	return data;
+}
+
+String SDISensor::takeContinuousMeasurement(){
+    return " ";
 }
 
 // this checks for activity at a particular address
@@ -201,7 +205,7 @@ bool SDISensor::checkActive(char addr){
 }
 
 bool SDISensor::addressAttached(char addr) {
-	return this->sensorAddresses.indexOf(addr) == -1 ? false : true;
+	return this->sensorAddress == addr ? false : true;
 }
 
 void SDISensor::changeAddress(char from, char to) {
@@ -214,7 +218,7 @@ void SDISensor::changeAddress(char from, char to) {
 	command += (char) to;
 	command += "!";
 	this->sdiBus.sendCommand(command);
-	this->sensorAddresses.replace(from, to);
+	//this->sensorAddress.replace(from, to);
 	delay(300);
 
 	this->sdiBus.clearBuffer();

@@ -18,7 +18,8 @@ using namespace std;
 class SDISensor : public Sensor {
 private:
     SDI12 sdiBus;
-    String sensorAddresses = "";
+    char sensorAddress = ' ';
+    bool canHandleContinuousMeasurement = true;
 
 public:
     SDISensor(uint8_t pin, String serialNum) : Sensor(pin, serialNum), sdiBus(pin) {}
@@ -26,10 +27,10 @@ public:
     // Sensor methods
     String readDataToString();
 
-    // SDISensor spesific methods
+    // SDISensor specific methods
     char getFirstActiveAddress();
     String getAllActiveAddresses();
-    String printInfoToString(char i);
+    String printInfoToString();
     void printInfo();
 
     void init(); // must be called before use
@@ -37,7 +38,8 @@ public:
 
 private:
     String printBufferToString();
-    String takeMeasurement(char i);
+    String takeMeasurement();
+    String takeContinuousMeasurement();
     bool checkActive(char i);
     void changeAddress(char from, char to);
     bool addressAttached(char i);
