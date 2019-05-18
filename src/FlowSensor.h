@@ -27,7 +27,7 @@ public:
 
     String readDataToString();
 
-    // AnalogSensor spesific methods
+    // AnalogSensor specific methods
     bool init();
     float getTotalFlow();
     float getAverageFlow();

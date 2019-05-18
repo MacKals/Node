@@ -22,6 +22,7 @@ void EcoSensors::init(EcoSD sd) {
                     SDISensor *s = new SDISensor(sensor[0].toInt(), sensor[2]);
                     s->init();
 				    sensors.push_back(s);
+                    s->printInfo();
 				    break;
                 }
 			case 'A': case 'a':
