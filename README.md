@@ -64,12 +64,12 @@ The following are items that remain to be completed as of May 13, 2019.
 - [ ] GPS integration.
 - [ ] Power rails switch (w/ knowledge of sensors on each rail).
 - [x] Decouple time of data acquisition and transmission.
-- [ ] Low power mode.
+- [x] Low power mode.
 - [x] Ensure packet delivery to TTN.
 - [ ] Revise document for config file details.
 
     ### Device Verification
-    - [ ] Weather station
+    - [x] Weather station
     - [ ] Flow sensor decoding (interrupt with sleep on?)
 
 ## Server
