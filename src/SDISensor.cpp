@@ -23,13 +23,16 @@ void SDISensor::init() {
     sensorAddress = getFirstActiveAddress();
 
     // now to see if continuous measurements are supported
-    String command = String(sensorAddress) + "R7!";
+    String command = String(sensorAddress) + "R7!"; //currently just suppports ATMOS 41 weather station
     this->sdiBus.sendCommand(command);
-    PRINTLN("sending: " + command);
+    //PRINTLN("sending: " + command);
     delay(100);
 
     String response = printBufferToString();
-    PRINTLN("this is what I get: " + response);
+    if (response.compareTo("") == 0){ // returns nothing
+        canHandleContinuousMeasurement = false;
+    }
+    //PRINTLN("R! command response: " + response);
 }
 
 void SDISensor::end() {
@@ -85,7 +88,7 @@ String SDISensor::printInfoToString(){
     this->sdiBus.setActive();
     sdiBus.clearBuffer();
 
-	String command = sensorAddress + "I!";
+	String command = String(sensorAddress) + "I!";
 	// command += (char) addr;
 	// command += "I!";
 	this->sdiBus.sendCommand(command);
@@ -101,7 +104,7 @@ void SDISensor::printInfo() {
     PRINTLN("Pin: " + String(pin) + ", addr: " + String(sensorAddress) + ", desc: " + printInfoToString());
 }
 
-String SDISensor::takeMeasurement(){
+String SDISensor::takeMeasurement(){ //using M! and D! commands
 
     this->sdiBus.setActive();
 
@@ -173,7 +176,20 @@ String SDISensor::takeMeasurement(){
 }
 
 String SDISensor::takeContinuousMeasurement(){
-    return " ";
+
+    this->sdiBus.setActive();
+
+	String command = String(sensorAddress) + "R7!";
+
+    this->sdiBus.sendCommand(command);
+	delay(60);
+
+	String sdiResponse = printBufferToString();
+
+	this->sdiBus.clearBuffer();
+    this->sdiBus.forceHold();
+
+	return sdiResponse;
 }
 
 // this checks for activity at a particular address
