@@ -1,2 +1,0 @@
-A, 33, 0, 3, 0, 100, Moisture Level
-S, 02, Dielectric Permittivity, Temperature (C), Electrical Conductivity (uS/cm)
