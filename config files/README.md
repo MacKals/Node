@@ -1,46 +1,28 @@
 
 # Configuration files
+Nodes use a single INI file (_config.ini_) for storing details that are unique to the given node. This includes the following information:
+
+1. LoRaWAN connection details
+2. Sensors connected
+3. Current deployment information (optional)
+
+This file must be edited to reflect the given node's details and uploaded to its associated microSD card onboard the unit.
+Details about the structure of INI files can be found on [Wikipedia](https://en.wikipedia.org/wiki/INI_file).
+
 ## LoRaWAN
-To establish a connection with the LoRaWAN server, you need to register the node as a new device on The Things Network. Once you have set the new device up, there is three keys that will have to be transferred to the node: Device EUI, Application EUI and App Key. You can do this by placing a file on the SD card of the node.
+To establish a connection with the LoRaWAN server, the node must be registered as a new device on The Things Network. Once the device is created, there are three keys that will have to be transferred to the node: **Device EUI**, **Application EUI** and **App Key**. Update the fields in the config file with these keys. Simply copy and paste the keys as they appear, rather than converting to little endian, etc.
 
-### Instrucitons:
-- Place the file in the root directory of the SD card.
-- Name the file "lorawan.txt"
-- Paste the three values (Device EUI, Application EUI and App Key) in that order, by using the copy button of the strings on the TTN website. Do not use little endian format for any of the parameters, copy them exatly as shown.
-- Separate the keys by newline.
+Details about device registration can be found at [The Things Network](https://www.thethingsnetwork.org/docs/devices/registration.html).
 
-You should end up with a file that only contains strings looking somehting like this:
-```
-00749A95AC2874C3
-7063D57E3006A734
-22F2C4EEA5832B46352375752C1853AA
-```
+## Sensors Connected
+Each sensor connected to the node (that collects data desired by the user) must be documented in _config.ini_. There are two fields required: the serial number (internal numbering scheme) and the sensor type. The supported sensor types have the following keywords:
 
-## Sensor Configuration
-In order to tell the system what data is coming from which sensor, a file called `sensors.txt` is used.
+- SDI-12
+- Flow
+- Analog
+- PWM
 
-- `xx` - header number (excluding the D)
-- `min` - min analog voltage the sensor can output in volts
-- `max` - max analog voltage the sensor can output in volts
-- `toMin` - desired reading when the value is min
-- `toMax` - desired reading when the value is max
-- `title` - title used to describe information, preferably including units. The title can have spaces
+The serial number associated with the sensor should be visible on the sensor itself on a custom asset label.
 
-### Analog sensors
-`A,xx,min,max,toMin,toMax,title`
-### SDI-12 sensors
-`S,xx,title1,title2,...`
-Add as many titles as there are data fileds on the SDI sensor
-### PWM sensors
-`P,xx,toMin,toMax,title`
-### Flow sensors
-`F,xx,???` TODO: how to decode ticks to
-
-
-## Common sensors and their configurations
-Below is a list of sensors used and how they should/could be configured. Make sure to update the `xx` to correspond to the pin you have connected the sensor to.
-
-TODO: expand list, include images
-
-Meter GS3: `S, xx, Dielectric Permittivity, Temperature (C), Electrical Conductivity (uS/cm)`
-SoilWatch 10: `A, xx, 0, 3, 0, 100, Moisture Level`
+## Current deployment information (optional) TODO
+While currently under development, there will exist a field in _config.ini_ for describing the purpose of the node for a given deployment.
