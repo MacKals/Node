@@ -17,6 +17,8 @@
 
 #include <Arduino.h>
 #include <EEPROM.h>
+#include <Snooze.h>
+
 #include <list>
 
 
@@ -31,6 +33,9 @@ class EcoNode {
     EcoSD sd;
     EcoGPS gps;
 
+    SnoozeAlarm	alarm;
+    SnoozeBlock *config_teensy35;
+
     uint16_t bootCount;
 
 	time_t timeLastData;
@@ -38,7 +43,6 @@ class EcoNode {
     void initBootCount();
     void setLoRaParameters();
     void setSensorParameters();
-    String cleanupString(String s);
 
     void recordDataPacket();
     void recordConfiguraton();
@@ -50,7 +54,7 @@ class EcoNode {
     // LED
     bool ledStatus = false;
     void blinkLED();
-    void activateLED(bool on = true);
+    void activateLED(bool state = true);
 
 public:
     void init();

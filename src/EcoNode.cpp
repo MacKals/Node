@@ -9,28 +9,32 @@
 #include <Time.h>
 #include <TimeAlarms.h>
 
-void EcoNode::activateLED(bool on) {
-	pinMode(LED, OUTPUT);
-	digitalWrite(LED, on);
-	ledStatus = on;
+void EcoNode::activateLED(bool state) {
+	digitalWrite(LED, state);
+	ledStatus = state;
 }
 
 void EcoNode::blinkLED() {
-	digitalWrite(LED, ledStatus);
 	ledStatus = !ledStatus;
+	digitalWrite(LED, ledStatus);
 }
 
 void EcoNode::init() {
 	PRINTLN("Node class initializing.");
+
+	// status LED
+	pinMode(LED, OUTPUT);
 	activateLED();
+
+	// for power management
+	config_teensy35 = new SnoozeBlock(alarm);
 
 	initBootCount();
 	setRTC();
 	sd.init();
-	setLoRaParameters();
-	radio.init();
-	// gps.init();
+	radio.init(sd);
 	sensorMaster.init(sd);
+	// gps.init();
 	//setSensorParameters();
 
 	recordConfiguraton();
@@ -71,55 +75,58 @@ void EcoNode::initBootCount() {
 	PRINTLN("Boot count = " + String(bootCount));
 }
 
-// TODO: Use?
-String EcoNode::cleanupString(String s) {
-	s = s.replace(" ", "");
-	s = s.replace("\n", "");
-	s = s.replace("\t", "");
-	return s;
-}
-
-// must be called after sd init and before radio init (?)
-// get parameters for LoRaWAN transmission from SD card
-void EcoNode::setLoRaParameters() {
-
-	vector<String> lora = sd.getLoRaWANFromConfig();
-	radio.setLoRaParameters(lora[0], lora[1], lora[2]);
-
-	//String data = sd.getDataFromFile(LORAWAN_CONFIG_FILE_NAME);
-	//
-	// if (data.length() == 0) return;
-	//
-	// uint16_t i1 = data.indexOf('\n');
-	// uint16_t i2 = data.indexOf('\n', i1+1);
-	//
-	// String appeui = cleanupString(data.substring(0, i1));
-	// String deveui = cleanupString(data.substring(i1, i2));
-	// String appkey = cleanupString(data.substring(i2)); // from index to end of string
-	//radio.setLoRaParameters(appeui, deveui, appkey);
-}
-
 
 void EcoNode::loop() {
-
-	radio.loop();
+	// led on when teensy avtive
+	activateLED();
 
 	// if (gpsTimer.timerDone()) {
 	// 	gps.printData();
 	// 	gpsTimer.startTimer(TRANSMIT_INTERVAL);
 	// }
 
-	// send data from file
-	if (radioTimer.timerDone()) {
-		sendDataPacket();
-		radioTimer.startTimer(TRANSMIT_INTERVAL);
-	}
-
 	// read data to file
 	if (dataTimer.timerDone()) {
+		dataTimer.startTimer(RECORD_INTERVAL); // restart timer without delay
 		recordDataPacket();
-		dataTimer.startTimer(RECORD_INTERVAL);
+		PRINTLN("reading done");
 	}
+
+	// send data from file
+	if (radioTimer.timerDone()) {
+		radioTimer.startTimer(TRANSMIT_INTERVAL); // restart timer without delay
+		sendDataPacket();
+		PRINTLN("radio done");
+	}
+
+	activateLED(false);
+
+	#ifdef POWER_SAVE
+		// schedule sleep
+		uint8_t sec = dataTimer.minSecondsLeft(radioTimer);
+		uint8_t min = dataTimer.minMinutesLeft(radioTimer);
+		uint8_t hour = dataTimer.minHoursLeft(radioTimer);
+
+		PRINTLN("Delay for: " + String(hour) +":" + String(min) + ":" + String(sec));
+
+		//wait for printing to complete
+		#ifdef DEBUG
+			delay(1000);
+		#endif
+
+		// avoid going to sleep with a timer set to zero
+		if (hour || min || sec > 2) {
+			alarm.setRtcTimer(hour, min, sec); // hour, min, sec, wake again after this time
+			int i = Snooze.hibernate( *config_teensy35 );
+		}
+
+		// re-establish serial connection
+		#ifdef DEBUG
+	        Serial.begin(115200);
+	        while (!Serial) {}
+			delay(1000);
+	    #endif
+	#endif
 }
 
 #define ON_AIR_DATA_FILENAME "oad"

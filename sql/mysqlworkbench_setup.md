@@ -6,4 +6,4 @@ MySQLWorkbench is a visual tool for viewing and developing MySQL databases.
 2. After installation is complete, open the application and click '+' to add a new connection.
 3. The database login credentials are not available here, but are available upon request.
 
-[logo]: \images\addconnection.png "add connection"
+![Add Connection](images/addconnection.png?raw=true "Add a Connection")

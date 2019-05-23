@@ -37,6 +37,31 @@ void printArray(u1_t *arr, uint8_t size) {
     PRINTLN();
 }
 
+void EcoRadio::init(EcoSD sd) {
+
+    // set LoRaWAN parameters from ini
+    vector<String> lora = sd.getLoRaWANFromConfig();
+	setLoRaParameters(lora[0], lora[1], lora[2]);
+
+
+    SPI.setSCK(RFM95_CLK); // update clock pin
+
+    // LMIC init.
+    os_init();
+    // Reset the MAC state. Session and pending data transfers will be discarded.
+    LMIC_reset();
+    // Disable link-check mode and ADR, because ADR tends to complicate testing.
+    LMIC_setLinkCheckMode(0);
+    // Set the data rate to Spreading Factor 7.  This is the fastest supported rate for 125 kHz channels, and it
+    // minimizes air time and battery power. Set the transmission power to 14 dBi (25 mW).
+    LMIC_setDrTxpow(DR_SF7,14);
+    // in the US, with TTN, it saves join time if we start on subband 1 (channels 8-15). This will
+    // get overridden after the join by parameters from the network. If working with other
+    // networks or in other regions, this will need to be changed.
+    LMIC_selectSubBand(1);
+}
+
+
 void EcoRadio::setLoRaParameters(String deveui, String appeui, String appkey) {
 
     // test for valid key lengths
@@ -125,6 +150,7 @@ void onEvent (ev_t ev) {
             // during join, but because slow data rates change max TX
 	        // size, we don't use it in this example.
             LMIC_setLinkCheckMode(0);
+            joined = true;
             break;
 
         case EV_RFU1:
@@ -146,6 +172,7 @@ void onEvent (ev_t ev) {
               Serial.print(LMIC.dataLen);
               PRINTLN(F(" bytes of payload"));
             }
+            _transmitSuccessfull = true;
             // Schedule next transmission
             // os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
             break;
@@ -176,6 +203,8 @@ void onEvent (ev_t ev) {
             PRINTLN((unsigned) ev);
             break;
     }
+
+    _lastEvent = ev;
 }
 
 
@@ -200,7 +229,21 @@ void EcoRadio::send(String s) {
 
 bool EcoRadio::ready() {
     // Check if there is not a current TX/RX job running
-    if (LMIC.opmode & OP_TXRXPEND) return false;
+    return !(LMIC.opmode & OP_TXRXPEND);
+}
+
+bool EcoRadio::transmitting() {
+    switch (_lastEvent) {
+        case EV_SCAN_TIMEOUT:
+        case EV_REJOIN_FAILED:
+        case EV_JOIN_FAILED:
+        case EV_RESET:
+
+        case 20:
+        case EV_TXCOMPLETE:
+            return false;
+    }
+
     return true;
 }
 
